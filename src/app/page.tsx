@@ -6740,104 +6740,299 @@ export default function CarLinkPage() {
         </DialogContent>
       </Dialog>
 
-      {/* Apps Sheet - Side Panel */}
+      {/* Apps Sheet - تصميم مبتكر وعصري */}
       <Sheet open={appsSheetOpen} onOpenChange={setAppsSheetOpen}>
         <SheetContent 
           side={isRTL ? "left" : "right"} 
-          className="!border-0 w-full sm:w-1/4 min-w-[280px] max-w-[400px] h-screen p-0 bg-background"
+          className="!border-0 w-full sm:w-[420px] h-screen p-0 bg-background overflow-hidden"
         >
-          {/* Header with Close Button on Left, Title and Icon on Right */}
-          <div className={`p-4 bg-background flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
-            {/* Close Button - Always on Left side */}
-            <button 
-              onClick={() => setAppsSheetOpen(false)}
-              className="w-8 h-8 rounded-lg hover:bg-muted flex items-center justify-center transition-colors"
-            >
-              <X className="w-5 h-5 text-muted-foreground" />
-            </button>
-            
-            {/* Title and Icon - Always on Right side */}
-            <div className={`flex items-center gap-2 ${isRTL ? 'flex-row' : 'flex-row-reverse'}`}>
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg">
-                <LayoutGrid className="w-5 h-5 text-white" />
-              </div>
-              <SheetTitle className="text-lg font-bold">
-                {isRTL ? 'الخدمات' : 'Services'}
-              </SheetTitle>
+          {/* Animated Background */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-0 left-0 w-full h-full">
+              <div className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] bg-gradient-to-br from-blue-500/5 via-transparent to-cyan-500/5 animate-pulse" />
+              <motion.div 
+                animate={{ 
+                  x: [0, 100, 0], 
+                  y: [0, -50, 0],
+                  rotate: [0, 180, 360]
+                }}
+                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                className="absolute top-20 right-10 w-32 h-32 rounded-full bg-gradient-to-br from-cyan-500/10 to-blue-500/10 blur-2xl"
+              />
+              <motion.div 
+                animate={{ 
+                  x: [0, -80, 0], 
+                  y: [0, 80, 0],
+                  rotate: [360, 180, 0]
+                }}
+                transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                className="absolute bottom-40 left-5 w-40 h-40 rounded-full bg-gradient-to-br from-emerald-500/10 to-teal-500/10 blur-2xl"
+              />
             </div>
           </div>
-          
-          {/* Blue Gradient Divider Line */}
-          <div className="w-full px-4">
-            <div className="w-full h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent" />
+
+          {/* Header Section */}
+          <div className="relative z-10">
+            {/* Header */}
+            <div className={`p-5 flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+              <button 
+                onClick={() => setAppsSheetOpen(false)}
+                className="w-10 h-10 rounded-xl bg-muted/50 hover:bg-muted flex items-center justify-center transition-all duration-300 hover:rotate-90"
+              >
+                <X className="w-5 h-5 text-muted-foreground" />
+              </button>
+              
+              <div className={`flex items-center gap-3 ${isRTL ? 'flex-row' : 'flex-row-reverse'}`}>
+                <motion.div 
+                  animate={{ rotate: [0, 10, -10, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                  className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 via-cyan-500 to-teal-500 flex items-center justify-center shadow-lg shadow-cyan-500/30"
+                >
+                  <LayoutGrid className="w-6 h-6 text-white" />
+                </motion.div>
+                <div className={isRTL ? 'text-right' : 'text-left'}>
+                  <SheetTitle className="text-xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+                    {isRTL ? 'التطبيقات' : 'Apps'}
+                  </SheetTitle>
+                  <p className="text-xs text-muted-foreground">{isRTL ? 'خدمات متكاملة' : 'Integrated Services'}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Decorative Divider */}
+            <div className="px-5">
+              <div className="h-px bg-gradient-to-r from-transparent via-blue-400/50 to-transparent" />
+            </div>
           </div>
-          
-          <div className="flex-1 overflow-y-auto p-4 h-[calc(100vh-120px)]">
-            <div className="grid grid-cols-2 gap-4">
-              {appFeatures.map((feature) => {
-                const IconComponent = feature.icon;
-                return (
-                  <div
-                    key={feature.id}
-                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl hover:bg-muted/50"
-                    onClick={() => {
-                      const serviceId = feature.id;
-                      setSelectedService(serviceId);
-                      setAppsSheetOpen(false);
-                      // Delay opening dialog to allow sheet to close first
-                      setTimeout(() => {
-                        setServiceDetailOpen(true);
-                      }, 300);
-                    }}
-                  >
-                    <div className={`w-12 h-12 rounded-xl ${feature.color} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg`}>
-                      <IconComponent className="w-6 h-6 text-white" />
-                    </div>
-                    <span className="text-sm text-center font-medium leading-tight">
-                      {isRTL ? feature.titleAr : feature.titleEn}
-                    </span>
-                    <span className="text-xs text-muted-foreground text-center mt-1 line-clamp-2">
-                      {isRTL ? feature.descriptionAr : feature.descriptionEn}
-                    </span>
-                  </div>
-                );
-              })}
+
+          {/* Services Content */}
+          <div className="relative z-10 flex-1 overflow-y-auto h-[calc(100vh-100px)] px-5 py-4">
+            {/* Featured Services Section */}
+            <div className="mb-6">
+              <div className={`flex items-center gap-2 mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <Sparkles className="w-4 h-4 text-amber-500" />
+                <span className="text-sm font-semibold text-amber-600 dark:text-amber-400">
+                  {isRTL ? 'الأكثر استخداماً' : 'Most Used'}
+                </span>
+              </div>
+              <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                {['financing', 'new-car-request', 'compare'].map((serviceId, i) => {
+                  const feature = appFeatures.find(f => f.id === serviceId)!;
+                  const IconComponent = feature.icon;
+                  return (
+                    <motion.div
+                      key={serviceId}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.1 }}
+                      whileHover={{ scale: 1.02, y: -4 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => {
+                        setSelectedService(serviceId);
+                        setAppsSheetOpen(false);
+                        setTimeout(() => setServiceDetailOpen(true), 300);
+                      }}
+                      className="flex-shrink-0 w-36 cursor-pointer"
+                    >
+                      <div className="relative p-4 rounded-2xl bg-gradient-to-br from-background to-muted/50 border border-border/50 hover:border-blue-500/50 shadow-lg hover:shadow-xl transition-all duration-300 group">
+                        {/* Badge */}
+                        {i === 0 && (
+                          <div className="absolute -top-2 -right-2 px-2 py-0.5 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full text-[10px] font-bold text-white shadow-lg">
+                            {isRTL ? 'مميز' : 'HOT'}
+                          </div>
+                        )}
+                        
+                        {/* Icon */}
+                        <div className={`w-12 h-12 rounded-xl ${feature.color} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-md`}>
+                          <IconComponent className="w-6 h-6 text-white" />
+                        </div>
+                        
+                        {/* Title */}
+                        <h4 className="font-semibold text-sm mb-1 line-clamp-1">
+                          {isRTL ? feature.titleAr : feature.titleEn}
+                        </h4>
+                        
+                        {/* Description */}
+                        <p className="text-xs text-muted-foreground line-clamp-2">
+                          {isRTL ? feature.descriptionAr : feature.descriptionEn}
+                        </p>
+                        
+                        {/* Arrow */}
+                        <div className="absolute bottom-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <ChevronLeft className={`w-4 h-4 text-blue-500 ${isRTL ? '' : 'rotate-180'}`} />
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* All Services Grid */}
+            <div className="mb-4">
+              <div className={`flex items-center gap-2 mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <LayoutGrid className="w-4 h-4 text-blue-500" />
+                <span className="text-sm font-semibold text-muted-foreground">
+                  {isRTL ? 'جميع الخدمات' : 'All Services'}
+                </span>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-3">
+                {appFeatures.map((feature, i) => {
+                  const IconComponent = feature.icon;
+                  const isPopular = ['financing', 'new-car-request', 'compare'].includes(feature.id);
+                  
+                  return (
+                    <motion.div
+                      key={feature.id}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.1 + i * 0.03 }}
+                      whileHover={{ scale: 1.03, y: -2 }}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => {
+                        setSelectedService(feature.id);
+                        setAppsSheetOpen(false);
+                        setTimeout(() => setServiceDetailOpen(true), 300);
+                      }}
+                      className="relative cursor-pointer group"
+                    >
+                      <div className={`p-4 rounded-2xl bg-gradient-to-br from-background to-muted/30 border border-border/50 hover:border-blue-500/40 transition-all duration-300 ${isPopular ? 'ring-1 ring-amber-500/20' : ''}`}>
+                        {/* Icon Container */}
+                        <div className="relative mb-3">
+                          <motion.div 
+                            whileHover={{ rotate: [0, -10, 10, 0] }}
+                            transition={{ duration: 0.5 }}
+                            className={`w-11 h-11 rounded-xl ${feature.color} flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow`}
+                          >
+                            <IconComponent className="w-5 h-5 text-white" />
+                          </motion.div>
+                          
+                          {/* Status Dot */}
+                          <motion.div 
+                            animate={{ scale: [1, 1.2, 1] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                            className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-green-500 border-2 border-background"
+                          />
+                        </div>
+                        
+                        {/* Content */}
+                        <div className={isRTL ? 'text-right' : 'text-left'}>
+                          <h4 className="font-semibold text-sm mb-0.5">
+                            {isRTL ? feature.titleAr : feature.titleEn}
+                          </h4>
+                          <p className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed">
+                            {isRTL ? feature.descriptionAr : feature.descriptionEn}
+                          </p>
+                        </div>
+                        
+                        {/* Hover Effect */}
+                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/0 to-cyan-500/0 group-hover:from-blue-500/5 group-hover:to-cyan-500/5 transition-all duration-300" />
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Quick Actions Footer */}
+            <div className="sticky bottom-0 pt-4 pb-6 bg-gradient-to-t from-background via-background to-transparent">
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  className="flex-1 h-11 rounded-xl border-dashed"
+                  onClick={() => {
+                    setSelectedService('settings');
+                    setAppsSheetOpen(false);
+                    setTimeout(() => setServiceDetailOpen(true), 300);
+                  }}
+                >
+                  <Settings className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                  {isRTL ? 'الإعدادات' : 'Settings'}
+                </Button>
+                <Button
+                  className="flex-1 h-11 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white shadow-lg"
+                  onClick={() => {
+                    setSelectedService('new-car-request');
+                    setAppsSheetOpen(false);
+                    setTimeout(() => setServiceDetailOpen(true), 300);
+                  }}
+                >
+                  <Plus className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                  {isRTL ? 'طلب جديد' : 'New Request'}
+                </Button>
+              </div>
             </div>
           </div>
         </SheetContent>
       </Sheet>
 
-      {/* Service Detail Panel - تصميم جديد ومحسن */}
+      {/* Service Detail Panel - تصميم مبتكر ومتطور */}
       <Dialog open={serviceDetailOpen} onOpenChange={setServiceDetailOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse justify-start' : ''}`}>
-              {selectedService && appFeatures.find(f => f.id === selectedService) && (
-                <>
-                  {(() => {
-                    const feature = appFeatures.find(f => f.id === selectedService)!;
-                    const IconComponent = feature.icon;
-                    return (
-                      <motion.div 
-                        initial={{ scale: 0, rotate: -180 }}
-                        animate={{ scale: 1, rotate: 0 }}
-                        className={`w-10 h-10 rounded-xl ${feature.color} flex items-center justify-center shadow-lg`}
-                      >
-                        <IconComponent className="w-5 h-5 text-white" />
-                      </motion.div>
-                    );
-                  })()}
-                  <div>
-                    <span className="text-lg font-bold">{isRTL ? appFeatures.find(f => f.id === selectedService)?.titleAr : appFeatures.find(f => f.id === selectedService)?.titleEn}</span>
-                    <p className="text-xs text-muted-foreground font-normal">{isRTL ? appFeatures.find(f => f.id === selectedService)?.descriptionAr : appFeatures.find(f => f.id === selectedService)?.descriptionEn}</p>
-                  </div>
-                </>
-              )}
-            </DialogTitle>
-          </DialogHeader>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden p-0 gap-0">
+          {/* Animated Header Background */}
+          <div className="relative">
+            <div className="absolute inset-0 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-cyan-500/5 to-teal-500/10" />
+              <motion.div 
+                animate={{ x: [0, 50, 0], opacity: [0.3, 0.5, 0.3] }}
+                transition={{ duration: 4, repeat: Infinity }}
+                className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/20 rounded-full blur-3xl"
+              />
+              <motion.div 
+                animate={{ x: [0, -30, 0], opacity: [0.3, 0.5, 0.3] }}
+                transition={{ duration: 5, repeat: Infinity, delay: 0.5 }}
+                className="absolute bottom-0 left-0 w-24 h-24 bg-blue-500/20 rounded-full blur-3xl"
+              />
+            </div>
+            
+            <DialogHeader className={`relative z-10 p-6 pb-4 ${isRTL ? 'text-right' : 'text-left'}`}>
+              <DialogTitle className="flex items-start gap-4">
+                {selectedService && appFeatures.find(f => f.id === selectedService) && (
+                  <>
+                    {(() => {
+                      const feature = appFeatures.find(f => f.id === selectedService)!;
+                      const IconComponent = feature.icon;
+                      return (
+                        <motion.div 
+                          initial={{ scale: 0, rotate: -180 }}
+                          animate={{ scale: 1, rotate: 0 }}
+                          transition={{ type: "spring", stiffness: 200, damping: 15 }}
+                          className={`relative`}
+                        >
+                          <div className={`w-14 h-14 rounded-2xl ${feature.color} flex items-center justify-center shadow-xl`}>
+                            <IconComponent className="w-7 h-7 text-white" />
+                          </div>
+                          <motion.div 
+                            animate={{ scale: [1, 1.2, 1] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                            className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-green-500 border-2 border-background"
+                          />
+                        </motion.div>
+                      );
+                    })()}
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+                          {isRTL ? appFeatures.find(f => f.id === selectedService)?.titleAr : appFeatures.find(f => f.id === selectedService)?.titleEn}
+                        </span>
+                        <Badge variant="secondary" className="text-[10px] px-2 py-0.5">
+                          {isRTL ? 'متاح' : 'Active'}
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-muted-foreground font-normal mt-1">
+                        {isRTL ? appFeatures.find(f => f.id === selectedService)?.descriptionAr : appFeatures.find(f => f.id === selectedService)?.descriptionEn}
+                      </p>
+                    </div>
+                  </>
+                )}
+              </DialogTitle>
+            </DialogHeader>
+          </div>
           
-          {/* Service Content */}
-          <div className="space-y-4">
+          {/* Service Content with Custom Scrollbar */}
+          <div className="overflow-y-auto max-h-[calc(90vh-140px)] px-6 pb-6">
+            <div className="space-y-4">
             {/* ========== خدمة تتبع الطلب - تصميم جديد ========== */}
             {selectedService === 'order-tracking' && (
               <div className="space-y-4">
@@ -8848,6 +9043,7 @@ export default function CarLinkPage() {
                   );
                 })}
               </div>
+            </div>
             </div>
           </div>
         </DialogContent>
