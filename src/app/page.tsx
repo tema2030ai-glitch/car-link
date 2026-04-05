@@ -939,6 +939,22 @@ export default function CarLinkPage() {
   const [mpTrim, setMpTrim] = useState('');
   const [mpPrice, setMpPrice] = useState('');
 
+  // Car Models by Brand - must be defined before getAvailableModels
+  const carModelsByBrand: Record<string, string[]> = {
+    'Toyota': ['Camry', 'Corolla', 'Yaris', 'Land Cruiser', 'Prado', 'Hilux', 'RAV4', 'Highlander', 'Innova', 'Fortuner'],
+    'Hyundai': ['Elantra', 'Sonata', 'Accent', 'Tucson', 'Santa Fe', 'Palisade', 'Kona', 'Creta', 'Veloster', 'Ioniq'],
+    'Honda': ['Accord', 'Civic', 'City', 'CR-V', 'HR-V', 'Pilot', 'Odyssey', 'Fit', 'BR-V', 'Passport'],
+    'Kia': ['Optima', 'K5', 'Rio', 'Sportage', 'Sorento', 'Telluride', 'Seltos', 'Carnival', 'Stinger', 'EV6'],
+    'Nissan': ['Altima', 'Sentra', 'Sunny', 'Patrol', 'X-Trail', 'Murano', 'Kicks', 'Navara', 'Titan', 'Juke'],
+    'Mazda': ['Mazda3', 'Mazda6', 'CX-3', 'CX-5', 'CX-9', 'CX-30', 'MX-5', 'Mazda2', 'BT-50', 'CX-7'],
+    'Ford': ['Fusion', 'Focus', 'Fiesta', 'Explorer', 'Edge', 'Escape', 'F-150', 'Expedition', 'Ranger', 'Bronco'],
+    'Chevrolet': ['Malibu', 'Cruze', 'Spark', 'Equinox', 'Traverse', 'Tahoe', 'Suburban', 'Silverado', 'Trailblazer', 'Blazer'],
+    'Mercedes': ['C-Class', 'E-Class', 'S-Class', 'A-Class', 'GLC', 'GLE', 'GLS', 'G-Class', 'CLA', 'AMG GT'],
+    'BMW': ['3 Series', '5 Series', '7 Series', 'X3', 'X5', 'X7', 'M3', 'M5', 'X6', 'i4'],
+    'Lexus': ['ES', 'LS', 'IS', 'RX', 'NX', 'GX', 'LX', 'UX', 'LC', 'RC'],
+    'Audi': ['A3', 'A4', 'A6', 'A8', 'Q3', 'Q5', 'Q7', 'Q8', 'RS6', 'e-tron']
+  };
+
   // Get models based on selected brand
   const getAvailableModels = () => {
     if (!carRequestBrand || !carModelsByBrand[carRequestBrand]) return [];
@@ -1754,22 +1770,6 @@ export default function CarLinkPage() {
     setMarketAnalysis(null);
     setBankOffers([]);
     setActiveTab('specs');
-  };
-
-  // Car Models by Brand
-  const carModelsByBrand: Record<string, string[]> = {
-    'Toyota': ['Camry', 'Corolla', 'Yaris', 'Land Cruiser', 'Prado', 'Hilux', 'RAV4', 'Highlander', 'Innova', 'Fortuner'],
-    'Hyundai': ['Elantra', 'Sonata', 'Accent', 'Tucson', 'Santa Fe', 'Palisade', 'Kona', 'Creta', 'Veloster', 'Ioniq'],
-    'Honda': ['Accord', 'Civic', 'City', 'CR-V', 'HR-V', 'Pilot', 'Odyssey', 'Fit', 'BR-V', 'Passport'],
-    'Kia': ['Optima', 'K5', 'Rio', 'Sportage', 'Sorento', 'Telluride', 'Seltos', 'Carnival', 'Stinger', 'EV6'],
-    'Nissan': ['Altima', 'Sentra', 'Sunny', 'Patrol', 'X-Trail', 'Murano', 'Kicks', 'Navara', 'Titan', 'Juke'],
-    'Mazda': ['Mazda3', 'Mazda6', 'CX-3', 'CX-5', 'CX-9', 'CX-30', 'MX-5', 'Mazda2', 'BT-50', 'CX-7'],
-    'Ford': ['Fusion', 'Focus', 'Fiesta', 'Explorer', 'Edge', 'Escape', 'F-150', 'Expedition', 'Ranger', 'Bronco'],
-    'Chevrolet': ['Malibu', 'Cruze', 'Spark', 'Equinox', 'Traverse', 'Tahoe', 'Suburban', 'Silverado', 'Trailblazer', 'Blazer'],
-    'Mercedes': ['C-Class', 'E-Class', 'S-Class', 'A-Class', 'GLC', 'GLE', 'GLS', 'G-Class', 'CLA', 'AMG GT'],
-    'BMW': ['3 Series', '5 Series', '7 Series', 'X3', 'X5', 'X7', 'M3', 'M5', 'X6', 'i4'],
-    'Lexus': ['ES', 'LS', 'IS', 'RX', 'NX', 'GX', 'LX', 'UX', 'LC', 'RC'],
-    'Audi': ['A3', 'A4', 'A6', 'A8', 'Q3', 'Q5', 'Q7', 'Q8', 'RS6', 'e-tron']
   };
 
   // Financing Application Chatbot Functions
