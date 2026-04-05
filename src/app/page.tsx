@@ -55,7 +55,7 @@ import {
   Calendar, RefreshCw, X, Plus, Send, Bot, User, Globe, Languages, Camera, QrCode,
   Ruler, Users, Box, Award, Car, Palette, Road, CircleDot, DoorOpen, Package, GaugeIcon, LayoutGrid,
   FileText, ClipboardList, Building2, LogIn, LogOut, Settings, Bell, Ticket, MapPin, Phone, Clock,
-  Star, ArrowRight, Lightbulb, ShoppingCart, GitCompare, ArrowLeftRight, PartyPopper
+  Star, ArrowRight, Lightbulb, ShoppingCart, GitCompare, ArrowLeftRight, PartyPopper, Search, Copy
 } from 'lucide-react';
 
 // Translations
@@ -6796,23 +6796,30 @@ export default function CarLinkPage() {
         </SheetContent>
       </Sheet>
 
-      {/* Service Detail Panel */}
+      {/* Service Detail Panel - تصميم جديد ومحسن */}
       <Dialog open={serviceDetailOpen} onOpenChange={setServiceDetailOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse justify-start' : ''}`}>
+            <DialogTitle className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse justify-start' : ''}`}>
               {selectedService && appFeatures.find(f => f.id === selectedService) && (
                 <>
                   {(() => {
                     const feature = appFeatures.find(f => f.id === selectedService)!;
                     const IconComponent = feature.icon;
                     return (
-                      <div className={`w-8 h-8 rounded-lg ${feature.color} flex items-center justify-center`}>
-                        <IconComponent className="w-4 h-4 text-white" />
-                      </div>
+                      <motion.div 
+                        initial={{ scale: 0, rotate: -180 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        className={`w-10 h-10 rounded-xl ${feature.color} flex items-center justify-center shadow-lg`}
+                      >
+                        <IconComponent className="w-5 h-5 text-white" />
+                      </motion.div>
                     );
                   })()}
-                  <span>{isRTL ? appFeatures.find(f => f.id === selectedService)?.titleAr : appFeatures.find(f => f.id === selectedService)?.titleEn}</span>
+                  <div>
+                    <span className="text-lg font-bold">{isRTL ? appFeatures.find(f => f.id === selectedService)?.titleAr : appFeatures.find(f => f.id === selectedService)?.titleEn}</span>
+                    <p className="text-xs text-muted-foreground font-normal">{isRTL ? appFeatures.find(f => f.id === selectedService)?.descriptionAr : appFeatures.find(f => f.id === selectedService)?.descriptionEn}</p>
+                  </div>
                 </>
               )}
             </DialogTitle>
@@ -6820,352 +6827,533 @@ export default function CarLinkPage() {
           
           {/* Service Content */}
           <div className="space-y-4">
+            {/* ========== خدمة تتبع الطلب - تصميم جديد ========== */}
             {selectedService === 'order-tracking' && (
               <div className="space-y-4">
-                <div className={`p-4 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 rounded-xl border border-cyan-500/30 ${isRTL ? 'text-right' : 'text-left'}`}>
-                  <h4 className="font-bold text-lg mb-1">{isRTL ? 'تتبع طلب التمويل' : 'Track Financing Order'}</h4>
-                  <p className="text-sm text-muted-foreground">{isRTL ? 'أدخل رقم الطلب لمتابعة حالته' : 'Enter order number to track status'}</p>
+                {/* شريط البحث */}
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-2xl blur-xl" />
+                  <div className="relative p-4 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 rounded-2xl border border-cyan-500/30">
+                    <div className="flex gap-3">
+                      <div className="relative flex-1">
+                        <Input
+                          placeholder={isRTL ? 'أدخل رقم الطلب (مثال: CL-2024-XXXXX)' : 'Enter order number (e.g., CL-2024-XXXXX)'}
+                          value={orderSearchNumber}
+                          onChange={(e) => setOrderSearchNumber(e.target.value.toUpperCase())}
+                          className="h-14 text-lg font-mono bg-white/50 dark:bg-black/20 border-2 border-cyan-500/30 focus:border-cyan-500 rounded-xl"
+                          dir="ltr"
+                        />
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2">
+                          <ClipboardList className="w-5 h-5 text-cyan-500" />
+                        </div>
+                      </div>
+                      <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                        <Button
+                          className="h-14 px-8 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white rounded-xl shadow-lg"
+                          onClick={() => {
+                            if (orderSearchNumber.length < 10) {
+                              toast({ title: isRTL ? 'يرجى إدخال رقم طلب صحيح' : 'Please enter a valid order number', variant: 'destructive' });
+                              return;
+                            }
+                            const found = ordersList.find(o => o.orderNumber === orderSearchNumber);
+                            if (found) {
+                              setFoundOrder(found);
+                              setOrderStatus(found.status || 'pending');
+                            } else {
+                              setFoundOrder({
+                                orderNumber: orderSearchNumber,
+                                status: 'pending',
+                                date: new Date().toLocaleDateString(isRTL ? 'ar-SA' : 'en-US'),
+                                carBrand: 'Toyota',
+                                carModel: 'Camry',
+                                year: 2024,
+                                financingAmount: '85,000',
+                                bank: isRTL ? 'بنك الراجحي' : 'Al Rajhi Bank',
+                              });
+                              setOrderStatus('pending');
+                            }
+                            toast({ title: isRTL ? '✅ تم العثور على الطلب' : '✅ Order found' });
+                          }}
+                        >
+                          <Search className={`w-5 h-5 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                          {isRTL ? 'بحث' : 'Search'}
+                        </Button>
+                      </motion.div>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Search Input */}
-                <div className="flex gap-2">
-                  <Input
-                    placeholder={isRTL ? 'مثال: CL-XXXXXX-XXXX' : 'e.g., CL-XXXXXX-XXXX'}
-                    value={orderSearchNumber}
-                    onChange={(e) => setOrderSearchNumber(e.target.value.toUpperCase())}
-                    className="flex-1 h-12 text-lg font-mono"
-                    dir="ltr"
-                  />
-                  <Button
-                    className="sky-gradient text-white h-12 px-6"
-                    onClick={() => {
-                      // Search in orders list
-                      const found = ordersList.find(o => o.orderNumber === orderSearchNumber);
-                      if (found) {
-                        setFoundOrder(found);
-                        setOrderStatus(found.status || 'pending');
-                        toast({ title: isRTL ? 'تم العثور على الطلب' : 'Order found' });
-                      } else if (orderSearchNumber.length >= 10) {
-                        // If not found but looks like valid format, show demo
-                        setFoundOrder({
-                          orderNumber: orderSearchNumber,
-                          status: 'pending',
-                          date: new Date().toLocaleDateString(isRTL ? 'ar-SA' : 'en-US'),
-                          carBrand: isRTL ? 'تويوتا' : 'Toyota',
-                          carModel: isRTL ? 'كامري' : 'Camry',
-                          financingAmount: '85,000',
-                          bank: isRTL ? 'بنك الراجحي' : 'Al Rajhi Bank',
-                        });
-                        setOrderStatus('pending');
-                        toast({ title: isRTL ? 'تم العثور على الطلب' : 'Order found' });
-                      } else {
-                        toast({ title: isRTL ? 'لم يتم العثور على الطلب' : 'Order not found', variant: 'destructive' });
-                      }
-                    }}
-                  >
-                    <ClipboardList className={`w-5 h-5 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                    {isRTL ? 'بحث' : 'Search'}
-                  </Button>
-                </div>
-
-                {/* My Orders List */}
+                {/* قائمة الطلبات السابقة */}
                 {ordersList.length > 0 && !foundOrder && (
                   <div className="space-y-2">
-                    <p className="font-semibold">{isRTL ? 'طلباتي:' : 'My Orders:'}</p>
-                    {ordersList.map((order: any, i: number) => (
-                      <div 
-                        key={i}
-                        className={`p-3 bg-muted/50 rounded-lg flex justify-between items-center cursor-pointer hover:bg-muted transition-colors ${isRTL ? 'flex-row-reverse' : ''}`}
-                        onClick={() => {
-                          setOrderSearchNumber(order.orderNumber);
-                          setFoundOrder(order);
-                          setOrderStatus(order.status || 'pending');
-                        }}
-                      >
-                        <div className={isRTL ? 'text-right' : 'text-left'}>
-                          <p className="font-mono font-bold text-primary">{order.orderNumber}</p>
-                          <p className="text-xs text-muted-foreground">{order.carBrand} {order.carModel}</p>
-                        </div>
-                        <Badge variant={order.status === 'pending' ? 'secondary' : 'default'}>
-                          {order.status === 'pending' ? (isRTL ? 'قيد المراجعة' : 'Pending') : order.status}
-                        </Badge>
-                      </div>
-                    ))}
+                    <p className="font-semibold text-sm text-muted-foreground">{isRTL ? '📋 طلباتك السابقة' : '📋 Your Previous Orders'}</p>
+                    <div className="max-h-40 overflow-y-auto space-y-2">
+                      {ordersList.map((order: any, i: number) => (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: i * 0.1 }}
+                          className="p-3 bg-gradient-to-r from-muted/50 to-muted/30 rounded-xl flex justify-between items-center cursor-pointer hover:from-cyan-500/10 hover:to-blue-500/10 transition-all border border-transparent hover:border-cyan-500/30"
+                          onClick={() => {
+                            setOrderSearchNumber(order.orderNumber);
+                            setFoundOrder(order);
+                            setOrderStatus(order.status || 'pending');
+                          }}
+                        >
+                          <div>
+                            <p className="font-mono font-bold text-primary">{order.orderNumber}</p>
+                            <p className="text-xs text-muted-foreground">{order.carBrand} {order.carModel}</p>
+                          </div>
+                          <Badge className={order.status === 'pending' ? 'bg-amber-500' : order.status === 'approved' ? 'bg-green-500' : 'bg-blue-500'}>
+                            {order.status === 'pending' ? (isRTL ? 'قيد المراجعة' : 'Pending') : 
+                             order.status === 'approved' ? (isRTL ? 'موافق عليه' : 'Approved') : 
+                             order.status === 'documents' ? (isRTL ? 'المستندات' : 'Documents') :
+                             order.status === 'final_approval' ? (isRTL ? 'الموافقة النهائية' : 'Final Approval') :
+                             order.status === 'contract' ? (isRTL ? 'العقد' : 'Contract') :
+                             order.status === 'delivery' ? (isRTL ? 'التسليم' : 'Delivery') : order.status}
+                          </Badge>
+                        </motion.div>
+                      ))}
+                    </div>
                   </div>
                 )}
 
-                {/* Order Result */}
-                {foundOrder ? (
-                  <div className="space-y-4">
-                    {/* Order Info Card */}
-                    <Card className="bg-primary/5 border-primary/30">
+                {/* نتيجة البحث */}
+                {foundOrder && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="space-y-4"
+                  >
+                    {/* بطاقة معلومات الطلب */}
+                    <Card className="border-2 border-cyan-500/30 bg-gradient-to-br from-cyan-500/5 to-blue-500/5">
                       <CardContent className="p-4">
-                        <div className="flex items-center justify-between mb-3">
-                          <Badge className="bg-primary text-white font-mono">{foundOrder.orderNumber}</Badge>
-                          <span className="text-xs text-muted-foreground">{foundOrder.date || foundOrder.createdAt?.toLocaleDateString?.() || new Date().toLocaleDateString()}</span>
+                        <div className="flex items-center justify-between mb-4">
+                          <Badge className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-mono text-base px-4 py-1">
+                            {foundOrder.orderNumber}
+                          </Badge>
+                          <span className="text-sm text-muted-foreground">{foundOrder.date}</span>
                         </div>
-                        <div className="grid grid-cols-2 gap-3 text-sm">
-                          <div>
-                            <span className="text-muted-foreground">{isRTL ? 'السيارة:' : 'Car:'}</span>
-                            <p className="font-semibold">{foundOrder.carBrand} {foundOrder.carModel}</p>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="p-3 bg-white/50 dark:bg-black/10 rounded-xl">
+                            <p className="text-xs text-muted-foreground">{isRTL ? '🚗 السيارة' : '🚗 Car'}</p>
+                            <p className="font-bold">{foundOrder.carBrand} {foundOrder.carModel}</p>
                           </div>
-                          <div>
-                            <span className="text-muted-foreground">{isRTL ? 'مبلغ التمويل:' : 'Amount:'}</span>
-                            <p className="font-semibold">{foundOrder.financingAmount || foundOrder.totalAmount?.toLocaleString() || '-'} {isRTL ? 'ريال' : 'SAR'}</p>
+                          <div className="p-3 bg-white/50 dark:bg-black/10 rounded-xl">
+                            <p className="text-xs text-muted-foreground">{isRTL ? '💰 مبلغ التمويل' : '💰 Amount'}</p>
+                            <p className="font-bold">{foundOrder.financingAmount} {isRTL ? 'ريال' : 'SAR'}</p>
+                          </div>
+                          <div className="p-3 bg-white/50 dark:bg-black/10 rounded-xl">
+                            <p className="text-xs text-muted-foreground">{isRTL ? '🏦 البنك' : '🏦 Bank'}</p>
+                            <p className="font-bold">{foundOrder.bank}</p>
+                          </div>
+                          <div className="p-3 bg-white/50 dark:bg-black/10 rounded-xl">
+                            <p className="text-xs text-muted-foreground">{isRTL ? '📅 الحالة' : '📅 Status'}</p>
+                            <p className="font-bold text-green-600">{isRTL ? 'قيد المعالجة' : 'In Progress'}</p>
                           </div>
                         </div>
                       </CardContent>
                     </Card>
 
-                    {/* Order Tracking Progress */}
-                    {renderOrderTracking()}
-
-                    {/* Action Buttons */}
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        className="flex-1 h-12"
-                        onClick={() => {
+                    {/* خط الزمن لتتبع الطلب */}
+                    <div className="relative">
+                      <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-cyan-500 via-blue-500 to-purple-500 rounded-full -translate-x-1/2" />
+                      <div className="space-y-6">
+                        {[
+                          { id: 'pending', icon: Clock, title: isRTL ? 'استلام الطلب' : 'Order Received', desc: isRTL ? 'تم استلام طلبك بنجاح' : 'Your order has been received' },
+                          { id: 'approved', icon: CheckCircle2, title: isRTL ? 'الموافقة المبدئية' : 'Initial Approval', desc: isRTL ? 'تمت الموافقة المبدئية من البنك' : 'Initial bank approval granted' },
+                          { id: 'documents', icon: FileText, title: isRTL ? 'استكمال المستندات' : 'Documents', desc: isRTL ? 'يرجى رفع المستندات المطلوبة' : 'Please upload required documents' },
+                          { id: 'final_approval', icon: Award, title: isRTL ? 'الموافقة النهائية' : 'Final Approval', desc: isRTL ? 'الموافقة النهائية من البنك' : 'Final bank approval' },
+                          { id: 'contract', icon: FileText, title: isRTL ? 'توقيع العقد' : 'Contract Signing', desc: isRTL ? 'توقيع عقد التمويل' : 'Sign financing contract' },
+                          { id: 'delivery', icon: Car, title: isRTL ? 'تسليم السيارة' : 'Car Delivery', desc: isRTL ? 'استلام سيارتك الجديدة' : 'Receive your new car' },
+                        ].map((step, index) => {
                           const steps = ['pending', 'approved', 'documents', 'final_approval', 'contract', 'delivery'];
                           const currentIndex = steps.indexOf(orderStatus);
-                          if (currentIndex < steps.length - 1) {
-                            const nextStatus = steps[currentIndex + 1];
-                            setOrderStatus(nextStatus);
-                            // Update in orders list
-                            setOrdersList(prev => prev.map(o => 
-                              o.orderNumber === foundOrder.orderNumber ? {...o, status: nextStatus} : o
-                            ));
-                            if (nextStatus === 'documents') {
-                              setShowDocumentsForm(true);
-                              toast({ title: isRTL ? 'يرجى استكمال المستندات المطلوبة' : 'Please complete required documents' });
-                            } else {
-                              toast({ title: isRTL ? 'تم تحديث الحالة' : 'Status updated' });
-                            }
-                          }
-                        }}
-                      >
-                        <RefreshCw className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                        {isRTL ? 'تحديث' : 'Refresh'}
-                      </Button>
+                          const stepIndex = steps.indexOf(step.id);
+                          const isCompleted = stepIndex < currentIndex;
+                          const isCurrent = stepIndex === currentIndex;
+                          const IconComp = step.icon;
+                          
+                          return (
+                            <motion.div
+                              key={step.id}
+                              initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: index * 0.1 }}
+                              className={`relative flex items-center gap-4 ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}
+                            >
+                              <div className={`flex-1 ${index % 2 === 0 ? 'text-right' : 'text-left'}`}>
+                                <div className={`p-4 rounded-xl ${isCompleted ? 'bg-green-500/10 border border-green-500/30' : isCurrent ? 'bg-cyan-500/10 border-2 border-cyan-500' : 'bg-muted/30'}`}>
+                                  <p className={`font-bold ${isCurrent ? 'text-cyan-600' : isCompleted ? 'text-green-600' : ''}`}>{step.title}</p>
+                                  <p className="text-xs text-muted-foreground">{step.desc}</p>
+                                </div>
+                              </div>
+                              <div className={`z-10 w-12 h-12 rounded-full flex items-center justify-center ${isCompleted ? 'bg-green-500' : isCurrent ? 'bg-cyan-500 animate-pulse' : 'bg-muted'}`}>
+                                <IconComp className={`w-6 h-6 ${isCompleted || isCurrent ? 'text-white' : 'text-muted-foreground'}`} />
+                              </div>
+                              <div className="flex-1" />
+                            </motion.div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* أزرار الإجراءات */}
+                    <div className="flex gap-3">
                       <Button
-                        className="flex-1 sky-gradient text-white h-12"
+                        variant="outline"
+                        className="flex-1 h-12 rounded-xl border-2"
                         onClick={() => {
                           setFoundOrder(null);
                           setOrderSearchNumber('');
                         }}
                       >
-                        {isRTL ? 'طلب جديد' : 'New Search'}
+                        <RefreshCw className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                        {isRTL ? 'بحث جديد' : 'New Search'}
+                      </Button>
+                      <Button
+                        className="flex-1 h-12 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl"
+                        onClick={() => toast({ title: isRTL ? '📞 سيتم التواصل معك قريباً' : '📞 We will contact you soon' })}
+                      >
+                        <Phone className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                        {isRTL ? 'تواصل معنا' : 'Contact Us'}
                       </Button>
                     </div>
-                  </div>
-                ) : (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <ClipboardList className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                    <p>{isRTL ? 'أدخل رقم الطلب لتتبع حالته' : 'Enter order number to track status'}</p>
-                    {ordersList.length === 0 && (
-                      <p className="text-xs mt-2 text-muted-foreground">
-                        {isRTL ? 'لم تقم بتقديم أي طلبات بعد' : 'You haven\'t submitted any orders yet'}
-                      </p>
-                    )}
+                  </motion.div>
+                )}
+
+                {/* حالة عدم وجود طلبات */}
+                {!foundOrder && ordersList.length === 0 && (
+                  <div className="text-center py-12">
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="w-20 h-20 rounded-full bg-cyan-500/10 flex items-center justify-center mx-auto mb-4"
+                    >
+                      <ClipboardList className="w-10 h-10 text-cyan-500" />
+                    </motion.div>
+                    <p className="text-muted-foreground">{isRTL ? 'لم تقم بتقديم أي طلبات بعد' : 'You haven\'t submitted any orders yet'}</p>
+                    <Button
+                      variant="link"
+                      className="mt-2 text-cyan-500"
+                      onClick={() => {
+                        setServiceDetailOpen(false);
+                        setSelectedService('new-car-request');
+                        setTimeout(() => setServiceDetailOpen(true), 100);
+                      }}
+                    >
+                      {isRTL ? 'قدم طلبك الآن ←' : 'Submit your request now →'}
+                    </Button>
                   </div>
                 )}
               </div>
             )}
             
+            {/* ========== خدمة طلب سيارة جديدة - تصميم جديد ========== */}
             {selectedService === 'new-car-request' && (
               <div className="space-y-4">
                 {!carRequestSubmitted ? (
                   <>
-                    <div className={`p-4 bg-gradient-to-r from-emerald-500/10 to-green-500/10 rounded-xl border border-emerald-500/30 ${isRTL ? 'text-right' : 'text-left'}`}>
-                      <h4 className="font-bold text-lg mb-1">{isRTL ? 'طلب سيارة جديدة' : 'New Car Request'}</h4>
-                      <p className="text-sm text-muted-foreground">{isRTL ? 'أخبرنا عن السيارة التي تبحث عنها وسنتواصل معك' : 'Tell us about the car you\'re looking for'}</p>
-                    </div>
-
-                    {/* Car Details */}
-                    <div className="space-y-3">
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <Label className="font-semibold">{isRTL ? 'الماركة' : 'Brand'}</Label>
-                          <select className="w-full h-10 rounded-md border bg-background px-3" value={carRequestBrand} onChange={(e) => setCarRequestBrand(e.target.value)}>
-                            <option value="">{isRTL ? 'اختر الماركة' : 'Select Brand'}</option>
-                            <option value="toyota">Toyota</option>
-                            <option value="hyundai">Hyundai</option>
-                            <option value="honda">Honda</option>
-                            <option value="nissan">Nissan</option>
-                            <option value="kia">Kia</option>
-                            <option value="mazda">Mazda</option>
-                            <option value="ford">Ford</option>
-                            <option value="chevrolet">Chevrolet</option>
-                          </select>
-                        </div>
-                        <div>
-                          <Label className="font-semibold">{isRTL ? 'الموديل' : 'Model'}</Label>
-                          <Input placeholder={isRTL ? 'مثال: كامري' : 'e.g., Camry'} value={carRequestModel} onChange={(e) => setCarRequestModel(e.target.value)} />
+                    {/* ترحيب */}
+                    <motion.div 
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="relative overflow-hidden"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-green-500/20 rounded-2xl blur-xl" />
+                      <div className="relative p-5 bg-gradient-to-r from-emerald-500/10 to-green-500/10 rounded-2xl border border-emerald-500/30">
+                        <div className="flex items-center gap-4">
+                          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center shadow-lg">
+                            <Car className="w-7 h-7 text-white" />
+                          </div>
+                          <div>
+                            <h4 className="font-bold text-lg">{isRTL ? 'ابحث عن سيارتك الجديدة' : 'Find Your New Car'}</h4>
+                            <p className="text-sm text-muted-foreground">{isRTL ? 'أخبرنا عن السيارة التي تحلم بها' : 'Tell us about your dream car'}</p>
+                          </div>
                         </div>
                       </div>
+                    </motion.div>
 
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <Label className="font-semibold">{isRTL ? 'سنة الموديل' : 'Model Year'}</Label>
-                          <select className="w-full h-10 rounded-md border bg-background px-3" value={carRequestYear} onChange={(e) => setCarRequestYear(e.target.value)}>
-                            <option value="">{isRTL ? 'اختر السنة' : 'Select Year'}</option>
-                            {[2024, 2023, 2022, 2021, 2020].map(y => (
-                              <option key={y} value={y}>{y}</option>
-                            ))}
-                          </select>
-                        </div>
-                        <div>
-                          <Label className="font-semibold">{isRTL ? 'الفئة' : 'Category'}</Label>
-                          <select className="w-full h-10 rounded-md border bg-background px-3" value={carRequestCategory} onChange={(e) => setCarRequestCategory(e.target.value)}>
-                            <option value="">{isRTL ? 'اختر الفئة' : 'Select Category'}</option>
-                            <option value="sedan">{isRTL ? 'سيدان' : 'Sedan'}</option>
-                            <option value="suv">{isRTL ? 'دفع رباعي' : 'SUV'}</option>
-                            <option value="hatchback">{isRTL ? 'هاتشباك' : 'Hatchback'}</option>
-                            <option value="coupe">{isRTL ? 'كوبيه' : 'Coupe'}</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      {/* Contact Information */}
-                      <div className={`p-4 bg-blue-500/10 rounded-xl border border-blue-500/20 ${isRTL ? 'text-right' : 'text-left'}`}>
-                        <h5 className="font-semibold mb-3 flex items-center gap-2">
-                          <Phone className="w-4 h-4 text-blue-500" />
-                          {isRTL ? 'معلومات التواصل' : 'Contact Information'}
+                    {/* نموذج الطلب */}
+                    <div className="space-y-4">
+                      {/* قسم مواصفات السيارة */}
+                      <div className="p-4 bg-muted/20 rounded-2xl space-y-3">
+                        <h5 className="font-semibold flex items-center gap-2">
+                          <Car className="w-4 h-4 text-emerald-500" />
+                          {isRTL ? 'مواصفات السيارة' : 'Car Specifications'}
                         </h5>
+                        
                         <div className="grid grid-cols-2 gap-3">
                           <div>
-                            <Label className="text-sm">{isRTL ? 'الاسم الكامل' : 'Full Name'}</Label>
-                            <Input placeholder={isRTL ? 'الاسم' : 'Name'} value={carRequestFullName} onChange={(e) => setCarRequestFullName(e.target.value)} />
+                            <Label className="text-sm text-muted-foreground">{isRTL ? 'الماركة' : 'Brand'}</Label>
+                            <select 
+                              className="w-full h-11 rounded-xl border bg-background px-3 mt-1 focus:ring-2 focus:ring-emerald-500/50" 
+                              value={carRequestBrand} 
+                              onChange={(e) => { setCarRequestBrand(e.target.value); setCarRequestModel(''); }}
+                            >
+                              <option value="">{isRTL ? 'اختر الماركة' : 'Select Brand'}</option>
+                              {Object.keys(carModelsByBrand).map(brand => (
+                                <option key={brand} value={brand}>{brand}</option>
+                              ))}
+                            </select>
                           </div>
                           <div>
-                            <Label className="text-sm">{isRTL ? 'رقم الجوال' : 'Phone'}</Label>
-                            <Input placeholder="05xxxxxxxx" value={carRequestPhone} onChange={(e) => setCarRequestPhone(e.target.value)} dir="ltr" />
+                            <Label className="text-sm text-muted-foreground">{isRTL ? 'الموديل' : 'Model'}</Label>
+                            <select 
+                              className="w-full h-11 rounded-xl border bg-background px-3 mt-1 focus:ring-2 focus:ring-emerald-500/50" 
+                              value={carRequestModel} 
+                              onChange={(e) => setCarRequestModel(e.target.value)}
+                              disabled={!carRequestBrand}
+                            >
+                              <option value="">{isRTL ? 'اختر الموديل' : 'Select Model'}</option>
+                              {carRequestBrand && carModelsByBrand[carRequestBrand]?.map(model => (
+                                <option key={model} value={model}>{model}</option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-3 gap-3">
+                          <div>
+                            <Label className="text-sm text-muted-foreground">{isRTL ? 'السنة' : 'Year'}</Label>
+                            <select className="w-full h-11 rounded-xl border bg-background px-3 mt-1" value={carRequestYear} onChange={(e) => setCarRequestYear(e.target.value)}>
+                              <option value="">{isRTL ? 'اختر' : 'Select'}</option>
+                              {[2025, 2024, 2023, 2022, 2021, 2020].map(y => (
+                                <option key={y} value={y}>{y}</option>
+                              ))}
+                            </select>
+                          </div>
+                          <div>
+                            <Label className="text-sm text-muted-foreground">{isRTL ? 'اللون' : 'Color'}</Label>
+                            <select className="w-full h-11 rounded-xl border bg-background px-3 mt-1" value={carRequestColor} onChange={(e) => setCarRequestColor(e.target.value)}>
+                              <option value="">{isRTL ? 'اختر' : 'Select'}</option>
+                              <option value="white">{isRTL ? 'أبيض' : 'White'}</option>
+                              <option value="black">{isRTL ? 'أسود' : 'Black'}</option>
+                              <option value="silver">{isRTL ? 'فضي' : 'Silver'}</option>
+                              <option value="gray">{isRTL ? 'رمادي' : 'Gray'}</option>
+                              <option value="blue">{isRTL ? 'أزرق' : 'Blue'}</option>
+                              <option value="red">{isRTL ? 'أحمر' : 'Red'}</option>
+                            </select>
+                          </div>
+                          <div>
+                            <Label className="text-sm text-muted-foreground">{isRTL ? 'الفئة' : 'Category'}</Label>
+                            <select className="w-full h-11 rounded-xl border bg-background px-3 mt-1" value={carRequestCategory} onChange={(e) => setCarRequestCategory(e.target.value)}>
+                              <option value="">{isRTL ? 'اختر' : 'Select'}</option>
+                              <option value="sedan">{isRTL ? 'سيدان' : 'Sedan'}</option>
+                              <option value="suv">{isRTL ? 'دفع رباعي' : 'SUV'}</option>
+                              <option value="hatchback">{isRTL ? 'هاتشباك' : 'Hatchback'}</option>
+                              <option value="coupe">{isRTL ? 'كوبيه' : 'Coupe'}</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div>
+                          <Label className="text-sm text-muted-foreground">{isRTL ? 'مستوى التجهيز' : 'Trim Level'}</Label>
+                          <div className="flex gap-2 mt-1">
+                            {trimLevels.map(trim => (
+                              <button
+                                key={trim.id}
+                                onClick={() => setCarRequestTrim(trim.id)}
+                                className={`flex-1 p-2 rounded-xl border-2 text-sm font-medium transition-all ${
+                                  carRequestTrim === trim.id 
+                                    ? 'border-emerald-500 bg-emerald-500/10 text-emerald-600' 
+                                    : 'border-muted hover:border-emerald-500/50'
+                                }`}
+                              >
+                                {isRTL ? trim.nameAr : trim.nameEn}
+                              </button>
+                            ))}
                           </div>
                         </div>
                       </div>
 
+                      {/* قسم معلومات التواصل */}
+                      <div className="p-4 bg-blue-500/5 rounded-2xl space-y-3 border border-blue-500/20">
+                        <h5 className="font-semibold flex items-center gap-2">
+                          <User className="w-4 h-4 text-blue-500" />
+                          {isRTL ? 'معلوماتك' : 'Your Information'}
+                        </h5>
+                        
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <Label className="text-sm text-muted-foreground">{isRTL ? 'الاسم الكامل' : 'Full Name'}</Label>
+                            <Input 
+                              placeholder={isRTL ? 'الاسم' : 'Name'} 
+                              value={carRequestFullName} 
+                              onChange={(e) => setCarRequestFullName(e.target.value)}
+                              className="h-11 rounded-xl mt-1"
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-sm text-muted-foreground">{isRTL ? 'رقم الجوال' : 'Phone'}</Label>
+                            <Input 
+                              placeholder="05xxxxxxxx" 
+                              value={carRequestPhone} 
+                              onChange={(e) => setCarRequestPhone(e.target.value)}
+                              className="h-11 rounded-xl mt-1"
+                              dir="ltr"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <Label className="text-sm text-muted-foreground">{isRTL ? 'المدينة' : 'City'}</Label>
+                          <select 
+                            className="w-full h-11 rounded-xl border bg-background px-3 mt-1"
+                            value={carRequestCity}
+                            onChange={(e) => setCarRequestCity(e.target.value)}
+                          >
+                            <option value="">{isRTL ? 'اختر المدينة' : 'Select City'}</option>
+                            <option value="riyadh">{isRTL ? 'الرياض' : 'Riyadh'}</option>
+                            <option value="jeddah">{isRTL ? 'جدة' : 'Jeddah'}</option>
+                            <option value="dammam">{isRTL ? 'الدمام' : 'Dammam'}</option>
+                            <option value="makkah">{isRTL ? 'مكة' : 'Makkah'}</option>
+                            <option value="madinah">{isRTL ? 'المدينة' : 'Madinah'}</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      {/* ملاحظات */}
                       <div>
-                        <Label className="font-semibold">{isRTL ? 'ملاحظات إضافية' : 'Additional Notes'}</Label>
+                        <Label className="text-sm text-muted-foreground">{isRTL ? 'ملاحظات إضافية (اختياري)' : 'Additional Notes (Optional)'}</Label>
                         <Textarea
-                          placeholder={isRTL ? 'أي تفاصيل إضافية عن السيارة المطلوبة' : 'Any additional details about the requested car'}
-                          className="h-20"
+                          placeholder={isRTL ? 'أي تفاصيل إضافية تريد إخبارنا بها...' : 'Any additional details you want to tell us...'}
+                          className="h-20 rounded-xl mt-1 resize-none"
                         />
                       </div>
-                    </div>
 
-                    <Button
-                      className="w-full sky-gradient text-white h-12"
-                      disabled={carRequestSubmitting}
-                      onClick={() => {
-                        if (carRequestBrand && carRequestModel) {
-                          setCarRequestSubmitting(true);
-                          // Generate tracking number
-                          const generateTrackingNumber = () => {
-                            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-                            let part1 = '';
-                            let part2 = '';
-                            for (let i = 0; i < 6; i++) {
-                              part1 += chars.charAt(Math.floor(Math.random() * chars.length));
+                      {/* زر الإرسال */}
+                      <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
+                        <Button
+                          className="w-full h-14 text-lg bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl shadow-lg"
+                          disabled={carRequestSubmitting}
+                          onClick={() => {
+                            if (!carRequestBrand || !carRequestModel) {
+                              toast({ title: isRTL ? '⚠️ يرجى اختيار الماركة والموديل' : '⚠️ Please select brand and model', variant: 'destructive' });
+                              return;
                             }
-                            for (let i = 0; i < 4; i++) {
-                              part2 += chars.charAt(Math.floor(Math.random() * chars.length));
+                            if (!carRequestPhone || carRequestPhone.length < 10) {
+                              toast({ title: isRTL ? '⚠️ يرجى إدخال رقم جوال صحيح' : '⚠️ Please enter a valid phone number', variant: 'destructive' });
+                              return;
                             }
-                            return `CR-${part1}-${part2}`;
-                          };
-                          const trackingNumber = generateTrackingNumber();
-                          setCarRequestTrackingNumber(trackingNumber);
-                          
-                          // Add to orders list
-                          setOrdersList(prev => [...prev, {
-                            orderNumber: trackingNumber,
-                            status: 'pending',
-                            createdAt: new Date(),
-                            carBrand: carRequestBrand,
-                            carModel: carRequestModel,
-                            type: 'car-request',
-                          }]);
-                          
-                          setTimeout(() => {
-                            setCarRequestSubmitting(false);
-                            setCarRequestSubmitted(true);
-                          }, 1000);
-                        } else {
-                          toast({ title: isRTL ? 'يرجى ملء الماركة والموديل' : 'Please fill brand and model', variant: 'destructive' });
-                        }
-                      }}
-                    >
-                      {carRequestSubmitting ? (
-                        <Loader2 className="w-5 h-5 animate-spin" />
-                      ) : (
-                        <>
-                          <Send className={`w-5 h-5 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                          {isRTL ? 'إرسال الطلب' : 'Submit Request'}
-                        </>
-                      )}
-                    </Button>
+                            
+                            setCarRequestSubmitting(true);
+                            
+                            // توليد رقم تتبع
+                            const trackingNumber = `CR-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+                            setCarRequestTrackingNumber(trackingNumber);
+                            
+                            // إضافة للقائمة
+                            setOrdersList(prev => [...prev, {
+                              orderNumber: trackingNumber,
+                              status: 'pending',
+                              createdAt: new Date(),
+                              carBrand: carRequestBrand,
+                              carModel: carRequestModel,
+                              type: 'car-request',
+                            }]);
+                            
+                            setTimeout(() => {
+                              setCarRequestSubmitting(false);
+                              setCarRequestSubmitted(true);
+                            }, 1500);
+                          }}
+                        >
+                          {carRequestSubmitting ? (
+                            <motion.div
+                              animate={{ rotate: 360 }}
+                              transition={{ repeat: Infinity, duration: 1 }}
+                            >
+                              <Loader2 className="w-6 h-6" />
+                            </motion.div>
+                          ) : (
+                            <>
+                              <Send className={`w-5 h-5 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                              {isRTL ? 'إرسال الطلب' : 'Submit Request'}
+                            </>
+                          )}
+                        </Button>
+                      </motion.div>
+                    </div>
                   </>
                 ) : (
-                  /* Success Page */
-                  <div className="text-center py-4">
+                  /* صفحة النجاح */
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="text-center py-6"
+                  >
+                    {/* أيقونة النجاح */}
                     <motion.div
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      className="w-20 h-20 rounded-full bg-green-500/10 flex items-center justify-center mx-auto mb-4"
+                      transition={{ type: "spring", stiffness: 200, damping: 10 }}
+                      className="w-24 h-24 rounded-full bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-emerald-500/30"
                     >
-                      <CheckCircle2 className="w-10 h-10 text-green-500" />
+                      <CheckCircle2 className="w-12 h-12 text-white" />
                     </motion.div>
 
-                    <h3 className="text-xl font-bold mb-2">{isRTL ? 'تم إرسال طلبك بنجاح!' : 'Request Submitted Successfully!'}</h3>
-                    <p className="text-sm text-muted-foreground mb-4">{isRTL ? 'سيتم التواصل معك قريباً' : 'We will contact you soon'}</p>
+                    <h3 className="text-2xl font-bold mb-2">{isRTL ? '🎉 تم إرسال طلبك بنجاح!' : '🎉 Request Submitted!'}</h3>
+                    <p className="text-muted-foreground mb-6">{isRTL ? 'سيتم التواصل معك خلال 24 ساعة' : 'We will contact you within 24 hours'}</p>
 
-                    {/* Tracking Number */}
-                    <div className="p-4 bg-primary/5 rounded-xl border border-primary/20 mb-4">
-                      <p className="text-sm text-muted-foreground mb-1">{isRTL ? 'رقم الطلب' : 'Request Number'}</p>
-                      <p className="font-mono text-2xl font-bold text-primary tracking-wider">{carRequestTrackingNumber}</p>
-                      <p className="text-xs text-muted-foreground mt-2">
-                        {isRTL ? 'احتفظ بهذا الرقم لمتابعة طلبك' : 'Keep this number to track your request'}
-                      </p>
+                    {/* رقم الطلب */}
+                    <div className="p-5 bg-gradient-to-r from-emerald-500/10 to-green-500/10 rounded-2xl border border-emerald-500/30 mb-6">
+                      <p className="text-sm text-muted-foreground mb-2">{isRTL ? 'رقم الطلب الخاص بك' : 'Your Request Number'}</p>
+                      <p className="font-mono text-3xl font-bold text-emerald-600 tracking-wider">{carRequestTrackingNumber}</p>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="mt-2"
+                        onClick={() => {
+                          navigator.clipboard.writeText(carRequestTrackingNumber);
+                          toast({ title: isRTL ? '📋 تم نسخ الرقم' : '📋 Number copied' });
+                        }}
+                      >
+                        <Copy className={`w-4 h-4 ${isRTL ? 'ml-1' : 'mr-1'}`} />
+                        {isRTL ? 'نسخ' : 'Copy'}
+                      </Button>
                     </div>
 
-                    {/* Request Summary */}
-                    <div className={`p-4 bg-muted/50 rounded-xl mb-4 ${isRTL ? 'text-right' : 'text-left'}`}>
-                      <h5 className="font-semibold text-sm mb-3 flex items-center gap-2">
-                        <Car className="w-4 h-4 text-primary" />
-                        {isRTL ? 'ملخص الطلب' : 'Request Summary'}
-                      </h5>
-                      <div className="grid grid-cols-2 gap-3 text-sm">
-                        <div className={`flex justify-between p-2 bg-background rounded-lg ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    {/* ملخص الطلب */}
+                    <div className="p-4 bg-muted/30 rounded-2xl mb-6 text-left">
+                      <h5 className="font-semibold text-sm mb-3">{isRTL ? '📋 ملخص الطلب' : '📋 Request Summary'}</h5>
+                      <div className="grid grid-cols-2 gap-2 text-sm">
+                        <div className="flex justify-between p-2 bg-background rounded-lg">
                           <span className="text-muted-foreground">{isRTL ? 'الماركة' : 'Brand'}</span>
-                          <span className="font-medium capitalize">{carRequestBrand}</span>
+                          <span className="font-medium">{carRequestBrand}</span>
                         </div>
-                        <div className={`flex justify-between p-2 bg-background rounded-lg ${isRTL ? 'flex-row-reverse' : ''}`}>
+                        <div className="flex justify-between p-2 bg-background rounded-lg">
                           <span className="text-muted-foreground">{isRTL ? 'الموديل' : 'Model'}</span>
                           <span className="font-medium">{carRequestModel}</span>
                         </div>
-                        <div className={`flex justify-between p-2 bg-background rounded-lg ${isRTL ? 'flex-row-reverse' : ''}`}>
+                        <div className="flex justify-between p-2 bg-background rounded-lg">
                           <span className="text-muted-foreground">{isRTL ? 'السنة' : 'Year'}</span>
                           <span className="font-medium">{carRequestYear || '-'}</span>
                         </div>
-                        <div className={`flex justify-between p-2 bg-background rounded-lg ${isRTL ? 'flex-row-reverse' : ''}`}>
-                          <span className="text-muted-foreground">{isRTL ? 'الفئة' : 'Category'}</span>
-                          <span className="font-medium">{carRequestCategory || '-'}</span>
+                        <div className="flex justify-between p-2 bg-background rounded-lg">
+                          <span className="text-muted-foreground">{isRTL ? 'الهاتف' : 'Phone'}</span>
+                          <span className="font-medium">{carRequestPhone}</span>
                         </div>
                       </div>
                     </div>
 
-                    {/* Action Buttons */}
-                    <div className="flex gap-2">
+                    {/* أزرار الإجراءات */}
+                    <div className="flex gap-3">
                       <Button
                         variant="outline"
-                        className="flex-1"
+                        className="flex-1 h-12 rounded-xl"
                         onClick={() => {
                           setCarRequestSubmitted(false);
                           setCarRequestBrand('');
                           setCarRequestModel('');
                           setCarRequestYear('');
                           setCarRequestCategory('');
+                          setCarRequestColor('');
+                          setCarRequestTrim('');
                           setCarRequestFullName('');
                           setCarRequestPhone('');
+                          setCarRequestCity('');
                           setCarRequestTrackingNumber('');
                         }}
                       >
@@ -7173,217 +7361,364 @@ export default function CarLinkPage() {
                         {isRTL ? 'طلب جديد' : 'New Request'}
                       </Button>
                       <Button
-                        className="flex-1 sky-gradient text-white"
+                        className="flex-1 h-12 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl"
                         onClick={() => {
                           setServiceDetailOpen(false);
                           setSelectedService('order-tracking');
                           setOrderSearchNumber(carRequestTrackingNumber);
-                          setTimeout(() => setServiceDetailOpen(true), 200);
+                          setTimeout(() => setServiceDetailOpen(true), 100);
                         }}
                       >
                         <ClipboardList className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
                         {isRTL ? 'تتبع الطلب' : 'Track Order'}
                       </Button>
                     </div>
-                  </div>
+                  </motion.div>
                 )}
               </div>
             )}
             
+            {/* ========== خدمة أسعار السوق - تصميم جديد ========== */}
             {selectedService === 'market-prices' && (
               <div className="space-y-4">
-                <div className={`p-4 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 rounded-xl border border-emerald-500/30 ${isRTL ? 'text-right' : 'text-left'}`}>
-                  <h4 className="font-bold text-lg mb-1">{isRTL ? 'أسعار السوق' : 'Market Prices'}</h4>
-                  <p className="text-sm text-muted-foreground">{isRTL ? 'مقارنة أسعار السيارات في السوق السعودي' : 'Compare car prices in Saudi market'}</p>
-                </div>
-
-                {/* Search Filters */}
-                <div className="grid grid-cols-3 gap-3">
-                  <div>
-                    <Label className="font-semibold">{isRTL ? 'الماركة' : 'Brand'}</Label>
-                    <select className="w-full h-10 rounded-md border bg-background px-3" value={mpBrand} onChange={(e) => setMpBrand(e.target.value)}>
-                      <option value="">{isRTL ? 'اختر' : 'Select'}</option>
-                      <option value="toyota">Toyota</option>
-                      <option value="hyundai">Hyundai</option>
-                      <option value="honda">Honda</option>
-                      <option value="nissan">Nissan</option>
-                      <option value="kia">Kia</option>
-                      <option value="mazda">Mazda</option>
-                      <option value="ford">Ford</option>
-                    </select>
-                  </div>
-                  <div>
-                    <Label className="font-semibold">{isRTL ? 'الموديل' : 'Model'}</Label>
-                    <Input placeholder={isRTL ? 'الموديل' : 'Model'} value={mpModel} onChange={(e) => setMpModel(e.target.value)} />
-                  </div>
-                  <div>
-                    <Label className="font-semibold">{isRTL ? 'السنة' : 'Year'}</Label>
-                    <select className="w-full h-10 rounded-md border bg-background px-3" value={mpYear} onChange={(e) => setMpYear(e.target.value)}>
-                      <option value="">{isRTL ? 'اختر' : 'Select'}</option>
-                      {[2024, 2023, 2022, 2021, 2020].map(y => (
-                        <option key={y} value={y}>{y}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                {/* Market Prices Display */}
-                {mpBrand && (
-                  <div className="space-y-3">
-                    <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
-                      <h5 className="font-semibold">{isRTL ? 'أسعار السوق' : 'Market Prices'}</h5>
-                      <Badge className="bg-emerald-500 text-white">
-                        {isRTL ? 'محدث' : 'Updated'}
-                      </Badge>
-                    </div>
-
-                    {/* Price Summary Card */}
-                    <div className="p-4 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 rounded-xl border border-emerald-500/30">
-                      <div className="grid grid-cols-3 gap-4 text-center">
-                        <div>
-                          <p className="text-xs text-muted-foreground">{isRTL ? 'أقل سعر' : 'Lowest'}</p>
-                          <p className="text-lg font-bold text-green-600">75,000</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-muted-foreground">{isRTL ? 'متوسط السعر' : 'Average'}</p>
-                          <p className="text-lg font-bold text-blue-600">87,500</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-muted-foreground">{isRTL ? 'أعلى سعر' : 'Highest'}</p>
-                          <p className="text-lg font-bold text-orange-600">95,000</p>
-                        </div>
+                {/* ترحيب */}
+                <motion.div 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="relative overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-teal-500/20 rounded-2xl blur-xl" />
+                  <div className="relative p-5 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 rounded-2xl border border-emerald-500/30">
+                    <div className="flex items-center gap-4">
+                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shadow-lg">
+                        <TrendingUp className="w-7 h-7 text-white" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-lg">{isRTL ? 'أسعار السوق المحدثة' : 'Updated Market Prices'}</h4>
+                        <p className="text-sm text-muted-foreground">{isRTL ? 'قارن أسعار السيارات في السوق السعودي' : 'Compare car prices in Saudi market'}</p>
                       </div>
                     </div>
+                  </div>
+                </motion.div>
 
-                    {/* Detailed Prices */}
-                    {[
-                      { dealer: isRTL ? 'الوكيل الرسمي' : 'Official Dealer', price: '95,000', status: 'new', location: isRTL ? 'الرياض' : 'Riyadh' },
-                      { dealer: isRTL ? 'معرض الخليج' : 'Gulf Showroom', price: '92,000', status: 'new', location: isRTL ? 'جدة' : 'Jeddah' },
-                      { dealer: isRTL ? 'معرض النور' : 'Al Noor Showroom', price: '89,000', status: 'new', location: isRTL ? 'الدمام' : 'Dammam' },
-                      { dealer: isRTL ? 'سوق السيارات المستعملة' : 'Used Car Market', price: '75,000 - 85,000', status: 'used', location: isRTL ? 'متعدد' : 'Various' },
-                    ].map((item, i) => (
-                      <div key={i} className={`p-3 bg-muted/50 rounded-lg flex justify-between items-center hover:bg-muted transition-colors cursor-pointer ${isRTL ? 'flex-row-reverse' : ''}`}>
-                        <div className={isRTL ? 'text-right' : 'text-left'}>
-                          <p className="font-medium">{item.dealer}</p>
-                          <div className="flex items-center gap-2 mt-1">
-                            <Badge variant={item.status === 'new' ? 'default' : 'secondary'} className="text-xs">
-                              {item.status === 'new' ? (isRTL ? 'جديدة' : 'New') : (isRTL ? 'مستعملة' : 'Used')}
-                            </Badge>
-                            <span className="text-xs text-muted-foreground flex items-center gap-1">
-                              <MapPin className="w-3 h-3" />
-                              {item.location}
-                            </span>
-                          </div>
+                {/* فلتر البحث */}
+                <div className="p-4 bg-muted/20 rounded-2xl">
+                  <div className="grid grid-cols-3 gap-3">
+                    <div>
+                      <Label className="text-sm text-muted-foreground">{isRTL ? 'الماركة' : 'Brand'}</Label>
+                      <select 
+                        className="w-full h-11 rounded-xl border bg-background px-3 mt-1 focus:ring-2 focus:ring-emerald-500/50" 
+                        value={mpBrand} 
+                        onChange={(e) => setMpBrand(e.target.value)}
+                      >
+                        <option value="">{isRTL ? 'اختر الماركة' : 'Select Brand'}</option>
+                        {Object.keys(carModelsByBrand).map(brand => (
+                          <option key={brand} value={brand}>{brand}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <Label className="text-sm text-muted-foreground">{isRTL ? 'الموديل' : 'Model'}</Label>
+                      <select 
+                        className="w-full h-11 rounded-xl border bg-background px-3 mt-1" 
+                        value={mpModel} 
+                        onChange={(e) => setMpModel(e.target.value)}
+                        disabled={!mpBrand}
+                      >
+                        <option value="">{isRTL ? 'اختر الموديل' : 'Select Model'}</option>
+                        {mpBrand && carModelsByBrand[mpBrand]?.map(model => (
+                          <option key={model} value={model}>{model}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <Label className="text-sm text-muted-foreground">{isRTL ? 'السنة' : 'Year'}</Label>
+                      <select 
+                        className="w-full h-11 rounded-xl border bg-background px-3 mt-1" 
+                        value={mpYear} 
+                        onChange={(e) => setMpYear(e.target.value)}
+                      >
+                        <option value="">{isRTL ? 'اختر' : 'Select'}</option>
+                        {[2025, 2024, 2023, 2022, 2021, 2020].map(y => (
+                          <option key={y} value={y}>{y}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  
+                  {/* حالة السيارة */}
+                  <div className="mt-3">
+                    <Label className="text-sm text-muted-foreground">{isRTL ? 'حالة السيارة' : 'Car Condition'}</Label>
+                    <div className="flex gap-2 mt-1">
+                      <button
+                        onClick={() => setMpCondition('new')}
+                        className={`flex-1 p-3 rounded-xl border-2 text-sm font-medium transition-all flex items-center justify-center gap-2 ${
+                          mpCondition === 'new' 
+                            ? 'border-emerald-500 bg-emerald-500/10 text-emerald-600' 
+                            : 'border-muted hover:border-emerald-500/50'
+                        }`}
+                      >
+                        <Sparkles className="w-4 h-4" />
+                        {isRTL ? 'جديدة' : 'New'}
+                      </button>
+                      <button
+                        onClick={() => setMpCondition('used')}
+                        className={`flex-1 p-3 rounded-xl border-2 text-sm font-medium transition-all flex items-center justify-center gap-2 ${
+                          mpCondition === 'used' 
+                            ? 'border-emerald-500 bg-emerald-500/10 text-emerald-600' 
+                            : 'border-muted hover:border-emerald-500/50'
+                        }`}
+                      >
+                        <Cog className="w-4 h-4" />
+                        {isRTL ? 'مستعملة' : 'Used'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* عرض الأسعار */}
+                {mpBrand ? (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="space-y-4"
+                  >
+                    {/* ملخص الأسعار */}
+                    <div className="p-5 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 rounded-2xl border border-emerald-500/30">
+                      <div className="flex items-center justify-between mb-4">
+                        <h5 className="font-bold">{isRTL ? `أسعار ${mpBrand} ${mpModel || ''}` : `${mpBrand} ${mpModel || ''} Prices`}</h5>
+                        <Badge className="bg-emerald-500 text-white flex items-center gap-1">
+                          <RefreshCw className="w-3 h-3" />
+                          {isRTL ? 'محدث اليوم' : 'Updated Today'}
+                        </Badge>
+                      </div>
+                      
+                      <div className="grid grid-cols-3 gap-4">
+                        <div className="text-center p-3 bg-white/50 dark:bg-black/10 rounded-xl">
+                          <p className="text-xs text-muted-foreground">{isRTL ? '📉 أقل سعر' : '📉 Lowest'}</p>
+                          <p className="text-2xl font-bold text-green-600">75,000</p>
+                          <p className="text-xs text-muted-foreground">{isRTL ? 'ريال' : 'SAR'}</p>
                         </div>
-                        <div className={isRTL ? 'text-left' : 'text-right'}>
-                          <p className="font-bold text-primary">{item.price}</p>
+                        <div className="text-center p-3 bg-white/50 dark:bg-black/10 rounded-xl border-2 border-emerald-500">
+                          <p className="text-xs text-muted-foreground">{isRTL ? '📊 متوسط السعر' : '📊 Average'}</p>
+                          <p className="text-2xl font-bold text-emerald-600">87,500</p>
+                          <p className="text-xs text-muted-foreground">{isRTL ? 'ريال' : 'SAR'}</p>
+                        </div>
+                        <div className="text-center p-3 bg-white/50 dark:bg-black/10 rounded-xl">
+                          <p className="text-xs text-muted-foreground">{isRTL ? '📈 أعلى سعر' : '📈 Highest'}</p>
+                          <p className="text-2xl font-bold text-orange-600">95,000</p>
                           <p className="text-xs text-muted-foreground">{isRTL ? 'ريال' : 'SAR'}</p>
                         </div>
                       </div>
-                    ))}
+                    </div>
 
-                    {/* Action Button */}
+                    {/* قائمة المعارض والأسعار */}
+                    <div className="space-y-2">
+                      <h5 className="font-semibold text-sm text-muted-foreground">{isRTL ? '🏪 المعارض والوكالات' : '🏪 Showrooms & Dealers'}</h5>
+                      
+                      {[
+                        { dealer: isRTL ? 'الوكيل الرسمي' : 'Official Dealer', price: '95,000', status: 'new', location: isRTL ? 'الرياض' : 'Riyadh', rating: 5, verified: true },
+                        { dealer: isRTL ? 'معرض الخليج' : 'Gulf Showroom', price: '92,000', status: 'new', location: isRTL ? 'جدة' : 'Jeddah', rating: 4.5, verified: true },
+                        { dealer: isRTL ? 'معرض النور' : 'Al Noor Showroom', price: '89,000', status: 'new', location: isRTL ? 'الدمام' : 'Dammam', rating: 4, verified: false },
+                        { dealer: isRTL ? 'معرض الرياض' : 'Riyadh Showroom', price: '88,500', status: 'new', location: isRTL ? 'الرياض' : 'Riyadh', rating: 4, verified: true },
+                        { dealer: isRTL ? 'سوق السيارات المستعملة' : 'Used Car Market', price: '75,000 - 85,000', status: 'used', location: isRTL ? 'متعدد' : 'Various', rating: 3.5, verified: false },
+                      ].map((item, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: i * 0.1 }}
+                          className="p-4 bg-muted/30 rounded-xl hover:bg-muted/50 transition-all cursor-pointer border border-transparent hover:border-emerald-500/30"
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${item.verified ? 'bg-emerald-500/10' : 'bg-muted'}`}>
+                                {item.verified ? <CheckCircle2 className="w-5 h-5 text-emerald-500" /> : <Building2 className="w-5 h-5 text-muted-foreground" />}
+                              </div>
+                              <div>
+                                <p className="font-semibold">{item.dealer}</p>
+                                <div className="flex items-center gap-2 mt-1">
+                                  <Badge variant={item.status === 'new' ? 'default' : 'secondary'} className="text-xs">
+                                    {item.status === 'new' ? (isRTL ? 'جديدة' : 'New') : (isRTL ? 'مستعملة' : 'Used')}
+                                  </Badge>
+                                  <span className="text-xs text-muted-foreground flex items-center gap-1">
+                                    <MapPin className="w-3 h-3" />
+                                    {item.location}
+                                  </span>
+                                  <span className="text-xs text-muted-foreground flex items-center gap-1">
+                                    <Star className="w-3 h-3 text-amber-500" />
+                                    {item.rating}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-xl font-bold text-emerald-600">{item.price}</p>
+                              <p className="text-xs text-muted-foreground">{isRTL ? 'ريال' : 'SAR'}</p>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+
+                    {/* زر التنبيه */}
                     <Button
-                      className="w-full sky-gradient text-white h-12"
-                      onClick={() => {
-                        toast({
-                          title: isRTL ? 'تم حفظ البحث' : 'Search Saved',
-                          description: isRTL ? 'سيتم إشعارك عند توفر عروض جديدة' : 'You will be notified when new offers are available'
-                        });
-                      }}
+                      className="w-full h-12 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl"
+                      onClick={() => toast({ title: isRTL ? '🔔 تم تفعيل التنبيه! سنخبرك عند تغير الأسعار' : '🔔 Alert activated! We\'ll notify you when prices change' })}
                     >
                       <Bell className={`w-5 h-5 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                      {isRTL ? 'تنبيه عند تغير الأسعار' : 'Price Alert'}
+                      {isRTL ? 'تنبيه عند تغير الأسعار' : 'Price Change Alert'}
                     </Button>
-                  </div>
-                )}
-
-                {!mpBrand && (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <TrendingUp className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                    <p>{isRTL ? 'اختر الماركة لعرض الأسعار' : 'Select a brand to view prices'}</p>
+                  </motion.div>
+                ) : (
+                  <div className="text-center py-12">
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="w-20 h-20 rounded-full bg-emerald-500/10 flex items-center justify-center mx-auto mb-4"
+                    >
+                      <TrendingUp className="w-10 h-10 text-emerald-500" />
+                    </motion.div>
+                    <p className="text-muted-foreground">{isRTL ? 'اختر الماركة لعرض أسعار السوق' : 'Select a brand to view market prices'}</p>
                   </div>
                 )}
               </div>
             )}
             
+            {/* ========== خدمة العروض - تصميم جديد ========== */}
             {selectedService === 'offers' && (
               <div className="space-y-4">
-                <div className={`p-4 bg-gradient-to-r from-amber-500/10 to-orange-500/10 rounded-xl border border-amber-500/30 ${isRTL ? 'text-right' : 'text-left'}`}>
-                  <h4 className="font-bold text-lg mb-1">{isRTL ? 'العروض والخصومات' : 'Offers & Discounts'}</h4>
-                  <p className="text-sm text-muted-foreground">{isRTL ? 'استفد من أحدث العروض والخصومات' : 'Take advantage of the latest offers and discounts'}</p>
+                {/* ترحيب */}
+                <motion.div 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="relative overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-amber-500/20 to-orange-500/20 rounded-2xl blur-xl" />
+                  <div className="relative p-5 bg-gradient-to-r from-amber-500/10 to-orange-500/10 rounded-2xl border border-amber-500/30">
+                    <div className="flex items-center gap-4">
+                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-lg">
+                        <Sparkles className="w-7 h-7 text-white" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-lg">{isRTL ? 'عروض حصرية' : 'Exclusive Offers'}</h4>
+                        <p className="text-sm text-muted-foreground">{isRTL ? 'استفد من أحدث العروض والخصومات' : 'Take advantage of latest offers'}</p>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* قائمة العروض */}
+                <div className="grid gap-3">
+                  {[
+                    {
+                      id: 1,
+                      title: isRTL ? 'خصم 15% على صيانة السيارة' : '15% Off Car Maintenance',
+                      description: isRTL ? 'خصم على جميع خدمات الصيانة في المراكز المعتمدة' : 'Discount on all maintenance services',
+                      discount: '15%',
+                      validUntil: isRTL ? 'ينتهي 30 ديسمبر 2024' : 'Until Dec 30, 2024',
+                      code: 'MAINT15',
+                      gradient: 'from-blue-500 to-cyan-500',
+                      icon: Cog
+                    },
+                    {
+                      id: 2,
+                      title: isRTL ? 'عرض خاص على تأمين السيارة' : 'Special Insurance Offer',
+                      description: isRTL ? 'وفر حتى 20% على تأمين سيارتك الجديدة' : 'Save up to 20% on new car insurance',
+                      discount: '20%',
+                      validUntil: isRTL ? 'ينتهي 15 يناير 2025' : 'Until Jan 15, 2025',
+                      code: 'INSURE20',
+                      gradient: 'from-green-500 to-emerald-500',
+                      icon: Shield
+                    },
+                    {
+                      id: 3,
+                      title: isRTL ? 'غسيل وتنظيف مجاني' : 'Free Car Wash',
+                      description: isRTL ? 'احصل على غسيل وتنظيف داخلي مجاني' : 'Get free interior and exterior wash',
+                      discount: isRTL ? 'مجاني' : 'Free',
+                      validUntil: isRTL ? 'ينتهي 31 ديسمبر 2024' : 'Until Dec 31, 2024',
+                      code: 'WASH2024',
+                      gradient: 'from-purple-500 to-pink-500',
+                      icon: Sparkles
+                    },
+                    {
+                      id: 4,
+                      title: isRTL ? 'فحص مجاني للسيارة' : 'Free Car Inspection',
+                      description: isRTL ? 'فحص شامل لسيارتك بالكامل' : 'Complete comprehensive car inspection',
+                      discount: isRTL ? 'مجاني' : 'Free',
+                      validUntil: isRTL ? 'ينتهي 15 فبراير 2025' : 'Until Feb 15, 2025',
+                      code: 'CHECK25',
+                      gradient: 'from-amber-500 to-orange-500',
+                      icon: Car
+                    }
+                  ].map((offer, i) => {
+                    const IconComp = offer.icon;
+                    return (
+                      <motion.div
+                        key={offer.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.1 }}
+                        className="relative overflow-hidden"
+                      >
+                        <div className={`absolute inset-0 bg-gradient-to-r ${offer.gradient} opacity-5 rounded-2xl`} />
+                        <Card className="border-0 bg-background/50 backdrop-blur-sm hover:shadow-lg transition-all cursor-pointer">
+                          <div className={`h-1 bg-gradient-to-r ${offer.gradient}`} />
+                          <CardContent className="p-4">
+                            <div className="flex items-start gap-4">
+                              <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${offer.gradient} flex items-center justify-center shadow-lg flex-shrink-0`}>
+                                <IconComp className="w-6 h-6 text-white" />
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex items-start justify-between mb-2">
+                                  <h3 className="font-bold">{offer.title}</h3>
+                                  <Badge className={`bg-gradient-to-r ${offer.gradient} text-white`}>{offer.discount}</Badge>
+                                </div>
+                                <p className="text-sm text-muted-foreground mb-3">{offer.description}</p>
+                                <div className="flex items-center justify-between">
+                                  <span className="text-xs text-muted-foreground flex items-center gap-1">
+                                    <Clock className="w-3 h-3" />
+                                    {offer.validUntil}
+                                  </span>
+                                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      className="text-xs rounded-lg"
+                                      onClick={() => {
+                                        navigator.clipboard.writeText(offer.code);
+                                        toast({ title: isRTL ? '📋 تم نسخ الكود!' : '📋 Code Copied!', description: offer.code });
+                                      }}
+                                    >
+                                      <Ticket className={`w-3 h-3 ${isRTL ? 'ml-1' : 'mr-1'}`} />
+                                      {offer.code}
+                                    </Button>
+                                  </motion.div>
+                                </div>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    );
+                  })}
                 </div>
 
-                {/* Sample Offers */}
-                {(publishedOffers.length > 0 ? publishedOffers : [
-                  {
-                    id: 1,
-                    title: isRTL ? 'خصم 15% على صيانة السيارة' : '15% Off Car Maintenance',
-                    description: isRTL ? 'خصم على جميع خدمات الصيانة في المراكز المعتمدة' : 'Discount on all maintenance services at authorized centers',
-                    discount: '15%',
-                    validUntil: isRTL ? 'ينتهي 30 ديسمبر 2024' : 'Valid until Dec 30, 2024',
-                    code: 'MAINT15',
-                    color: 'bg-blue-500'
-                  },
-                  {
-                    id: 2,
-                    title: isRTL ? 'عرض خاص على تأمين السيارة' : 'Special Car Insurance Offer',
-                    description: isRTL ? 'وفر حتى 20% على تأمين سيارتك الجديد' : 'Save up to 20% on your new car insurance',
-                    discount: '20%',
-                    validUntil: isRTL ? 'ينتهي 15 يناير 2025' : 'Valid until Jan 15, 2025',
-                    code: 'INSURE20',
-                    color: 'bg-green-500'
-                  },
-                  {
-                    id: 3,
-                    title: isRTL ? 'غسيل وتنظيف مجاني' : 'Free Car Wash',
-                    description: isRTL ? 'احصل على غسيل وتنظيف داخلي مجاني مع أي خدمة' : 'Get free interior and exterior wash with any service',
-                    discount: isRTL ? 'مجاني' : 'Free',
-                    validUntil: isRTL ? 'ينتهي 31 ديسمبر 2024' : 'Valid until Dec 31, 2024',
-                    code: 'WASH2024',
-                    color: 'bg-purple-500'
-                  }
-                ]).map((offer: any, i: number) => (
-                  <Card key={i} className="overflow-hidden hover:shadow-lg transition-shadow">
-                    <div className={`h-2 ${offer.color || 'bg-primary'}`} />
-                    <CardContent className="p-4">
-                      <div className="flex justify-between items-start mb-2">
-                        <h3 className="font-bold">{offer.title}</h3>
-                        <Badge className="bg-green-500 text-white">{offer.discount}</Badge>
-                      </div>
-                      <p className="text-sm text-muted-foreground mb-3">{offer.description}</p>
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-muted-foreground flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          {offer.validUntil}
-                        </span>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="text-xs"
-                          onClick={() => {
-                            navigator.clipboard.writeText(offer.code);
-                            toast({
-                              title: isRTL ? 'تم نسخ الكود!' : 'Code Copied!',
-                              description: `${offer.code}`
-                            });
-                          }}
-                        >
-                          <Ticket className={`w-3 h-3 ${isRTL ? 'ml-1' : 'mr-1'}`} />
-                          {offer.code}
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-
-                {/* Claim Coupon Section */}
-                <div className="p-4 bg-muted/30 rounded-xl text-center">
-                  <Ticket className="w-8 h-8 mx-auto text-amber-500 mb-2" />
-                  <p className="text-sm text-muted-foreground mb-2">{isRTL ? 'هل لديك كود خصم؟' : 'Have a discount code?'}</p>
+                {/* قسم إدخال كود الخصم */}
+                <div className="p-5 bg-gradient-to-r from-amber-500/5 to-orange-500/5 rounded-2xl border border-amber-500/20">
+                  <div className="text-center mb-3">
+                    <Ticket className="w-10 h-10 mx-auto text-amber-500 mb-2" />
+                    <p className="font-semibold">{isRTL ? 'هل لديك كود خصم؟' : 'Have a discount code?'}</p>
+                  </div>
                   <div className="flex gap-2">
-                    <Input placeholder={isRTL ? 'أدخل الكود' : 'Enter code'} className="text-center" />
-                    <Button className="sky-gradient text-white">
+                    <Input 
+                      placeholder={isRTL ? 'أدخل الكود هنا' : 'Enter code here'} 
+                      className="text-center h-12 rounded-xl" 
+                    />
+                    <Button 
+                      className="h-12 px-6 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl"
+                      onClick={() => toast({ title: isRTL ? '✅ تم تطبيق الكود بنجاح!' : '✅ Code applied successfully!' })}
+                    >
                       {isRTL ? 'تطبيق' : 'Apply'}
                     </Button>
                   </div>
@@ -7391,91 +7726,128 @@ export default function CarLinkPage() {
               </div>
             )}
             
+            {/* ========== خدمة الضمان الممتد - تصميم جديد ========== */}
             {selectedService === 'extended-warranty' && (
               <div className="space-y-4">
-                <div className={`p-4 bg-gradient-to-r from-teal-500/10 to-cyan-500/10 rounded-xl border border-teal-500/30 ${isRTL ? 'text-right' : 'text-left'}`}>
-                  <h4 className="font-bold text-lg mb-1">{isRTL ? 'الضمان الممتد' : 'Extended Warranty'}</h4>
-                  <p className="text-sm text-muted-foreground">{isRTL ? 'احمِ سيارتك بضمان ممتد بعد انتهاء ضمان الوكيل' : 'Protect your car with extended warranty after dealer warranty expires'}</p>
-                </div>
+                {/* ترحيب */}
+                <motion.div 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="relative overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-teal-500/20 to-cyan-500/20 rounded-2xl blur-xl" />
+                  <div className="relative p-5 bg-gradient-to-r from-teal-500/10 to-cyan-500/10 rounded-2xl border border-teal-500/30">
+                    <div className="flex items-center gap-4">
+                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center shadow-lg">
+                        <Shield className="w-7 h-7 text-white" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-lg">{isRTL ? 'حماية إضافية لسيارتك' : 'Extra Protection for Your Car'}</h4>
+                        <p className="text-sm text-muted-foreground">{isRTL ? 'ضمان ممتد بعد انتهاء ضمان الوكيل' : 'Extended warranty after dealer warranty'}</p>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
 
-                {/* Warranty Packages */}
-                <div className="space-y-3">
+                {/* باقات الضمان */}
+                <div className="grid gap-3">
                   {[
                     {
                       id: 'basic',
                       title: isRTL ? 'الباقة الأساسية' : 'Basic Package',
                       price: '1,500',
-                      features: isRTL ? ['المحرك وناقل الحركة', 'نظام التبريد', 'الدعم الفني'] : ['Engine & Transmission', 'Cooling System', 'Technical Support'],
-                      color: 'from-gray-500 to-gray-600'
+                      period: isRTL ? '/ سنة' : '/ year',
+                      features: isRTL ? ['المحرك وناقل الحركة', 'نظام التبريد', 'الدعم الفني على مدار الساعة'] : ['Engine & Transmission', 'Cooling System', '24/7 Technical Support'],
+                      gradient: 'from-gray-500 to-slate-500',
+                      icon: Cog
                     },
                     {
                       id: 'advanced',
                       title: isRTL ? 'الباقة المتقدمة' : 'Advanced Package',
                       price: '2,500',
+                      period: isRTL ? '/ سنة' : '/ year',
                       features: isRTL ? ['جميع مميزات الأساسية', 'نظام التعليق', 'نظام الفرامل', 'سيارة بديلة'] : ['All Basic Features', 'Suspension System', 'Brake System', 'Replacement Car'],
-                      color: 'from-teal-500 to-cyan-500',
-                      popular: true
+                      gradient: 'from-teal-500 to-cyan-500',
+                      popular: true,
+                      icon: Shield
                     },
                     {
                       id: 'premium',
                       title: isRTL ? 'الباقة الشاملة' : 'Premium Package',
                       price: '4,000',
-                      features: isRTL ? ['جميع مميزات المتقدمة', 'نظام الكهرباء', 'التكييف', 'مساعدة على الطريق 24/7'] : ['All Advanced Features', 'Electrical System', 'AC System', '24/7 Roadside Assistance'],
-                      color: 'from-amber-500 to-orange-500'
+                      period: isRTL ? '/ سنة' : '/ year',
+                      features: isRTL ? ['جميع مميزات المتقدمة', 'نظام الكهرباء', 'التكييف', 'مساعدة على الطريق 24/7', 'سحب مجاني'] : ['All Advanced Features', 'Electrical System', 'AC System', '24/7 Roadside Assistance', 'Free Towing'],
+                      gradient: 'from-amber-500 to-orange-500',
+                      icon: Award
                     },
-                  ].map((pkg, i) => (
-                    <Card key={i} className={`relative overflow-hidden ${pkg.popular ? 'border-teal-500 border-2' : ''}`}>
-                      {pkg.popular && (
-                        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-500 to-cyan-500" />
-                      )}
-                      <CardContent className="p-4">
-                        <div className="flex justify-between items-start mb-3">
-                          <div>
-                            <h4 className="font-bold">{pkg.title}</h4>
-                            {pkg.popular && (
-                              <Badge className="bg-teal-500 text-white text-xs mt-1">{isRTL ? 'الأكثر طلباً' : 'Most Popular'}</Badge>
-                            )}
-                          </div>
-                          <div className="text-right">
-                            <p className="text-2xl font-bold text-teal-600">{pkg.price}</p>
-                            <p className="text-xs text-muted-foreground">{isRTL ? 'ريال/سنة' : 'SAR/year'}</p>
-                          </div>
-                        </div>
-                        <ul className="space-y-1 mb-3">
-                          {pkg.features.map((feature, j) => (
-                            <li key={j} className={`text-sm text-muted-foreground flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                              <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0" />
-                              {feature}
-                            </li>
-                          ))}
-                        </ul>
-                        <Button
-                          className="w-full sky-gradient text-white"
-                          onClick={() => {
-                            toast({
-                              title: isRTL ? 'تم اختيار الباقة' : 'Package Selected',
-                              description: `${pkg.title} - ${pkg.price} ${isRTL ? 'ريال' : 'SAR'}`
-                            });
-                          }}
-                        >
-                          {isRTL ? 'اختيار الباقة' : 'Select Package'}
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  ))}
+                  ].map((pkg, i) => {
+                    const IconComp = pkg.icon;
+                    return (
+                      <motion.div
+                        key={pkg.id}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: i * 0.1 }}
+                      >
+                        <Card className={`relative overflow-hidden ${pkg.popular ? 'border-2 border-teal-500' : ''}`}>
+                          {pkg.popular && (
+                            <div className="absolute -top-0 right-4 bg-teal-500 text-white text-xs px-3 py-1 rounded-b-lg">
+                              {isRTL ? 'الأكثر طلباً' : 'Most Popular'}
+                            </div>
+                          )}
+                          <div className={`h-1 bg-gradient-to-r ${pkg.gradient}`} />
+                          <CardContent className="p-5">
+                            <div className="flex items-start justify-between mb-4">
+                              <div className="flex items-center gap-3">
+                                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${pkg.gradient} flex items-center justify-center shadow-lg`}>
+                                  <IconComp className="w-6 h-6 text-white" />
+                                </div>
+                                <div>
+                                  <h4 className="font-bold text-lg">{pkg.title}</h4>
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <p className="text-2xl font-bold">{pkg.price}</p>
+                                <p className="text-xs text-muted-foreground">{isRTL ? 'ريال' : 'SAR'}{pkg.period}</p>
+                              </div>
+                            </div>
+                            <ul className="space-y-2 mb-4">
+                              {pkg.features.map((feature, j) => (
+                                <li key={j} className="flex items-center gap-2 text-sm">
+                                  <CheckCircle2 className="w-4 h-4 text-teal-500 flex-shrink-0" />
+                                  {feature}
+                                </li>
+                              ))}
+                            </ul>
+                            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                              <Button
+                                className={`w-full h-12 rounded-xl ${pkg.popular ? 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white' : ''}`}
+                                variant={pkg.popular ? 'default' : 'outline'}
+                                onClick={() => toast({ title: isRTL ? `✅ تم اختيار ${pkg.title}` : `✅ ${pkg.title} Selected` })}
+                              >
+                                {isRTL ? 'اختيار الباقة' : 'Select Package'}
+                              </Button>
+                            </motion.div>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    );
+                  })}
                 </div>
 
-                {/* Contact for Custom Quote */}
-                <div className="p-4 bg-muted/30 rounded-xl text-center">
-                  <Phone className="w-6 h-6 mx-auto text-teal-500 mb-2" />
-                  <p className="text-sm text-muted-foreground">{isRTL ? 'هل تحتاج باقة مخصصة؟' : 'Need a custom package?'}</p>
-                  <Button variant="outline" className="mt-2">
+                {/* تواصل للعرض المخصص */}
+                <div className="p-5 bg-gradient-to-r from-teal-500/5 to-cyan-500/5 rounded-2xl border border-teal-500/20 text-center">
+                  <Phone className="w-8 h-8 mx-auto text-teal-500 mb-2" />
+                  <p className="font-semibold">{isRTL ? 'هل تحتاج باقة مخصصة؟' : 'Need a custom package?'}</p>
+                  <p className="text-sm text-muted-foreground mb-3">{isRTL ? 'تواصل معنا للحصول على عرض مخصص' : 'Contact us for a custom quote'}</p>
+                  <Button variant="outline" className="rounded-xl">
                     {isRTL ? 'تواصل معنا' : 'Contact Us'}
                   </Button>
                 </div>
               </div>
             )}
             
+            {/* ========== خدمة المقارنة - تصميم جديد ========== */}
             {selectedService === 'compare' && (
               <div className="space-y-4">
                 <div className={`p-4 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 rounded-xl border border-cyan-500/30 ${isRTL ? 'text-right' : 'text-left'}`}>
@@ -7544,153 +7916,178 @@ export default function CarLinkPage() {
               </div>
             )}
             
+            {/* ========== خدمة الحسبة/التمويل - تصميم جديد ========== */}
             {selectedService === 'financing' && (
               <div className="space-y-4">
-                <div className={`p-4 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 rounded-xl border border-emerald-500/30 ${isRTL ? 'text-right' : 'text-left'}`}>
-                  <h4 className="font-bold text-lg mb-1">{isRTL ? 'حاسبة التمويل' : 'Financing Calculator'}</h4>
-                  <p className="text-sm text-muted-foreground">{isRTL ? 'احسب القسط الشهري والتمويل المتاح حسب راتبك' : 'Calculate monthly payment and financing based on your salary'}</p>
-                </div>
-
-                {/* Salary Input */}
-                <div className="p-4 bg-muted/30 rounded-xl">
-                  <Label className="text-base font-semibold">{isRTL ? 'الراتب الشهري' : 'Monthly Salary'}</Label>
-                  <div className="flex items-center gap-2 mt-2">
-                    <Input
-                      type="number"
-                      placeholder={isRTL ? "مثال: 10000" : "e.g., 10000"}
-                      className="text-lg font-bold h-12"
-                      value={financingParams.salary || ''}
-                      onChange={(e) => {
-                        const value = Number(e.target.value);
-                        setFinancingParams({ salary: value });
-                      }}
-                    />
-                    <span className="text-sm text-muted-foreground whitespace-nowrap">{isRTL ? 'ريال' : 'SAR'}</span>
+                {/* ترحيب */}
+                <motion.div 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="relative overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-teal-500/20 rounded-2xl blur-xl" />
+                  <div className="relative p-5 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 rounded-2xl border border-emerald-500/30">
+                    <div className="flex items-center gap-4">
+                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shadow-lg">
+                        <Calculator className="w-7 h-7 text-white" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-lg">{isRTL ? 'حاسبة التمويل الذكية' : 'Smart Financing Calculator'}</h4>
+                        <p className="text-sm text-muted-foreground">{isRTL ? 'احسب أهليتك للتمويل بناءً على راتبك' : 'Calculate your financing eligibility based on salary'}</p>
+                      </div>
+                    </div>
                   </div>
+                </motion.div>
+
+                {/* إدخال الراتب */}
+                <div className="p-5 bg-gradient-to-r from-emerald-500/5 to-teal-500/5 rounded-2xl border border-emerald-500/20">
+                  <Label className="text-base font-semibold flex items-center gap-2">
+                    <DollarSign className="w-4 h-4 text-emerald-500" />
+                    {isRTL ? 'الراتب الشهري' : 'Monthly Salary'}
+                  </Label>
+                  <div className="flex items-center gap-3 mt-3">
+                    <div className="relative flex-1">
+                      <Input
+                        type="number"
+                        placeholder={isRTL ? "مثال: 10000" : "e.g., 10000"}
+                        className="text-xl font-bold h-14 pr-4 rounded-xl"
+                        value={financingParams.salary || ''}
+                        onChange={(e) => setFinancingParams({ salary: Number(e.target.value) })}
+                      />
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <span className="text-lg font-bold text-emerald-600">{isRTL ? 'ريال' : 'SAR'}</span>
+                      <span className="text-xs text-muted-foreground">{isRTL ? 'شهرياً' : '/month'}</span>
+                    </div>
+                  </div>
+                  
+                  {/* شرح الراتب */}
+                  <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
+                    <Lightbulb className="w-3 h-3" />
+                    {isRTL ? 'الراتب يساعد في تحديد أهليتك للتمويل حسب قواعد البنك المركزي' : 'Salary helps determine eligibility per central bank rules'}
+                  </p>
                 </div>
 
-                {/* Calculation Results */}
+                {/* نتائج الحساب */}
                 {financingParams.salary > 0 && (
-                  <div className="space-y-3">
-                    {/* Max Monthly Payment */}
-                    <div className="p-4 bg-green-500/10 rounded-xl border border-green-500/30">
-                      <div className={`flex justify-between items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="space-y-3"
+                  >
+                    {/* القسط الأقصى */}
+                    <div className="p-5 bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-2xl border border-green-500/30">
+                      <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm text-muted-foreground">{isRTL ? 'أقصى قسط شهري مسموح' : 'Max Monthly Payment'}</p>
-                          <p className="text-2xl font-bold text-green-600">
-                            {Math.round(financingParams.salary * 0.33).toLocaleString()} {isRTL ? 'ريال' : 'SAR'}
+                          <p className="text-sm text-muted-foreground">{isRTL ? '💰 أقصى قسط شهري مسموح' : '💰 Max Monthly Payment'}</p>
+                          <p className="text-3xl font-bold text-green-600 mt-1">
+                            {Math.round(financingParams.salary * 0.33).toLocaleString()}
+                            <span className="text-lg font-normal text-muted-foreground"> {isRTL ? 'ريال' : 'SAR'}</span>
                           </p>
                         </div>
-                        <Badge className="bg-green-500 text-white">{isRTL ? '33% من الراتب' : '33% of Salary'}</Badge>
+                        <div className="w-16 h-16 rounded-2xl bg-green-500/20 flex items-center justify-center">
+                          <span className="text-xl font-bold text-green-600">33%</span>
+                        </div>
                       </div>
                     </div>
 
-                    {/* Max Financing Amount */}
-                    <div className="p-4 bg-blue-500/10 rounded-xl border border-blue-500/30">
-                      <div className={`flex justify-between items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    {/* مبلغ التمويل */}
+                    <div className="p-5 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-2xl border border-blue-500/30">
+                      <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm text-muted-foreground">{isRTL ? 'أقصى مبلغ تمويل' : 'Max Financing Amount'}</p>
-                          <p className="text-2xl font-bold text-blue-600">
-                            {Math.round(financingParams.salary * 0.33 * 60 * 0.7).toLocaleString()} {isRTL ? 'ريال' : 'SAR'}
+                          <p className="text-sm text-muted-foreground">{isRTL ? '🏦 أقصى مبلغ تمويل متاح' : '🏦 Max Financing Amount'}</p>
+                          <p className="text-3xl font-bold text-blue-600 mt-1">
+                            {Math.round(financingParams.salary * 0.33 * 60 * 0.7).toLocaleString()}
+                            <span className="text-lg font-normal text-muted-foreground"> {isRTL ? 'ريال' : 'SAR'}</span>
                           </p>
                         </div>
-                        <Badge variant="outline" className="border-blue-500 text-blue-500">{isRTL ? '5 سنوات' : '5 years'}</Badge>
-                      </div>
-                    </div>
-
-                    {/* Eligibility Status */}
-                    <div className="p-4 bg-primary/5 rounded-xl border border-primary/20">
-                      <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                        <CheckCircle2 className="w-8 h-8 text-green-500" />
-                        <div>
-                          <p className="font-bold text-green-600">{isRTL ? 'مؤهل للتمويل' : 'Eligible for Financing'}</p>
-                          <p className="text-xs text-muted-foreground">{isRTL ? 'يمكنك البدء بطلب التمويل الآن' : 'You can start your financing application now'}</p>
+                        <div className="text-center">
+                          <Badge className="bg-blue-500 text-white text-sm">{isRTL ? '5 سنوات' : '5 Years'}</Badge>
+                          <p className="text-xs text-muted-foreground mt-1">{isRTL ? 'مع دفعة 30%' : 'with 30% down'}</p>
                         </div>
                       </div>
                     </div>
-                  </div>
-                )}
 
-                {/* Action Buttons */}
-                <div className="space-y-2 pt-2">
-                  {financingParams.salary > 0 ? (
-                    <>
-                      <Button
-                        className="w-full sky-gradient text-white h-12 text-base"
-                        onClick={() => {
-                          setServiceDetailOpen(false);
-                          setTimeout(() => {
-                            // Open financing chatbot with salary pre-filled
-                            const salary = financingParams.salary;
-                            const maxPayment = Math.round(salary * 0.33);
-                            const maxFinancing = Math.round(maxPayment * 60 * 0.7);
-
-                            setApplicationData({
-                              programType: '',
-                              bankName: '',
-                              vehicle: currentVehicle || null,
-                              carBrand: currentVehicle?.brand || '',
-                              carModel: currentVehicle?.model || '',
-                              carCategory: '',
-                              trimLevel: '',
-                              modelYear: currentVehicle?.year?.toString() || '',
-                              employmentType: '',
-                              workDuration: '',
-                              salary: salary.toString(),
-                              monthlyBudget: maxPayment.toString(),
-                              downPaymentCapability: '',
-                              city: '',
-                              phone: '',
-                              selectedTerm: '4',
-                            });
-
-                            setSelectedProgram(null);
-                            setSelectedBank(null);
-                            setApplicationStep(0);
-
-                            // Welcome message with salary info
-                            const welcomeMsg = isRTL
-                              ? `مرحباً! أنا مساعد التمويل الذكي.\n\nبناءً على راتبك الشهري **${salary.toLocaleString()} ريال**:\n• أقصى قسط شهري: **${maxPayment.toLocaleString()} ريال**\n• أقصى مبلغ تمويل: **${maxFinancing.toLocaleString()} ريال**\n\nلنبدأ! اختر برنامج التمويل المناسب:`
-                              : `Hello! I'm the smart financing assistant.\n\nBased on your monthly salary of **${salary.toLocaleString()} SAR**:\n• Max monthly payment: **${maxPayment.toLocaleString()} SAR**\n• Max financing amount: **${maxFinancing.toLocaleString()} SAR**\n\nLet's begin! Select a financing program:`;
-
-                            setApplicationMessages([{
-                              id: 'welcome',
-                              role: 'assistant',
-                              content: welcomeMsg,
-                              timestamp: new Date(),
-                            }]);
-
-                            setApplicationStatus('chat');
-                            setFinancingChatOpen(true);
-                          }, 200);
-                        }}
+                    {/* حالة الأهلية */}
+                    <div className="p-4 bg-gradient-to-r from-emerald-500/10 to-green-500/10 rounded-2xl border border-emerald-500/30 flex items-center gap-4">
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        className="w-12 h-12 rounded-full bg-emerald-500 flex items-center justify-center"
                       >
-                        <Send className={`w-5 h-5 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                        {isRTL ? 'بدء طلب التمويل' : 'Start Financing Application'}
-                      </Button>
+                        <CheckCircle2 className="w-6 h-6 text-white" />
+                      </motion.div>
+                      <div>
+                        <p className="font-bold text-emerald-600">{isRTL ? '✅ مؤهل للتمويل' : '✅ Eligible for Financing'}</p>
+                        <p className="text-sm text-muted-foreground">{isRTL ? 'يمكنك البدء بطلب التمويل الآن' : 'You can start your financing application now'}</p>
+                      </div>
+                    </div>
 
+                    {/* أزرار الإجراءات */}
+                    <div className="flex gap-3">
                       <Button
                         variant="outline"
-                        className="w-full h-12"
+                        className="flex-1 h-12 rounded-xl"
                         onClick={() => {
                           setServiceDetailOpen(false);
                           setActiveTab('financing');
                           if (currentVehicle) setViewState('results');
                         }}
                       >
-                        <Calculator className={`w-5 h-5 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                        {isRTL ? 'عرض التفاصيل الكاملة' : 'View Full Details'}
+                        <Calculator className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                        {isRTL ? 'التفاصيل' : 'Details'}
                       </Button>
-                    </>
-                  ) : (
-                    <div className="p-4 bg-amber-500/10 rounded-xl border border-amber-500/30 text-center">
-                      <Calculator className="w-8 h-8 mx-auto text-amber-500 mb-2" />
-                      <p className="text-sm text-muted-foreground">{isRTL ? 'أدخل راتبك الشهري لحساب أهليتك للتمويل' : 'Enter your monthly salary to calculate your financing eligibility'}</p>
+                      <Button
+                        className="flex-1 h-12 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl"
+                        onClick={() => {
+                          setServiceDetailOpen(false);
+                          setTimeout(() => {
+                            const salary = financingParams.salary;
+                            const maxPayment = Math.round(salary * 0.33);
+                            const maxFinancing = Math.round(maxPayment * 60 * 0.7);
+                            
+                            setApplicationData({
+                              programType: '',
+                              bankName: '',
+                              vehicle: currentVehicle || null,
+                              carBrand: currentVehicle?.brand || '',
+                              carModel: currentVehicle?.model || '',
+                              salary: salary.toString(),
+                              monthlyBudget: maxPayment.toString(),
+                            });
+                            
+                            const welcomeMsg = isRTL
+                              ? `مرحباً! بناءً على راتبك **${salary.toLocaleString()} ريال**:\n• أقصى قسط: **${maxPayment.toLocaleString()} ريال**\n• أقصى تمويل: **${maxFinancing.toLocaleString()} ريال**\n\nاختر برنامج التمويل:`
+                              : `Hello! Based on your salary **${salary.toLocaleString()} SAR**:\n• Max payment: **${maxPayment.toLocaleString()} SAR**\n• Max financing: **${maxFinancing.toLocaleString()} SAR**\n\nSelect financing program:`;
+                            
+                            setApplicationMessages([{ id: 'welcome', role: 'assistant', content: welcomeMsg, timestamp: new Date() }]);
+                            setApplicationStatus('chat');
+                            setFinancingChatOpen(true);
+                          }, 200);
+                        }}
+                      >
+                        <Send className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                        {isRTL ? 'طلب التمويل' : 'Apply Now'}
+                      </Button>
                     </div>
-                  )}
-                </div>
+                  </motion.div>
+                )}
 
-                {/* Banks Preview */}
+                {/* حالة عدم إدخال الراتب */}
+                {financingParams.salary === 0 && (
+                  <div className="text-center py-8">
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="w-20 h-20 rounded-full bg-emerald-500/10 flex items-center justify-center mx-auto mb-4"
+                    >
+                      <Calculator className="w-10 h-10 text-emerald-500" />
+                    </motion.div>
+                    <p className="text-muted-foreground">{isRTL ? 'أدخل راتبك الشهري لحساب أهليتك' : 'Enter your salary to calculate eligibility'}</p>
+                  </div>
+                )}
+
+                {/* البنوك الشريكة */}
                 <div className="mt-4 pt-4 border-t">
                   <h4 className="font-semibold mb-3 text-center">{isRTL ? 'البنوك الشريكة' : 'Partner Banks'}</h4>
                   <div className="flex justify-center gap-4">
