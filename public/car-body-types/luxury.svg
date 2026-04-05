@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" fill="none">
+  <defs>
+    <linearGradient id="luxuryGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a5568;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2d3748;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Luxury Sedan Body - Elegant, long -->
+  <path d="M15 65 L25 65 L30 58 L45 48 L70 42 L100 40 L135 42 L160 50 L175 58 L185 63 L185 70 L180 75 L160 75 L155 80 L135 80 L130 75 L80 75 L75 80 L55 80 L50 75 L30 75 L20 70 Z" fill="url(#luxuryGrad)" stroke="#1a202c" stroke-width="1.5"/>
+  <!-- Windows -->
+  <path d="M48 50 L72 44 L133 44 L157 52 L150 62 L55 62 Z" fill="#a0aec0" stroke="#1a202c" stroke-width="0.5"/>
+  <line x1="95" y1="44" x2="95" y2="62" stroke="#1a202c" stroke-width="0.5"/>
+  <line x1="125" y1="44" x2="125" y2="62" stroke="#1a202c" stroke-width="0.5"/>
+  <!-- Wheels -->
+  <circle cx="60" cy="75" r="12" fill="#1a202c"/>
+  <circle cx="60" cy="75" r="8" fill="#4a5568"/>
+  <circle cx="60" cy="75" r="3" fill="#a0aec0"/>
+  <circle cx="155" cy="75" r="12" fill="#1a202c"/>
+  <circle cx="155" cy="75" r="8" fill="#4a5568"/>
+  <circle cx="155" cy="75" r="3" fill="#a0aec0"/>
+  <!-- Details -->
+  <line x1="175" y1="60" x2="182" y2="63" stroke="#a0aec0" stroke-width="1.5"/>
+  <rect x="25" y="60" width="10" height="4" rx="1" fill="#a0aec0"/>
+  <!-- Chrome trim -->
+  <line x1="30" y1="62" x2="175" y2="62" stroke="#718096" stroke-width="0.5"/>
+</svg>

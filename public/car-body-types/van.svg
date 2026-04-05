@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" fill="none">
+  <defs>
+    <linearGradient id="vanGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a5568;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2d3748;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Van Body - Tall, boxy -->
+  <path d="M20 65 L30 65 L30 30 L50 25 L150 25 L175 35 L180 55 L180 70 L175 75 L155 75 L150 80 L130 80 L125 75 L75 75 L70 80 L50 80 L45 75 L25 75 L15 70 Z" fill="url(#vanGrad)" stroke="#1a202c" stroke-width="1.5"/>
+  <!-- Windows -->
+  <rect x="40" y="32" width="125" height="25" fill="#a0aec0" stroke="#1a202c" stroke-width="0.5"/>
+  <line x1="70" y1="32" x2="70" y2="57" stroke="#1a202c" stroke-width="0.5"/>
+  <line x1="110" y1="32" x2="110" y2="57" stroke="#1a202c" stroke-width="0.5"/>
+  <line x1="145" y1="32" x2="145" y2="57" stroke="#1a202c" stroke-width="0.5"/>
+  <!-- Wheels -->
+  <circle cx="55" cy="75" r="12" fill="#1a202c"/>
+  <circle cx="55" cy="75" r="8" fill="#4a5568"/>
+  <circle cx="55" cy="75" r="3" fill="#a0aec0"/>
+  <circle cx="150" cy="75" r="12" fill="#1a202c"/>
+  <circle cx="150" cy="75" r="8" fill="#4a5568"/>
+  <circle cx="150" cy="75" r="3" fill="#a0aec0"/>
+  <!-- Details -->
+  <line x1="172" y1="55" x2="178" y2="58" stroke="#a0aec0" stroke-width="1.5"/>
+  <rect x="35" y="58" width="10" height="5" rx="1" fill="#a0aec0"/>
+</svg>

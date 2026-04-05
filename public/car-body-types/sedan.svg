@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" fill="none">
+  <defs>
+    <linearGradient id="sedanGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a5568;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2d3748;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Sedan Body -->
+  <path d="M25 65 L35 65 L40 55 L55 45 L80 40 L110 40 L140 45 L160 55 L170 60 L175 65 L180 65 L180 70 L175 75 L155 75 L150 80 L130 80 L125 75 L75 75 L70 80 L50 80 L45 75 L25 75 L20 70 Z" fill="url(#sedanGrad)" stroke="#1a202c" stroke-width="1.5"/>
+  <!-- Windows -->
+  <path d="M58 47 L80 42 L108 42 L132 47 L125 58 L60 58 Z" fill="#a0aec0" stroke="#1a202c" stroke-width="0.5"/>
+  <line x1="90" y1="42" x2="90" y2="58" stroke="#1a202c" stroke-width="0.5"/>
+  <!-- Wheels -->
+  <circle cx="55" cy="75" r="12" fill="#1a202c"/>
+  <circle cx="55" cy="75" r="8" fill="#4a5568"/>
+  <circle cx="55" cy="75" r="3" fill="#a0aec0"/>
+  <circle cx="145" cy="75" r="12" fill="#1a202c"/>
+  <circle cx="145" cy="75" r="8" fill="#4a5568"/>
+  <circle cx="145" cy="75" r="3" fill="#a0aec0"/>
+  <!-- Details -->
+  <line x1="170" y1="58" x2="175" y2="60" stroke="#a0aec0" stroke-width="1.5"/>
+  <rect x="35" y="60" width="8" height="4" rx="1" fill="#a0aec0"/>
+</svg>

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" fill="none">
+  <defs>
+    <linearGradient id="coupeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a5568;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2d3748;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Coupe Body - Sleek, sloping roof -->
+  <path d="M25 65 L35 65 L45 58 L65 42 L95 38 L130 42 L155 52 L170 58 L180 63 L180 70 L175 75 L155 75 L150 80 L130 80 L125 75 L75 75 L70 80 L50 80 L45 75 L25 75 L20 70 Z" fill="url(#coupeGrad)" stroke="#1a202c" stroke-width="1.5"/>
+  <!-- Windows -->
+  <path d="M68 44 L95 40 L128 44 L145 52 L135 60 L78 60 Z" fill="#a0aec0" stroke="#1a202c" stroke-width="0.5"/>
+  <!-- Wheels -->
+  <circle cx="55" cy="75" r="12" fill="#1a202c"/>
+  <circle cx="55" cy="75" r="8" fill="#4a5568"/>
+  <circle cx="55" cy="75" r="3" fill="#a0aec0"/>
+  <circle cx="145" cy="75" r="12" fill="#1a202c"/>
+  <circle cx="145" cy="75" r="8" fill="#4a5568"/>
+  <circle cx="145" cy="75" r="3" fill="#a0aec0"/>
+  <!-- Details -->
+  <line x1="170" y1="60" x2="178" y2="63" stroke="#a0aec0" stroke-width="1.5"/>
+  <rect x="35" y="60" width="8" height="4" rx="1" fill="#a0aec0"/>
+</svg>

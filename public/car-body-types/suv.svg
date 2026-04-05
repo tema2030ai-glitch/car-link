@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" fill="none">
+  <defs>
+    <linearGradient id="suvGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a5568;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2d3748;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- SUV Body - Boxier and taller -->
+  <path d="M20 65 L30 65 L35 50 L50 35 L90 30 L140 30 L165 40 L175 50 L180 55 L180 70 L175 75 L155 75 L150 80 L130 80 L125 75 L75 75 L70 80 L50 80 L45 75 L25 75 L15 70 Z" fill="url(#suvGrad)" stroke="#1a202c" stroke-width="1.5"/>
+  <!-- Windows -->
+  <path d="M52 37 L90 32 L138 32 L158 42 L150 55 L55 55 Z" fill="#a0aec0" stroke="#1a202c" stroke-width="0.5"/>
+  <line x1="95" y1="32" x2="95" y2="55" stroke="#1a202c" stroke-width="0.5"/>
+  <line x1="125" y1="32" x2="125" y2="55" stroke="#1a202c" stroke-width="0.5"/>
+  <!-- Wheels -->
+  <circle cx="55" cy="75" r="14" fill="#1a202c"/>
+  <circle cx="55" cy="75" r="9" fill="#4a5568"/>
+  <circle cx="55" cy="75" r="3" fill="#a0aec0"/>
+  <circle cx="150" cy="75" r="14" fill="#1a202c"/>
+  <circle cx="150" cy="75" r="9" fill="#4a5568"/>
+  <circle cx="150" cy="75" r="3" fill="#a0aec0"/>
+  <!-- Details -->
+  <line x1="170" y1="53" x2="178" y2="58" stroke="#a0aec0" stroke-width="1.5"/>
+  <rect x="30" y="58" width="10" height="5" rx="1" fill="#a0aec0"/>
+</svg>
