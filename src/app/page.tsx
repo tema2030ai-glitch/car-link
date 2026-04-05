@@ -7927,397 +7927,357 @@ export default function CarLinkPage() {
               </div>
             )}
             
-            {/* ========== خدمة الحسبة/التمويل - تصميم مبتكر ========== */}
+            {/* ========== خدمة الحسبة/التمويل - تصميم Wizard مبتكر ========== */}
             {selectedService === 'financing' && (
-              <div className="space-y-4">
-                {/* مؤشر الخطوات */}
-                <div className="flex items-center justify-center gap-2 p-4">
-                  {[
-                    { num: 1, label: isRTL ? 'الراتب' : 'Salary', icon: DollarSign },
-                    { num: 2, label: isRTL ? 'المبلغ' : 'Amount', icon: Car },
-                    { num: 3, label: isRTL ? 'المدة' : 'Term', icon: Calendar },
-                    { num: 4, label: isRTL ? 'النتيجة' : 'Result', icon: CheckCircle2 },
-                  ].map((step, i) => {
-                    const isActive = i === (financingParams.salary > 0 ? (financingParams.downPayment > 0 ? (financingParams.loanTerm > 0 ? 3 : 2) : 1) : 0);
-                    const isCompleted = i < (financingParams.salary > 0 ? (financingParams.downPayment > 0 ? (financingParams.loanTerm > 0 ? 3 : 2) : 1) : 0);
-                    const StepIcon = step.icon;
-                    return (
-                      <div key={step.num} className="flex items-center">
-                        <motion.div
-                          animate={{
-                            scale: isActive ? 1.1 : 1,
-                          }}
-                          className={`relative flex flex-col items-center`}
-                        >
-                          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 ${
-                            isCompleted ? 'bg-gradient-to-br from-emerald-500 to-teal-500 text-white shadow-lg' :
-                            isActive ? 'bg-gradient-to-br from-emerald-500 to-teal-500 text-white shadow-lg ring-4 ring-emerald-500/30' :
-                            'bg-muted text-muted-foreground'
-                          }`}>
-                            {isCompleted ? <CheckCircle2 className="w-6 h-6" /> : <StepIcon className="w-5 h-5" />}
-                          </div>
-                          <span className={`text-xs mt-2 font-medium ${isActive ? 'text-emerald-600' : 'text-muted-foreground'}`}>{step.label}</span>
-                          {isActive && (
-                            <motion.div
-                              layoutId="activeStep"
-                              className="absolute -bottom-1 w-1 h-1 rounded-full bg-emerald-500"
-                            />
-                          )}
-                        </motion.div>
-                        {i < 3 && (
-                          <div className={`w-8 h-1 mx-1 rounded transition-all duration-300 ${
-                            isCompleted ? 'bg-emerald-500' : 'bg-muted'
-                          }`} />
-                        )}
-                      </div>
-                    );
-                  })}
+              <div className="space-y-0">
+                {/* Progress Header */}
+                <div className="relative mb-6">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs text-muted-foreground">{isRTL ? 'الخطوة' : 'Step'} {financingParams.salary > 0 ? (financingParams.downPayment > 0 ? 3 : 2) : 1} {isRTL ? 'من' : 'of'} 3</span>
+                    <span className="text-xs font-bold text-emerald-600">{Math.round(((financingParams.salary > 0 ? 1 : 0) + (financingParams.downPayment > 0 ? 1 : 0) + (financingParams.loanTerm > 0 ? 1 : 0)) / 3 * 100)}%</span>
+                  </div>
+                  <div className="h-2 bg-muted rounded-full overflow-hidden">
+                    <motion.div 
+                      initial={{ width: 0 }}
+                      animate={{ width: `${((financingParams.salary > 0 ? 1 : 0) + (financingParams.downPayment > 0 ? 1 : 0) + (financingParams.loanTerm > 0 ? 1 : 0)) / 3 * 100}%` }}
+                      className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full"
+                    />
+                  </div>
                 </div>
 
-                {/* الخطوة 1: إدخال الراتب */}
+                {/* Step 1: Salary Input */}
                 {financingParams.salary === 0 && (
                   <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="space-y-4"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="space-y-5"
                   >
                     <div className="text-center">
                       <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ type: 'spring', delay: 0.2 }}
-                        className="w-24 h-24 rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center mx-auto mb-4 shadow-xl"
+                        animate={{ 
+                          scale: [1, 1.05, 1],
+                          rotate: [0, 5, -5, 0]
+                        }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        className="w-28 h-28 rounded-3xl bg-gradient-to-br from-emerald-500 via-green-500 to-teal-500 flex items-center justify-center mx-auto mb-5 shadow-2xl shadow-emerald-500/30"
                       >
-                        <Wallet className="w-12 h-12 text-white" />
+                        <Wallet className="w-14 h-14 text-white" />
                       </motion.div>
-                      <h4 className="text-xl font-bold mb-2">{isRTL ? 'ما هو راتبك الشهري؟' : 'What is your monthly salary?'}</h4>
-                      <p className="text-sm text-muted-foreground">{isRTL ? 'سنساعدك في حساب أهليتك للتمويل' : 'We\'ll help calculate your financing eligibility'}</p>
+                      <h3 className="text-2xl font-bold mb-2">{isRTL ? 'ما راتبك الشهري؟' : 'What\'s Your Salary?'}</h3>
+                      <p className="text-muted-foreground">{isRTL ? 'لنحسب أهليتك للتمويل' : 'Let\'s calculate your eligibility'}</p>
                     </div>
 
                     <div className="relative">
-                      <Input
-                        type="number"
-                        placeholder="0"
-                        value={financingParams.salary || ''}
-                        onChange={(e) => setFinancingParams({ ...financingParams, salary: Number(e.target.value) })}
-                        className="text-center text-4xl font-bold h-20 border-2 focus:border-emerald-500 rounded-2xl"
-                        dir="ltr"
-                      />
-                      <span className={`absolute top-1/2 -translate-y-1/2 text-muted-foreground text-lg ${isRTL ? 'left-4' : 'right-4'}`}>
-                        {isRTL ? 'ريال' : 'SAR'}
-                      </span>
+                      <motion.div 
+                        whileFocus={{ scale: 1.02 }}
+                        className="relative"
+                      >
+                        <Input
+                          type="number"
+                          placeholder="0"
+                          value={financingParams.salary || ''}
+                          onChange={(e) => setFinancingParams({ ...financingParams, salary: Number(e.target.value) })}
+                          className="text-center text-5xl font-bold h-28 border-0 bg-gradient-to-b from-muted/50 to-muted/30 rounded-3xl focus:ring-4 focus:ring-emerald-500/30"
+                          dir="ltr"
+                        />
+                        <span className={`absolute top-1/2 -translate-y-1/2 text-muted-foreground text-xl font-medium ${isRTL ? 'left-6' : 'right-6'}`}>
+                          {isRTL ? 'ر.س' : 'SAR'}
+                        </span>
+                      </motion.div>
                     </div>
 
-                    {/* أزرار سريعة */}
+                    {/* Quick Amount Buttons */}
                     <div className="grid grid-cols-4 gap-2">
-                      {[5000, 10000, 15000, 20000].map((amount) => (
-                        <Button
+                      {[5000, 8000, 12000, 15000, 18000, 20000, 25000, 30000].map((amount, i) => (
+                        <motion.div
                           key={amount}
-                          variant="outline"
-                          className="h-12 rounded-xl font-bold"
-                          onClick={() => setFinancingParams({ ...financingParams, salary: amount })}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: i * 0.05 }}
                         >
-                          {amount.toLocaleString()}
-                        </Button>
+                          <Button
+                            variant="outline"
+                            className="w-full h-14 rounded-2xl font-bold hover:bg-emerald-500/10 hover:border-emerald-500 hover:text-emerald-600 transition-all"
+                            onClick={() => setFinancingParams({ ...financingParams, salary: amount })}
+                          >
+                            {(amount / 1000).toFixed(0)}K
+                          </Button>
+                        </motion.div>
                       ))}
                     </div>
                   </motion.div>
                 )}
 
-                {/* الخطوة 2: إدخال مبلغ السيارة */}
+                {/* Step 2: Down Payment */}
                 {financingParams.salary > 0 && financingParams.downPayment === 0 && (
                   <motion.div
-                    initial={{ opacity: 0, x: 20 }}
+                    initial={{ opacity: 0, x: 50 }}
                     animate={{ opacity: 1, x: 0 }}
-                    className="space-y-4"
+                    className="space-y-5"
                   >
                     <div className="text-center">
                       <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ type: 'spring', delay: 0.2 }}
-                        className="w-24 h-24 rounded-3xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mx-auto mb-4 shadow-xl"
+                        animate={{ y: [0, -10, 0] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        className="w-28 h-28 rounded-3xl bg-gradient-to-br from-blue-500 via-indigo-500 to-violet-500 flex items-center justify-center mx-auto mb-5 shadow-2xl shadow-blue-500/30"
                       >
-                        <Car className="w-12 h-12 text-white" />
+                        <CreditCard className="w-14 h-14 text-white" />
                       </motion.div>
-                      <h4 className="text-xl font-bold mb-2">{isRTL ? 'ما سعر السيارة التي تريدها؟' : 'What is the car price you want?'}</h4>
-                      <p className="text-sm text-muted-foreground">{isRTL ? 'أدخل سعر السيارة المطلوبة' : 'Enter the price of the car you want'}</p>
+                      <h3 className="text-2xl font-bold mb-2">{isRTL ? 'الدفعة المقدمة' : 'Down Payment'}</h3>
+                      <p className="text-muted-foreground">{isRTL ? 'كم يمكنك دفعه مقدمًا؟' : 'How much can you pay upfront?'}</p>
+                    </div>
+
+                    {/* Salary Display */}
+                    <div className="flex items-center justify-center gap-2 p-3 bg-emerald-500/10 rounded-xl">
+                      <DollarSign className="w-4 h-4 text-emerald-500" />
+                      <span className="text-sm">{isRTL ? 'راتبك:' : 'Your salary:'}</span>
+                      <span className="font-bold text-emerald-600">{financingParams.salary.toLocaleString()} {isRTL ? 'ر.س' : 'SAR'}</span>
                     </div>
 
                     <div className="relative">
                       <Input
                         type="number"
                         placeholder="0"
-                        value={financingParams.vehiclePrice || ''}
-                        onChange={(e) => setFinancingParams({ ...financingParams, vehiclePrice: Number(e.target.value), downPayment: Math.round(Number(e.target.value) * 0.2) })}
-                        className="text-center text-4xl font-bold h-20 border-2 focus:border-blue-500 rounded-2xl"
+                        value={financingParams.downPayment || ''}
+                        onChange={(e) => setFinancingParams({ ...financingParams, downPayment: Number(e.target.value) })}
+                        className="text-center text-5xl font-bold h-28 border-0 bg-gradient-to-b from-muted/50 to-muted/30 rounded-3xl focus:ring-4 focus:ring-blue-500/30"
                         dir="ltr"
                       />
-                      <span className={`absolute top-1/2 -translate-y-1/2 text-muted-foreground text-lg ${isRTL ? 'left-4' : 'right-4'}`}>
-                        {isRTL ? 'ريال' : 'SAR'}
+                      <span className={`absolute top-1/2 -translate-y-1/2 text-muted-foreground text-xl font-medium ${isRTL ? 'left-6' : 'right-6'}`}>
+                        {isRTL ? 'ر.س' : 'SAR'}
                       </span>
                     </div>
 
-                    {/* أزرار سريعة */}
-                    <div className="grid grid-cols-3 gap-2">
-                      {[75000, 100000, 150000].map((amount) => (
-                        <Button
-                          key={amount}
-                          variant="outline"
-                          className="h-12 rounded-xl font-bold"
-                          onClick={() => setFinancingParams({ ...financingParams, vehiclePrice: amount, downPayment: Math.round(amount * 0.2) })}
-                        >
-                          {amount.toLocaleString()}
-                        </Button>
-                      ))}
-                    </div>
-
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        className="flex-1 h-12 rounded-xl"
-                        onClick={() => setFinancingParams({ ...financingParams, salary: 0 })}
-                      >
-                        {isRTL ? 'السابق' : 'Back'}
-                      </Button>
-                      <Button
-                        className="flex-1 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl"
-                        disabled={!financingParams.vehiclePrice}
-                        onClick={() => {}}
-                      >
-                        {isRTL ? 'التالي' : 'Next'}
-                      </Button>
-                    </div>
-                  </motion.div>
-                )}
-
-                {/* الخطوة 3: اختيار المدة */}
-                {financingParams.salary > 0 && financingParams.vehiclePrice > 0 && financingParams.loanTerm === 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="space-y-4"
-                  >
-                    <div className="text-center">
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ type: 'spring', delay: 0.2 }}
-                        className="w-24 h-24 rounded-3xl bg-gradient-to-br from-purple-500 to-violet-500 flex items-center justify-center mx-auto mb-4 shadow-xl"
-                      >
-                        <Calendar className="w-12 h-12 text-white" />
-                      </motion.div>
-                      <h4 className="text-xl font-bold mb-2">{isRTL ? 'اختر مدة التمويل' : 'Select financing term'}</h4>
-                      <p className="text-sm text-muted-foreground">{isRTL ? 'كلما طالت المدة، قل القسط الشهري' : 'Longer terms mean lower monthly payments'}</p>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-3">
-                      {[1, 2, 3, 4, 5, 6].map((year) => {
-                        const monthlyPay = Math.round(((financingParams.vehiclePrice - financingParams.downPayment) * 0.045/12 * Math.pow(1.00375, year*12)) / (Math.pow(1.00375, year*12) - 1));
+                    {/* Percentage Buttons */}
+                    <div className="grid grid-cols-4 gap-2">
+                      {[10, 15, 20, 25, 30, 35, 40, 50].map((percent, i) => {
+                        const maxCarPrice = financingParams.salary * 60;
+                        const amount = Math.round(maxCarPrice * percent / 100);
                         return (
                           <motion.div
-                            key={year}
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
+                            key={percent}
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: i * 0.05 }}
                           >
                             <Button
                               variant="outline"
-                              className="w-full h-20 rounded-2xl flex flex-col items-center justify-center"
-                              onClick={() => setFinancingParams({ ...financingParams, loanTerm: year })}
+                              className="w-full h-14 rounded-2xl flex flex-col items-center justify-center hover:bg-blue-500/10 hover:border-blue-500 transition-all"
+                              onClick={() => setFinancingParams({ ...financingParams, downPayment: amount })}
                             >
-                              <span className="text-xl font-bold">{year} {isRTL ? 'سنوات' : 'years'}</span>
-                              <span className="text-xs text-muted-foreground">{isRTL ? 'قسط تقريبي' : 'approx. payment'}</span>
+                              <span className="text-lg font-bold">{percent}%</span>
+                              <span className="text-[10px] text-muted-foreground">{(amount / 1000).toFixed(0)}K</span>
                             </Button>
                           </motion.div>
                         );
                       })}
                     </div>
 
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        className="flex-1 h-12 rounded-xl"
-                        onClick={() => setFinancingParams({ ...financingParams, vehiclePrice: 0, downPayment: 0 })}
-                      >
-                        {isRTL ? 'السابق' : 'Back'}
-                      </Button>
-                    </div>
+                    <Button
+                      variant="ghost"
+                      className="w-full"
+                      onClick={() => setFinancingParams({ ...financingParams, salary: 0 })}
+                    >
+                      <ArrowRight className={`w-4 h-4 ${isRTL ? 'ml-2 rotate-180' : 'mr-2'}`} />
+                      {isRTL ? 'الرجوع للخطوة السابقة' : 'Go Back'}
+                    </Button>
                   </motion.div>
                 )}
 
-                {/* الخطوة 4: النتائج */}
-                {financingParams.salary > 0 && financingParams.vehiclePrice > 0 && financingParams.loanTerm > 0 && (
+                {/* Step 3: Loan Term */}
+                {financingParams.salary > 0 && financingParams.downPayment > 0 && financingParams.loanTerm === 0 && (
                   <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="space-y-4"
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="space-y-5"
                   >
-                    {/* حساب النتائج */}
+                    <div className="text-center">
+                      <motion.div
+                        animate={{ rotate: [0, 360] }}
+                        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                        className="w-28 h-28 rounded-3xl bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 flex items-center justify-center mx-auto mb-5 shadow-2xl shadow-amber-500/30"
+                      >
+                        <Calendar className="w-14 h-14 text-white" />
+                      </motion.div>
+                      <h3 className="text-2xl font-bold mb-2">{isRTL ? 'مدة التمويل' : 'Loan Duration'}</h3>
+                      <p className="text-muted-foreground">{isRTL ? 'اختر عدد السنوات' : 'Choose the number of years'}</p>
+                    </div>
+
+                    {/* Info Cards */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="p-3 bg-emerald-500/10 rounded-xl text-center">
+                        <p className="text-xs text-muted-foreground">{isRTL ? 'الراتب' : 'Salary'}</p>
+                        <p className="font-bold text-emerald-600">{financingParams.salary.toLocaleString()}</p>
+                      </div>
+                      <div className="p-3 bg-blue-500/10 rounded-xl text-center">
+                        <p className="text-xs text-muted-foreground">{isRTL ? 'الدفعة' : 'Down Payment'}</p>
+                        <p className="font-bold text-blue-600">{financingParams.downPayment.toLocaleString()}</p>
+                      </div>
+                    </div>
+
+                    {/* Year Selection */}
+                    <div className="grid grid-cols-5 gap-3">
+                      {[1, 2, 3, 4, 5].map((year) => (
+                        <motion.div
+                          key={year}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <Button
+                            variant="outline"
+                            className="w-full h-20 rounded-2xl flex flex-col items-center justify-center hover:bg-amber-500/10 hover:border-amber-500 transition-all"
+                            onClick={() => setFinancingParams({ ...financingParams, loanTerm: year })}
+                          >
+                            <span className="text-3xl font-bold">{year}</span>
+                            <span className="text-xs text-muted-foreground">{isRTL ? 'سنوات' : 'years'}</span>
+                          </Button>
+                        </motion.div>
+                      ))}
+                    </div>
+
+                    <Button
+                      variant="ghost"
+                      className="w-full"
+                      onClick={() => setFinancingParams({ ...financingParams, downPayment: 0 })}
+                    >
+                      <ArrowRight className={`w-4 h-4 ${isRTL ? 'ml-2 rotate-180' : 'mr-2'}`} />
+                      {isRTL ? 'الرجوع للخطوة السابقة' : 'Go Back'}
+                    </Button>
+                  </motion.div>
+                )}
+
+                {/* Results */}
+                {financingParams.salary > 0 && financingParams.downPayment > 0 && financingParams.loanTerm > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="space-y-5"
+                  >
+                    {/* Success Header */}
+                    <div className="text-center">
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ type: "spring", stiffness: 200 }}
+                        className="w-24 h-24 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center mx-auto mb-4 shadow-2xl"
+                      >
+                        <CheckCircle2 className="w-12 h-12 text-white" />
+                      </motion.div>
+                      <h3 className="text-xl font-bold">{isRTL ? 'تم حساب التمويل!' : 'Financing Calculated!'}</h3>
+                    </div>
+
+                    {/* Main Result Card */}
                     {(() => {
-                      const salary = financingParams.salary;
-                      const vehiclePrice = financingParams.vehiclePrice;
-                      const downPayment = financingParams.downPayment;
-                      const term = financingParams.loanTerm;
-                      const financedAmount = vehiclePrice - downPayment;
-                      const monthlyRate = 0.045 / 12;
-                      const monthlyPayment = Math.round(financedAmount * (monthlyRate * Math.pow(1 + monthlyRate, term * 12)) / (Math.pow(1 + monthlyRate, term * 12) - 1));
-                      const totalAmount = monthlyPayment * term * 12;
-                      const maxMonthly = Math.round(salary * 0.33);
-                      const isEligible = monthlyPayment <= maxMonthly;
+                      const maxCarPrice = financingParams.salary * 60;
+                      const loanAmount = maxCarPrice - financingParams.downPayment;
+                      const monthlyPayment = Math.round(loanAmount / (financingParams.loanTerm * 12) * 1.05);
+                      const totalAmount = monthlyPayment * financingParams.loanTerm * 12;
                       
                       return (
                         <>
-                          {/* شارة الأهلية */}
-                          <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{ type: 'spring', delay: 0.2 }}
-                            className={`p-6 rounded-3xl text-center ${isEligible ? 'bg-gradient-to-br from-emerald-500 to-teal-500' : 'bg-gradient-to-br from-amber-500 to-orange-500'}`}
-                          >
-                            <div className="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-3">
-                              {isEligible ? (
-                                <CheckCircle2 className="w-10 h-10 text-white" />
-                              ) : (
-                                <AlertCircle className="w-10 h-10 text-white" />
-                              )}
+                          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500 p-6 text-white shadow-2xl">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+                            <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2" />
+                            <div className="relative z-10 text-center">
+                              <p className="text-sm opacity-80 mb-1">{isRTL ? 'القسط الشهري' : 'Monthly Payment'}</p>
+                              <motion.p 
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                className="text-5xl font-black mb-2"
+                              >
+                                {monthlyPayment.toLocaleString()}
+                              </motion.p>
+                              <p className="text-sm opacity-80">{isRTL ? 'ريال / شهر' : 'SAR / month'}</p>
                             </div>
-                            <h4 className="text-2xl font-bold text-white mb-1">
-                              {isEligible ? (isRTL ? 'مؤهل للتمويل!' : 'Eligible for Financing!') : (isRTL ? 'يحتاج مراجعة' : 'Needs Review')}
-                            </h4>
-                            <p className="text-white/80 text-sm">
-                              {isEligible ? (isRTL ? 'يمكنك البدء بطلب التمويل' : 'You can start your financing application') : (isRTL ? 'جرب زيادة الدفعة المقدمة' : 'Try increasing your down payment')}
-                            </p>
-                          </motion.div>
-
-                          {/* نتائج الحساب */}
-                          <div className="grid grid-cols-2 gap-3">
-                            <motion.div
-                              initial={{ opacity: 0, y: 20 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: 0.3 }}
-                              className="p-4 bg-gradient-to-br from-sky-500/10 to-blue-500/10 rounded-2xl border border-sky-500/30 text-center"
-                            >
-                              <p className="text-xs text-muted-foreground">{isRTL ? 'القسط الشهري' : 'Monthly Payment'}</p>
-                              <p className="text-2xl font-bold text-sky-600 mt-1">{monthlyPayment.toLocaleString()}</p>
-                              <p className="text-xs text-muted-foreground">{isRTL ? 'ريال' : 'SAR'}</p>
-                            </motion.div>
-                            <motion.div
-                              initial={{ opacity: 0, y: 20 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: 0.4 }}
-                              className="p-4 bg-gradient-to-br from-emerald-500/10 to-green-500/10 rounded-2xl border border-emerald-500/30 text-center"
-                            >
-                              <p className="text-xs text-muted-foreground">{isRTL ? 'الدفعة المقدمة' : 'Down Payment'}</p>
-                              <p className="text-2xl font-bold text-emerald-600 mt-1">{downPayment.toLocaleString()}</p>
-                              <p className="text-xs text-muted-foreground">{isRTL ? 'ريال' : 'SAR'}</p>
-                            </motion.div>
-                            <motion.div
-                              initial={{ opacity: 0, y: 20 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: 0.5 }}
-                              className="p-4 bg-gradient-to-br from-purple-500/10 to-violet-500/10 rounded-2xl border border-purple-500/30 text-center"
-                            >
-                              <p className="text-xs text-muted-foreground">{isRTL ? 'مبلغ التمويل' : 'Financed Amount'}</p>
-                              <p className="text-2xl font-bold text-purple-600 mt-1">{financedAmount.toLocaleString()}</p>
-                              <p className="text-xs text-muted-foreground">{isRTL ? 'ريال' : 'SAR'}</p>
-                            </motion.div>
-                            <motion.div
-                              initial={{ opacity: 0, y: 20 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: 0.6 }}
-                              className="p-4 bg-gradient-to-br from-amber-500/10 to-orange-500/10 rounded-2xl border border-amber-500/30 text-center"
-                            >
-                              <p className="text-xs text-muted-foreground">{isRTL ? 'التكلفة الإجمالية' : 'Total Cost'}</p>
-                              <p className="text-2xl font-bold text-amber-600 mt-1">{totalAmount.toLocaleString()}</p>
-                              <p className="text-xs text-muted-foreground">{isRTL ? 'ريال' : 'SAR'}</p>
-                            </motion.div>
                           </div>
 
-                          {/* البنوك المقترحة */}
-                          <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.7 }}
-                            className="p-4 bg-muted/30 rounded-2xl"
-                          >
-                            <h5 className="font-semibold mb-3 text-center">{isRTL ? 'البنوك المقترحة' : 'Recommended Banks'}</h5>
+                          {/* Details Grid */}
+                          <div className="grid grid-cols-3 gap-3">
+                            {[
+                              { label: isRTL ? 'سعر السيارة' : 'Car Price', value: maxCarPrice, icon: Car, color: 'text-blue-500 bg-blue-500/10' },
+                              { label: isRTL ? 'القرض' : 'Loan', value: loanAmount, icon: Landmark, color: 'text-purple-500 bg-purple-500/10' },
+                              { label: isRTL ? 'التكلفة الكلية' : 'Total Cost', value: totalAmount, icon: DollarSign, color: 'text-amber-500 bg-amber-500/10' },
+                            ].map((item, i) => {
+                              const Icon = item.icon;
+                              return (
+                                <motion.div
+                                  key={i}
+                                  initial={{ opacity: 0, y: 20 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  transition={{ delay: i * 0.1 }}
+                                  className={`p-4 rounded-2xl ${item.color} text-center`}
+                                >
+                                  <Icon className="w-6 h-6 mx-auto mb-2" />
+                                  <p className="text-xs text-muted-foreground mb-1">{item.label}</p>
+                                  <p className="font-bold text-lg">{item.value.toLocaleString()}</p>
+                                </motion.div>
+                              );
+                            })}
+                          </div>
+
+                          {/* Bank Offers */}
+                          <div className="space-y-3">
+                            <h4 className="font-semibold flex items-center gap-2">
+                              <Building2 className="w-4 h-4 text-primary" />
+                              {isRTL ? 'أفضل عروض البنوك' : 'Best Bank Offers'}
+                            </h4>
                             <div className="space-y-2">
                               {saudiBanks.slice(0, 3).map((bank, i) => (
-                                <div key={bank.id} className="flex items-center gap-3 p-3 bg-background rounded-xl">
-                                  <span className="text-2xl">{bank.logo}</span>
-                                  <div className="flex-1">
-                                    <p className="font-medium">{isRTL ? bank.nameAr : bank.nameEn}</p>
-                                    <p className="text-xs text-muted-foreground">{bank.rate}% {isRTL ? 'سنوياً' : 'annually'}</p>
+                                <motion.div
+                                  key={bank.id}
+                                  initial={{ opacity: 0, x: -20 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: i * 0.1 }}
+                                  className={`p-4 rounded-2xl border ${i === 0 ? 'border-emerald-500 bg-emerald-500/5' : 'border-border bg-muted/30'}`}
+                                >
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center text-xl">
+                                        {bank.logo}
+                                      </div>
+                                      <div>
+                                        <p className="font-semibold">{isRTL ? bank.nameAr : bank.nameEn}</p>
+                                        <p className="text-xs text-muted-foreground">{bank.rate}% {isRTL ? 'سنوياً' : 'annual'}</p>
+                                      </div>
+                                    </div>
+                                    {i === 0 && (
+                                      <Badge className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white">
+                                        {isRTL ? 'الأفضل' : 'Best'}
+                                      </Badge>
+                                    )}
                                   </div>
-                                  <Badge className={i === 0 ? 'bg-emerald-500' : 'bg-muted'}>
-                                    {i === 0 ? (isRTL ? 'الأفضل' : 'Best') : `${bank.rate}%`}
-                                  </Badge>
-                                </div>
+                                </motion.div>
                               ))}
                             </div>
-                          </motion.div>
-
-                          {/* أزرار الإجراءات */}
-                          <div className="flex gap-3">
-                            <Button
-                              variant="outline"
-                              className="flex-1 h-12 rounded-xl"
-                              onClick={() => setFinancingParams({ salary: 0, downPayment: 0, loanTerm: 0, interestRate: 4.5, vehiclePrice: 0 })}
-                            >
-                              <RefreshCw className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                              {isRTL ? 'حساب جديد' : 'New Calculation'}
-                            </Button>
-                            <Button
-                              className="flex-1 h-12 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl"
-                              onClick={() => {
-                                setServiceDetailOpen(false);
-                                setTimeout(() => {
-                                  setApplicationData({
-                                    programType: '',
-                                    bankName: '',
-                                    vehicle: null,
-                                    carBrand: '',
-                                    carModel: '',
-                                    salary: salary.toString(),
-                                    monthlyBudget: maxMonthly.toString(),
-                                  });
-                                  const welcomeMsg = isRTL
-                                    ? `مرحباً! بناءً على راتبك **${salary.toLocaleString()} ريال**:\n• أقصى قسط: **${maxMonthly.toLocaleString()} ريال**\n• القسط المقترح: **${monthlyPayment.toLocaleString()} ريال**\n\nاختر برنامج التمويل:`
-                                    : `Hello! Based on your salary **${salary.toLocaleString()} SAR**:\n• Max payment: **${maxMonthly.toLocaleString()} SAR**\n• Suggested payment: **${monthlyPayment.toLocaleString()} SAR**\n\nSelect financing program:`;
-                                  setApplicationMessages([{ id: 'welcome', role: 'assistant', content: welcomeMsg, timestamp: new Date() }]);
-                                  setApplicationStatus('chat');
-                                  setFinancingChatOpen(true);
-                                }, 200);
-                              }}
-                            >
-                              <Send className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                              {isRTL ? 'طلب التمويل' : 'Apply Now'}
-                            </Button>
                           </div>
                         </>
                       );
                     })()}
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-3">
+                      <Button
+                        variant="outline"
+                        className="flex-1 h-14 rounded-2xl"
+                        onClick={() => setFinancingParams({ salary: 0, downPayment: 0, loanTerm: 0, interestRate: 4.5, vehiclePrice: 0 })}
+                      >
+                        <RefreshCw className={`w-5 h-5 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                        {isRTL ? 'حساب جديد' : 'New Calculation'}
+                      </Button>
+                      <Button
+                        className="flex-1 h-14 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg"
+                        onClick={() => {
+                          setServiceDetailOpen(false);
+                          setSelectedService('new-car-request');
+                          setTimeout(() => setServiceDetailOpen(true), 300);
+                        }}
+                      >
+                        <Send className={`w-5 h-5 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                        {isRTL ? 'طلب تمويل' : 'Apply Now'}
+                      </Button>
+                    </div>
                   </motion.div>
                 )}
-
-                {/* البنوك الشريكة */}
-                <div className="pt-4 border-t">
-                  <h4 className="font-semibold mb-3 text-center text-sm text-muted-foreground">{isRTL ? 'بنوك شريكة معتمدة' : 'Certified Partner Banks'}</h4>
-                  <div className="flex justify-center gap-3">
-                    {saudiBanks.slice(0, 6).map((bank, i) => (
-                      <motion.div
-                        key={bank.id}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: i * 0.05 }}
-                        className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center text-lg"
-                        title={isRTL ? bank.nameAr : bank.nameEn}
-                      >
-                        {bank.logo}
-                      </motion.div>
-                    ))}
-                  </div>
-                </div>
               </div>
             )}
             
