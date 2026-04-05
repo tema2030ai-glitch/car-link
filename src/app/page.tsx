@@ -956,6 +956,16 @@ export default function CarLinkPage() {
     'Audi': ['A3', 'A4', 'A6', 'A8', 'Q3', 'Q5', 'Q7', 'Q8', 'RS6', 'e-tron']
   };
 
+  // Saudi Banks Data
+  const saudiBanks = [
+    { id: 1, nameAr: 'البنك الأهلي', nameEn: 'SNB', logo: '🏦', rate: 4.5, minSalary: 3000 },
+    { id: 2, nameAr: 'بنك الراجحي', nameEn: 'Al Rajhi', logo: '🏛️', rate: 4.25, minSalary: 3000 },
+    { id: 3, nameAr: 'بنك الرياض', nameEn: 'Riyad Bank', logo: '🏢', rate: 4.75, minSalary: 4000 },
+    { id: 4, nameAr: 'البنك العربي', nameEn: 'Arab Bank', logo: '🏛️', rate: 4.9, minSalary: 5000 },
+    { id: 5, nameAr: 'بنك الجزيرة', nameEn: 'Al Jazira', logo: '🏦', rate: 4.85, minSalary: 4000 },
+    { id: 6, nameAr: 'البنك السعودي الفرنسي', nameEn: 'Banque Saudi Fransi', logo: '🏛️', rate: 4.95, minSalary: 4500 },
+  ];
+
   // Get models based on selected brand
   const getAvailableModels = () => {
     if (!carRequestBrand || !carModelsByBrand[carRequestBrand]) return [];
