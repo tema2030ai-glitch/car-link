@@ -8268,35 +8268,77 @@ export default function CarLinkPage() {
                       {(() => {
                         // Car categories: 1=economy, 2=compact, 3=mid-size, 4=full-size, 5=luxury
                         const allCars = [
-                          // Economy Cars
+                          // Economy Cars - Sedan
                           { brand: 'تويوتا', brandEn: 'Toyota', model: 'يارس', modelEn: 'Yaris', year: 2024, price: 58000, hp: 107, fuelConsumption: '5.5', engine: '1.5L', seats: 5, transmission: 'أوتوماتيك', category: 1 },
+                          { brand: 'تويوتا', brandEn: 'Toyota', model: 'يارس سيدان', modelEn: 'Yaris Sedan', year: 2024, price: 62000, hp: 107, fuelConsumption: '5.4', engine: '1.5L', seats: 5, transmission: 'أوتوماتيك', category: 1 },
                           { brand: 'نيسان', brandEn: 'Nissan', model: 'صني', modelEn: 'Sunny', year: 2024, price: 55000, hp: 108, fuelConsumption: '5.8', engine: '1.6L', seats: 5, transmission: 'أوتوماتيك', category: 1 },
                           { brand: 'هيونداي', brandEn: 'Hyundai', model: 'أكسنت', modelEn: 'Accent', year: 2024, price: 62000, hp: 120, fuelConsumption: '5.4', engine: '1.4L', seats: 5, transmission: 'أوتوماتيك', category: 1 },
                           { brand: 'كيا', brandEn: 'Kia', model: 'بيكانتو', modelEn: 'Picanto', year: 2024, price: 52000, hp: 85, fuelConsumption: '5.0', engine: '1.0L', seats: 5, transmission: 'أوتوماتيك', category: 1 },
+                          { brand: 'شيفروليه', brandEn: 'Chevrolet', model: 'سونيك', modelEn: 'Sonic', year: 2024, price: 57000, hp: 138, fuelConsumption: '5.9', engine: '1.4L', seats: 5, transmission: 'أوتوماتيك', category: 1 },
+                          { brand: 'ميتسوبيشي', brandEn: 'Mitsubishi', model: 'ميراج', modelEn: 'Mirage', year: 2024, price: 48000, hp: 78, fuelConsumption: '4.8', engine: '1.2L', seats: 5, transmission: 'أوتوماتيك', category: 1 },
                           // Compact Cars
                           { brand: 'كيا', brandEn: 'Kia', model: 'ريو', modelEn: 'Rio', year: 2024, price: 65000, hp: 118, fuelConsumption: '5.6', engine: '1.4L', seats: 5, transmission: 'أوتوماتيك', category: 2 },
                           { brand: 'كيا', brandEn: 'Kia', model: 'سيراتو', modelEn: 'Cerato', year: 2024, price: 78000, hp: 147, fuelConsumption: '6.0', engine: '2.0L', seats: 5, transmission: 'أوتوماتيك', category: 2 },
                           { brand: 'هيونداي', brandEn: 'Hyundai', model: 'فيرونا', modelEn: 'Verna', year: 2024, price: 68000, hp: 123, fuelConsumption: '5.5', engine: '1.4L', seats: 5, transmission: 'أوتوماتيك', category: 2 },
+                          { brand: 'شيفروليه', brandEn: 'Chevrolet', model: 'أفيو', modelEn: 'Aveo', year: 2024, price: 58000, hp: 115, fuelConsumption: '5.7', engine: '1.4L', seats: 5, transmission: 'أوتوماتيك', category: 2 },
                           // Mid-Size Cars
                           { brand: 'هيونداي', brandEn: 'Hyundai', model: 'إلنترا', modelEn: 'Elantra', year: 2024, price: 82000, hp: 147, fuelConsumption: '5.9', engine: '2.0L', seats: 5, transmission: 'أوتوماتيك', category: 3 },
                           { brand: 'تويوتا', brandEn: 'Toyota', model: 'كورولا', modelEn: 'Corolla', year: 2024, price: 85000, hp: 169, fuelConsumption: '5.2', engine: '2.0L', seats: 5, transmission: 'أوتوماتيك', category: 3 },
+                          { brand: 'تويوتا', brandEn: 'Toyota', model: 'كورولا هايبرد', modelEn: 'Corolla Hybrid', year: 2024, price: 95000, hp: 134, fuelConsumption: '3.8', engine: '1.8L Hybrid', seats: 5, transmission: 'أوتوماتيك', category: 3 },
                           { brand: 'هوندا', brandEn: 'Honda', model: 'سيفيك', modelEn: 'Civic', year: 2024, price: 88000, hp: 158, fuelConsumption: '5.7', engine: '2.0L', seats: 5, transmission: 'أوتوماتيك', category: 3 },
                           { brand: 'فولكسفاغن', brandEn: 'Volkswagen', model: 'جيتا', modelEn: 'Jetta', year: 2024, price: 90000, hp: 158, fuelConsumption: '5.6', engine: '1.4L TSI', seats: 5, transmission: 'أوتوماتيك', category: 3 },
+                          { brand: 'مازدا', brandEn: 'Mazda', model: 'مازدا 3', modelEn: 'Mazda3', year: 2024, price: 92000, hp: 155, fuelConsumption: '5.8', engine: '2.0L', seats: 5, transmission: 'أوتوماتيك', category: 3 },
+                          { brand: 'فورد', brandEn: 'Ford', model: 'فيوجن', modelEn: 'Fusion', year: 2024, price: 94000, hp: 175, fuelConsumption: '6.5', engine: '2.5L', seats: 5, transmission: 'أوتوماتيك', category: 3 },
+                          { brand: 'سكودا', brandEn: 'Skoda', model: 'أوكتافيا', modelEn: 'Octavia', year: 2024, price: 88000, hp: 148, fuelConsumption: '5.4', engine: '1.4L TSI', seats: 5, transmission: 'أوتوماتيك', category: 3 },
                           // Full-Size Cars
                           { brand: 'نيسان', brandEn: 'Nissan', model: 'التيما', modelEn: 'Altima', year: 2024, price: 98000, hp: 188, fuelConsumption: '6.2', engine: '2.5L', seats: 5, transmission: 'أوتوماتيك', category: 4 },
                           { brand: 'هيونداي', brandEn: 'Hyundai', model: 'سوناتا', modelEn: 'Sonata', year: 2024, price: 108000, hp: 191, fuelConsumption: '6.3', engine: '2.5L', seats: 5, transmission: 'أوتوماتيك', category: 4 },
                           { brand: 'هوندا', brandEn: 'Honda', model: 'أكورد', modelEn: 'Accord', year: 2024, price: 115000, hp: 192, fuelConsumption: '5.9', engine: '1.5L Turbo', seats: 5, transmission: 'أوتوماتيك', category: 4 },
                           { brand: 'كيا', brandEn: 'Kia', model: 'كي 5', modelEn: 'K5', year: 2024, price: 102000, hp: 180, fuelConsumption: '6.1', engine: '2.0L', seats: 5, transmission: 'أوتوماتيك', category: 4 },
+                          { brand: 'فولكسفاغن', brandEn: 'Volkswagen', model: 'باسات', modelEn: 'Passat', year: 2024, price: 118000, hp: 174, fuelConsumption: '6.0', engine: '2.0L TSI', seats: 5, transmission: 'أوتوماتيك', category: 4 },
+                          { brand: 'مازدا', brandEn: 'Mazda', model: 'مازدا 6', modelEn: 'Mazda6', year: 2024, price: 112000, hp: 187, fuelConsumption: '6.2', engine: '2.5L', seats: 5, transmission: 'أوتوماتيك', category: 4 },
                           // Luxury Cars
                           { brand: 'تويوتا', brandEn: 'Toyota', model: 'كامري', modelEn: 'Camry', year: 2024, price: 118000, hp: 206, fuelConsumption: '5.8', engine: '2.5L', seats: 5, transmission: 'أوتوماتيك', category: 5 },
-                          // SUV Category
+                          { brand: 'تويوتا', brandEn: 'Toyota', model: 'كامري هايبرد', modelEn: 'Camry Hybrid', year: 2024, price: 132000, hp: 208, fuelConsumption: '4.2', engine: '2.5L Hybrid', seats: 5, transmission: 'أوتوماتيك', category: 5 },
+                          { brand: 'نيسان', brandEn: 'Nissan', model: 'ماكسيما', modelEn: 'Maxima', year: 2024, price: 138000, hp: 300, fuelConsumption: '7.5', engine: '3.5L V6', seats: 5, transmission: 'أوتوماتيك', category: 5 },
+                          // Small SUV / Crossover
                           { brand: 'تويوتا', brandEn: 'Toyota', model: 'راش', modelEn: 'Rush', year: 2024, price: 85000, hp: 105, fuelConsumption: '7.2', engine: '1.5L', seats: 7, transmission: 'أوتوماتيك', category: 3 },
                           { brand: 'هيونداي', brandEn: 'Hyundai', model: 'كريتا', modelEn: 'Creta', year: 2024, price: 88000, hp: 123, fuelConsumption: '6.8', engine: '1.6L', seats: 5, transmission: 'أوتوماتيك', category: 3 },
+                          { brand: 'كيا', brandEn: 'Kia', model: 'سلتوس', modelEn: 'Seltos', year: 2024, price: 92000, hp: 147, fuelConsumption: '6.5', engine: '2.0L', seats: 5, transmission: 'أوتوماتيك', category: 3 },
+                          { brand: 'نيسان', brandEn: 'Nissan', model: 'كيكس', modelEn: 'Kicks', year: 2024, price: 78000, hp: 147, fuelConsumption: '6.2', engine: '1.6L', seats: 5, transmission: 'أوتوماتيك', category: 3 },
+                          { brand: 'هوندا', brandEn: 'Honda', model: 'إتش آر في', modelEn: 'HR-V', year: 2024, price: 98000, hp: 141, fuelConsumption: '6.0', engine: '1.8L', seats: 5, transmission: 'أوتوماتيك', category: 3 },
+                          { brand: 'مازدا', brandEn: 'Mazda', model: 'سي اكس 30', modelEn: 'CX-30', year: 2024, price: 98000, hp: 155, fuelConsumption: '6.4', engine: '2.0L', seats: 5, transmission: 'أوتوماتيك', category: 3 },
+                          { brand: 'ميتسوبيشي', brandEn: 'Mitsubishi', model: 'إكس فورس', modelEn: 'Xforce', year: 2024, price: 82000, hp: 103, fuelConsumption: '6.8', engine: '1.5L', seats: 5, transmission: 'أوتوماتيك', category: 3 },
+                          { brand: 'شيفروليه', brandEn: 'Chevrolet', model: 'تريلبليزر', modelEn: 'Trailblazer', year: 2024, price: 88000, hp: 137, fuelConsumption: '6.5', engine: '1.2L Turbo', seats: 5, transmission: 'أوتوماتيك', category: 3 },
+                          // Mid-Size SUV
                           { brand: 'كيا', brandEn: 'Kia', model: 'سبورتاج', modelEn: 'Sportage', year: 2024, price: 105000, hp: 187, fuelConsumption: '7.5', engine: '2.0L', seats: 5, transmission: 'أوتوماتيك', category: 4 },
                           { brand: 'نيسان', brandEn: 'Nissan', model: 'اكس تريل', modelEn: 'X-Trail', year: 2024, price: 115000, hp: 188, fuelConsumption: '7.8', engine: '2.5L', seats: 7, transmission: 'أوتوماتيك', category: 4 },
                           { brand: 'هوندا', brandEn: 'Honda', model: 'سي آر في', modelEn: 'CR-V', year: 2024, price: 125000, hp: 190, fuelConsumption: '7.2', engine: '1.5L Turbo', seats: 5, transmission: 'أوتوماتيك', category: 4 },
                           { brand: 'تويوتا', brandEn: 'Toyota', model: 'راف 4', modelEn: 'RAV4', year: 2024, price: 135000, hp: 203, fuelConsumption: '7.0', engine: '2.5L', seats: 5, transmission: 'أوتوماتيك', category: 5 },
                           { brand: 'مازدا', brandEn: 'Mazda', model: 'سي اكس 5', modelEn: 'CX-5', year: 2024, price: 118000, hp: 187, fuelConsumption: '7.1', engine: '2.5L', seats: 5, transmission: 'أوتوماتيك', category: 4 },
+                          { brand: 'هيونداي', brandEn: 'Hyundai', model: 'توسان', modelEn: 'Tucson', year: 2024, price: 108000, hp: 187, fuelConsumption: '7.2', engine: '2.0L', seats: 5, transmission: 'أوتوماتيك', category: 4 },
+                          { brand: 'فورد', brandEn: 'Ford', model: 'إيسكيب', modelEn: 'Escape', year: 2024, price: 118000, hp: 180, fuelConsumption: '7.0', engine: '1.5L EcoBoost', seats: 5, transmission: 'أوتوماتيك', category: 4 },
+                          { brand: 'شيفروليه', brandEn: 'Chevrolet', model: 'إيكوينوكس', modelEn: 'Equinox', year: 2024, price: 115000, hp: 170, fuelConsumption: '7.3', engine: '1.5L Turbo', seats: 5, transmission: 'أوتوماتيك', category: 4 },
+                          { brand: 'فولكسفاغن', brandEn: 'Volkswagen', model: 'تيغوان', modelEn: 'Tiguan', year: 2024, price: 122000, hp: 184, fuelConsumption: '7.0', engine: '2.0L TSI', seats: 5, transmission: 'أوتوماتيك', category: 4 },
+                          { brand: 'ميتسوبيشي', brandEn: 'Mitsubishi', model: 'أوت لاندر', modelEn: 'Outlander', year: 2024, price: 108000, hp: 181, fuelConsumption: '7.4', engine: '2.5L', seats: 7, transmission: 'أوتوماتيك', category: 4 },
+                          // Large SUV
+                          { brand: 'تويوتا', brandEn: 'Toyota', model: 'هايلاندر', modelEn: 'Highlander', year: 2024, price: 168000, hp: 295, fuelConsumption: '8.5', engine: '3.5L V6', seats: 7, transmission: 'أوتوماتيك', category: 5 },
+                          { brand: 'هيونداي', brandEn: 'Hyundai', model: 'سانتافي', modelEn: 'Santa Fe', year: 2024, price: 148000, hp: 277, fuelConsumption: '8.2', engine: '2.5L Turbo', seats: 7, transmission: 'أوتوماتيك', category: 5 },
+                          { brand: 'كيا', brandEn: 'Kia', model: 'سورينتو', modelEn: 'Sorento', year: 2024, price: 138000, hp: 277, fuelConsumption: '8.0', engine: '2.5L Turbo', seats: 7, transmission: 'أوتوماتيك', category: 5 },
+                          { brand: 'فورد', brandEn: 'Ford', model: 'إكسبلورر', modelEn: 'Explorer', year: 2024, price: 175000, hp: 300, fuelConsumption: '9.0', engine: '2.3L EcoBoost', seats: 7, transmission: 'أوتوماتيك', category: 5 },
+                          { brand: 'نيسان', brandEn: 'Nissan', model: 'باثفايندر', modelEn: 'Pathfinder', year: 2024, price: 158000, hp: 284, fuelConsumption: '8.8', engine: '3.5L V6', seats: 7, transmission: 'أوتوماتيك', category: 5 },
+                          { brand: 'شيفروليه', brandEn: 'Chevrolet', model: 'ترافيرس', modelEn: 'Traverse', year: 2024, price: 155000, hp: 310, fuelConsumption: '9.2', engine: '3.6L V6', seats: 7, transmission: 'أوتوماتيك', category: 5 },
+                          { brand: 'هوندا', brandEn: 'Honda', model: 'بايلوت', modelEn: 'Pilot', year: 2024, price: 172000, hp: 280, fuelConsumption: '8.7', engine: '3.5L V6', seats: 7, transmission: 'أوتوماتيك', category: 5 },
+                          { brand: 'مازدا', brandEn: 'Mazda', model: 'سي اكس 9', modelEn: 'CX-9', year: 2024, price: 158000, hp: 250, fuelConsumption: '8.4', engine: '2.5L Turbo', seats: 7, transmission: 'أوتوماتيك', category: 5 },
+                          // Pickup Trucks
+                          { brand: 'تويوتا', brandEn: 'Toyota', model: 'هيلوكس', modelEn: 'Hilux', year: 2024, price: 115000, hp: 164, fuelConsumption: '8.5', engine: '2.8L Diesel', seats: 5, transmission: 'أوتوماتيك', category: 4 },
+                          { brand: 'فورد', brandEn: 'Ford', model: 'رينجر', modelEn: 'Ranger', year: 2024, price: 128000, hp: 197, fuelConsumption: '8.2', engine: '2.0L Diesel', seats: 5, transmission: 'أوتوماتيك', category: 4 },
+                          { brand: 'نيسان', brandEn: 'Nissan', model: 'نافارا', modelEn: 'Navara', year: 2024, price: 118000, hp: 188, fuelConsumption: '8.0', engine: '2.3L Diesel', seats: 5, transmission: 'أوتوماتيك', category: 4 },
+                          { brand: 'شيفروليه', brandEn: 'Chevrolet', model: 'سيلفرادو', modelEn: 'Silverado', year: 2024, price: 198000, hp: 355, fuelConsumption: '11.0', engine: '5.3L V8', seats: 5, transmission: 'أوتوماتيك', category: 5 },
+                          // MPV / Minivan
+                          { brand: 'تويوتا', brandEn: 'Toyota', model: 'إنوفا', modelEn: 'Innova', year: 2024, price: 128000, hp: 164, fuelConsumption: '8.0', engine: '2.8L Diesel', seats: 7, transmission: 'أوتوماتيك', category: 4 },
+                          { brand: 'كيا', brandEn: 'Kia', model: 'كارنفال', modelEn: 'Carnival', year: 2024, price: 148000, hp: 277, fuelConsumption: '8.5', engine: '2.5L Turbo', seats: 8, transmission: 'أوتوماتيك', category: 5 },
+                          { brand: 'هيونداي', brandEn: 'Hyundai', model: 'ستاركس', modelEn: 'Starex', year: 2024, price: 118000, hp: 168, fuelConsumption: '8.8', engine: '2.5L Diesel', seats: 9, transmission: 'أوتوماتيك', category: 4 },
                         ];
 
                         const calculateCarPayment = (price: number) => {
@@ -8315,11 +8357,10 @@ export default function CarLinkPage() {
                             isWithinBudget: calculateCarPayment(car.price) <= salaryEligibility.maxMonthlyPayment,
                           }));
 
-                        // Affordable cars (within budget)
+                        // Affordable cars (within budget) - show ALL cars
                         const affordableCars = carsWithPayments
                           .filter(car => car.isWithinBudget)
-                          .sort((a, b) => b.monthlyPayment - a.monthlyPayment)
-                          .slice(0, 6);
+                          .sort((a, b) => b.monthlyPayment - a.monthlyPayment);
 
                         if (affordableCars.length === 0) {
                           return (
@@ -8332,48 +8373,74 @@ export default function CarLinkPage() {
                         }
 
                         return (
-                          <div className="space-y-2 max-h-72 overflow-y-auto">
-                            {affordableCars.map((car, i) => (
-                              <motion.div
-                                key={`${car.brand}-${car.model}`}
-                                initial={{ opacity: 0, x: isRTL ? 10 : -10 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: i * 0.05 }}
-                                className={`p-3 rounded-xl border ${i === 0 ? 'border-amber-500/50 bg-amber-500/5' : 'border-border bg-muted/30'} hover:border-primary/50 transition-colors cursor-pointer ${isRTL ? 'flex-row-reverse' : ''} flex items-center justify-between gap-3`}
-                              >
-                                {/* Rank */}
-                                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 ${i === 0 ? 'bg-gradient-to-br from-amber-400 to-orange-500 text-white' : 'bg-muted text-muted-foreground'}`}>
-                                  {i === 0 ? '🥇' : i + 1}
+                          <div className="space-y-2">
+                            {/* Summary Header */}
+                            <div className={`flex items-center justify-between p-3 bg-emerald-500/10 rounded-xl border border-emerald-500/30 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                              <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                                <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                                  <Car className="w-4 h-4 text-emerald-600" />
                                 </div>
-                                
-                                {/* Car Info */}
-                                <div className={`flex-1 min-w-0 ${isRTL ? 'text-right' : 'text-left'}`}>
-                                  <div className="font-semibold text-sm truncate">
-                                    {isRTL ? car.brand : car.brandEn} {isRTL ? car.model : car.modelEn}
-                                  </div>
-                                  <div className="text-[10px] text-muted-foreground flex items-center gap-1">
-                                    <span>{car.year}</span>
-                                    <span className="w-0.5 h-0.5 rounded-full bg-muted-foreground"></span>
-                                    <span>{getCurrencyDisplay()} {car.price.toLocaleString()}</span>
-                                  </div>
+                                <div className={isRTL ? 'text-right' : 'text-left'}>
+                                  <span className="font-bold text-emerald-600 text-lg">{affordableCars.length}</span>
+                                  <span className="text-xs text-muted-foreground mr-1"> {isRTL ? 'سيارة متاحة' : 'cars available'}</span>
                                 </div>
-                                
-                                {/* Payment */}
-                                <div className={`flex-shrink-0 ${isRTL ? 'text-left' : 'text-right'}`}>
-                                  <div className="font-bold text-sm text-emerald-600">
-                                    {getCurrencyDisplay()} {Math.round(car.monthlyPayment).toLocaleString()}
+                              </div>
+                              <div className={`text-xs ${isRTL ? 'text-right' : 'text-left'}`}>
+                                <span className="text-muted-foreground">{isRTL ? 'الحد الأقصى:' : 'Max:'}</span>
+                                <span className="font-bold text-primary mr-1"> {getCurrencyDisplay()} {Math.round(salaryEligibility.maxMonthlyPayment).toLocaleString()}</span>
+                              </div>
+                            </div>
+
+                            {/* Cars List - Scrollable */}
+                            <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
+                              {affordableCars.map((car, i) => (
+                                <motion.div
+                                  key={`${car.brand}-${car.model}`}
+                                  initial={{ opacity: 0, x: isRTL ? 10 : -10 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: i * 0.03 }}
+                                  className={`p-3 rounded-xl border ${i === 0 ? 'border-amber-500/50 bg-amber-500/5' : 'border-border bg-muted/30'} hover:border-primary/50 transition-colors cursor-pointer ${isRTL ? 'flex-row-reverse' : ''} flex items-center justify-between gap-3`}
+                                >
+                                  {/* Rank */}
+                                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 ${i === 0 ? 'bg-gradient-to-br from-amber-400 to-orange-500 text-white' : i < 3 ? 'bg-emerald-500/20 text-emerald-600' : 'bg-muted text-muted-foreground'}`}>
+                                    {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : i + 1}
                                   </div>
-                                  <div className="text-[9px] text-muted-foreground text-center">{isRTL ? 'شهرياً' : 'monthly'}</div>
-                                </div>
-                              </motion.div>
-                            ))}
-                            
+                                  
+                                  {/* Car Info */}
+                                  <div className={`flex-1 min-w-0 ${isRTL ? 'text-right' : 'text-left'}`}>
+                                    <div className="font-semibold text-sm truncate">
+                                      {isRTL ? car.brand : car.brandEn} {isRTL ? car.model : car.modelEn}
+                                    </div>
+                                    <div className="text-[10px] text-muted-foreground flex items-center gap-1">
+                                      <span>{car.year}</span>
+                                      <span className="w-0.5 h-0.5 rounded-full bg-muted-foreground"></span>
+                                      <span>{getCurrencyDisplay()} {car.price.toLocaleString()}</span>
+                                      <span className="w-0.5 h-0.5 rounded-full bg-muted-foreground"></span>
+                                      <span>{car.hp} {isRTL ? 'حصان' : 'hp'}</span>
+                                    </div>
+                                  </div>
+                                  
+                                  {/* Payment */}
+                                  <div className={`flex-shrink-0 ${isRTL ? 'text-left' : 'text-right'}`}>
+                                    <div className="font-bold text-sm text-emerald-600">
+                                      {getCurrencyDisplay()} {Math.round(car.monthlyPayment).toLocaleString()}
+                                    </div>
+                                    <div className="text-[9px] text-muted-foreground text-center">{isRTL ? 'شهرياً' : 'monthly'}</div>
+                                  </div>
+                                </motion.div>
+                              ))}
+                            </div>
+
+                            {/* Footer Summary */}
                             <div className={`flex items-center justify-between pt-2 border-t text-[10px] text-muted-foreground ${isRTL ? 'flex-row-reverse' : ''}`}>
                               <span className="flex items-center gap-1">
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                {isRTL ? `${affordableCars.length} سيارات ضمن الميزانية` : `${affordableCars.length} cars within budget`}
+                                <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+                                {isRTL ? `جميع السيارات المتاحة (${affordableCars.length})` : `All available cars (${affordableCars.length})`}
                               </span>
-                              <span>{isRTL ? 'الحد الأقصى:' : 'Max:'} {getCurrencyDisplay()} {Math.round(salaryEligibility.maxMonthlyPayment).toLocaleString()}</span>
+                              <span className="flex items-center gap-1">
+                                <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                {isRTL ? 'الأفضل لميزانيتك' : 'Best for your budget'}
+                              </span>
                             </div>
                           </div>
                         );
