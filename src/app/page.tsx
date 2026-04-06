@@ -4268,71 +4268,64 @@ export default function CarLinkPage() {
                       </CardHeader>
                       
                       <CardContent className="space-y-5 relative z-10">
-                        {/* Car Price Input - If no vehicle selected */}
-                        {!currentVehicle.price && (
-                          <div className="p-4 rounded-xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20">
-                            <div className={`flex items-center gap-2 mb-3 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
-                              <DollarSign className="w-5 h-5 text-amber-500" />
-                              <Label className="font-semibold text-amber-600">{isRTL ? 'سعر السيارة' : 'Car Price'}</Label>
-                            </div>
-                            <div className="relative">
-                              <Input
-                                type="text"
-                                inputMode="numeric"
-                                placeholder={isRTL ? 'أدخل سعر السيارة' : 'Enter car price'}
-                                value={manualCarPrice || ''}
-                                onChange={(e) => {
-                                  const value = e.target.value.replace(/[^0-9]/g, '');
-                                  const price = Number(value);
-                                  setManualCarPrice(price);
-                                  if (price > 0) {
-                                    calculateFinancing(price);
-                                  }
-                                }}
-                                className={`text-lg font-bold ${isRTL ? 'text-right pr-16' : 'text-left pl-16'} h-12 border-amber-500/30 focus:border-amber-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
-                              />
-                              <span className={`absolute top-1/2 -translate-y-1/2 text-muted-foreground font-medium ${isRTL ? 'left-3' : 'right-3'}`}>
-                                {isRTL ? 'ريال' : 'SAR'}
-                              </span>
-                            </div>
-                            <p className="text-xs text-muted-foreground mt-2">
-                              {isRTL ? 'أدخل سعر السيارة لحساب التمويل' : 'Enter the car price to calculate financing'}
-                            </p>
+                        {/* Car Price Input - Always show */}
+                        <div className="p-4 rounded-xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20">
+                          <div className={`flex items-center gap-2 mb-3 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
+                            <DollarSign className="w-5 h-5 text-amber-500" />
+                            <Label className="font-semibold text-amber-600">{isRTL ? 'سعر السيارة' : 'Car Price'}</Label>
                           </div>
-                        )}
+                          <div className="relative">
+                            <Input
+                              type="text"
+                              inputMode="numeric"
+                              placeholder={isRTL ? 'أدخل سعر السيارة' : 'Enter car price'}
+                              value={(currentVehicle.price || manualCarPrice) || ''}
+                              onChange={(e) => {
+                                const value = e.target.value.replace(/[^0-9]/g, '');
+                                const price = Number(value);
+                                setManualCarPrice(price);
+                                if (price > 0) {
+                                  calculateFinancing(price);
+                                }
+                              }}
+                              className={`text-lg font-bold ${isRTL ? 'text-right pr-16' : 'text-left pl-16'} h-12 border-amber-500/30 focus:border-amber-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+                            />
+                            <span className={`absolute top-1/2 -translate-y-1/2 text-muted-foreground font-medium ${isRTL ? 'left-3' : 'right-3'}`}>
+                              {isRTL ? 'ريال' : 'SAR'}
+                            </span>
+                          </div>
+                        </div>
 
-                        {(currentVehicle.price || manualCarPrice > 0) && (
-                          <>
-                            {/* Salary Input Section */}
-                            <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20">
-                              <div className={`flex items-center gap-2 mb-3 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
-                                <DollarSign className="w-5 h-5 text-emerald-500" />
-                                <Label className="font-semibold text-emerald-600">{t.monthlySalary}</Label>
-                              </div>
-                              <div className="relative">
-                                <Input
-                                  type="text"
-                                  inputMode="numeric"
-                                  placeholder={t.enterSalary}
-                                  value={financingParams.salary || ''}
-                                  onChange={(e) => {
-                                    const value = e.target.value.replace(/[^0-9]/g, '');
-                                    const salary = Number(value);
-                                    setFinancingParams({ salary });
-                                    // Auto-calculate eligibility
-                                    if (salary > 0 && financingResult) {
-                                      const maxPayment = salary * 0.33; // 33% of salary
-                                      const isEligible = financingResult.monthlyPayment <= maxPayment;
-                                      setSalaryEligibility({
-                                        isEligible,
-                                        maxMonthlyPayment: maxPayment,
-                                        recommendedDownPayment: Math.max(20, Math.round((1 - (maxPayment * financingParams.loanTerm) / (currentVehicle.price || manualCarPrice)) * 100)),
-                                        debtToIncomeRatio: Math.round((financingResult.monthlyPayment / salary) * 100)
-                                      });
-                                    }
-                                  }}
-                                  className={`text-lg font-bold ${isRTL ? 'text-right pr-16' : 'text-left pl-16'} h-12 border-emerald-500/30 focus:border-emerald-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
-                                />
+                        {/* Salary Input Section - Always show */}
+                        <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20">
+                          <div className={`flex items-center gap-2 mb-3 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
+                            <DollarSign className="w-5 h-5 text-emerald-500" />
+                            <Label className="font-semibold text-emerald-600">{t.monthlySalary}</Label>
+                          </div>
+                          <div className="relative">
+                            <Input
+                              type="text"
+                              inputMode="numeric"
+                              placeholder={t.enterSalary}
+                              value={financingParams.salary || ''}
+                              onChange={(e) => {
+                                const value = e.target.value.replace(/[^0-9]/g, '');
+                                const salary = Number(value);
+                                setFinancingParams({ salary });
+                                // Auto-calculate eligibility
+                                if (salary > 0 && financingResult) {
+                                  const maxPayment = salary * 0.33; // 33% of salary
+                                  const isEligible = financingResult.monthlyPayment <= maxPayment;
+                                  setSalaryEligibility({
+                                    isEligible,
+                                    maxMonthlyPayment: maxPayment,
+                                    recommendedDownPayment: Math.max(20, Math.round((1 - (maxPayment * financingParams.loanTerm) / (currentVehicle.price || manualCarPrice || 100000)) * 100)),
+                                    debtToIncomeRatio: Math.round((financingResult.monthlyPayment / salary) * 100)
+                                  });
+                                }
+                              }}
+                              className={`text-lg font-bold ${isRTL ? 'text-right pr-16' : 'text-left pl-16'} h-12 border-emerald-500/30 focus:border-emerald-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+                            />
                                 <span className={`absolute top-1/2 -translate-y-1/2 text-muted-foreground font-medium ${isRTL ? 'left-3' : 'right-3'}`}>
                                   {isRTL ? 'ريال' : 'SAR'}
                                 </span>
@@ -4361,7 +4354,7 @@ export default function CarLinkPage() {
                                         interestRate: selectedBank.interestRate,
                                         selectedBank: bankId 
                                       });
-                                      calculateFinancing(currentVehicle.price || manualCarPrice, { interestRate: selectedBank.interestRate });
+                                      calculateFinancing(currentVehicle.price || manualCarPrice || 100000, { interestRate: selectedBank.interestRate });
                                     }
                                   }
                                 }}
@@ -4424,7 +4417,7 @@ export default function CarLinkPage() {
                                 value={[financingParams.downPayment]}
                                 onValueChange={([value]) => {
                                   setFinancingParams({ downPayment: value });
-                                  calculateFinancing(currentVehicle.price || manualCarPrice, { downPayment: value });
+                                  calculateFinancing(currentVehicle.price || manualCarPrice || 100000, { downPayment: value });
                                 }}
                                 min={5}
                                 max={50}
@@ -4433,7 +4426,7 @@ export default function CarLinkPage() {
                               />
                               <p className="text-sm text-muted-foreground mt-1 flex items-center gap-1">
                                 <DollarSign className="w-3 h-3" />
-                                = {getCurrencyDisplay()} {Math.round((currentVehicle.price || manualCarPrice) * financingParams.downPayment / 100).toLocaleString()}
+                                = {getCurrencyDisplay()} {Math.round((currentVehicle.price || manualCarPrice || 100000) * financingParams.downPayment / 100).toLocaleString()}
                               </p>
                             </div>
 
@@ -4447,7 +4440,7 @@ export default function CarLinkPage() {
                                 value={[financingParams.loanTerm]}
                                 onValueChange={([value]) => {
                                   setFinancingParams({ loanTerm: value });
-                                  calculateFinancing(currentVehicle.price || manualCarPrice, { loanTerm: value });
+                                  calculateFinancing(currentVehicle.price || manualCarPrice || 100000, { loanTerm: value });
                                 }}
                                 min={12}
                                 max={84}
@@ -4469,7 +4462,7 @@ export default function CarLinkPage() {
                                 value={[financingParams.interestRate]}
                                 onValueChange={([value]) => {
                                   setFinancingParams({ interestRate: value });
-                                  calculateFinancing(currentVehicle.price || manualCarPrice, { interestRate: value });
+                                  calculateFinancing(currentVehicle.price || manualCarPrice || 100000, { interestRate: value });
                                 }}
                                 min={1}
                                 max={15}
@@ -4845,8 +4838,6 @@ export default function CarLinkPage() {
                                 })()}
                               </motion.div>
                             )}
-                          </>
-                        )}
                       </CardContent>
                     </Card>
 
