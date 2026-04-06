@@ -1143,14 +1143,14 @@ export default function CarLinkPage() {
   // Load bank offers on mount
   useEffect(() => {
     const defaultBankOffers = [
-      { id: 'alrajhi', bankName: 'بنك الراجحي', bankNameEn: 'Al Rajhi Bank', interestRate: 4.75, minDownPayment: 10, maxTerm: 60, minSalary: 3000, eligible: true, features: ['أقل نسبة ربح', 'موافقة سريعة', 'تأجيل قسط'] },
-      { id: 'albilad', bankName: 'بنك البلاد', bankNameEn: 'Al Bilad Bank', interestRate: 4.85, minDownPayment: 15, maxTerm: 60, minSalary: 3500, eligible: true, features: ['تمويل فوري', 'بدون رسوم'] },
-      { id: 'snb', bankName: 'البنك الأهلي السعودي', bankNameEn: 'SNB', interestRate: 4.9, minDownPayment: 15, maxTerm: 72, minSalary: 4000, eligible: true, features: ['أطول فترة سداد', 'برنامج ولاء'] },
-      { id: 'riyadbank', bankName: 'بنك الرياض', bankNameEn: 'Riyad Bank', interestRate: 5.0, minDownPayment: 20, maxTerm: 60, minSalary: 4500, eligible: true, features: ['تأمين مجاني', 'خدمة متميزة'] },
-      { id: 'arabnational', bankName: 'البنك العربي الوطني', bankNameEn: 'Arab National Bank', interestRate: 5.1, minDownPayment: 20, maxTerm: 60, minSalary: 4000, eligible: true, features: ['مرونة في السداد'] },
-      { id: 'sabb', bankName: 'بنك ساب', bankNameEn: 'SABB', interestRate: 5.25, minDownPayment: 20, maxTerm: 48, minSalary: 5000, eligible: true, features: ['خدمة VIP'] },
-      { id: 'alinma', bankName: 'بنك الإنماء', bankNameEn: 'Alinma Bank', interestRate: 4.95, minDownPayment: 15, maxTerm: 60, minSalary: 3500, eligible: true, features: ['تمويل إسلامي', 'موافقة فورية'] },
-      { id: 'firstab', bankName: 'البنك الأول', bankNameEn: 'First Abu Dhabi', interestRate: 5.15, minDownPayment: 20, maxTerm: 60, minSalary: 5000, eligible: true, features: ['خدمة مخصصة'] },
+      { id: 'alrajhi', bankName: 'بنك الراجحي', bankNameEn: 'Al Rajhi Bank', interestRate: 4.75, minDownPayment: 10, maxTerm: 60, minSalary: 3000, eligible: true, features: ['أقل نسبة ربح', 'موافقة سريعة', 'تأجيل قسط'], fees: 1500, profitAmount: 0 },
+      { id: 'albilad', bankName: 'بنك البلاد', bankNameEn: 'Al Bilad Bank', interestRate: 4.85, minDownPayment: 15, maxTerm: 60, minSalary: 3500, eligible: true, features: ['تمويل فوري', 'بدون رسوم'], fees: 1000, profitAmount: 0 },
+      { id: 'snb', bankName: 'البنك الأهلي السعودي', bankNameEn: 'SNB', interestRate: 4.9, minDownPayment: 15, maxTerm: 72, minSalary: 4000, eligible: true, features: ['أطول فترة سداد', 'برنامج ولاء'], fees: 2000, profitAmount: 0 },
+      { id: 'riyadbank', bankName: 'بنك الرياض', bankNameEn: 'Riyad Bank', interestRate: 5.0, minDownPayment: 20, maxTerm: 60, minSalary: 4500, eligible: true, features: ['تأمين مجاني', 'خدمة متميزة'], fees: 1800, profitAmount: 0 },
+      { id: 'arabnational', bankName: 'البنك العربي الوطني', bankNameEn: 'Arab National Bank', interestRate: 5.1, minDownPayment: 20, maxTerm: 60, minSalary: 4000, eligible: true, features: ['مرونة في السداد'], fees: 1200, profitAmount: 0 },
+      { id: 'sabb', bankName: 'بنك ساب', bankNameEn: 'SABB', interestRate: 5.25, minDownPayment: 20, maxTerm: 48, minSalary: 5000, eligible: true, features: ['خدمة VIP'], fees: 2500, profitAmount: 0 },
+      { id: 'alinma', bankName: 'بنك الإنماء', bankNameEn: 'Alinma Bank', interestRate: 4.95, minDownPayment: 15, maxTerm: 60, minSalary: 3500, eligible: true, features: ['تمويل إسلامي', 'موافقة فورية'], fees: 800, profitAmount: 0 },
+      { id: 'firstab', bankName: 'البنك الأول', bankNameEn: 'First Abu Dhabi', interestRate: 5.15, minDownPayment: 20, maxTerm: 60, minSalary: 5000, eligible: true, features: ['خدمة مخصصة'], fees: 2200, profitAmount: 0 },
     ];
     setBankOffers(defaultBankOffers);
   }, []);
@@ -4965,15 +4965,15 @@ export default function CarLinkPage() {
                                   <div className={`grid grid-cols-3 gap-2 mt-3 pt-3 border-t ${isRTL ? 'direction-rtl' : ''}`}>
                                     <div className="text-center">
                                       <div className="text-xs text-muted-foreground">{t.financingAmount}</div>
-                                      <div className="text-sm font-semibold">{getCurrencyDisplay()} {(bank.financingAmount || bank.principal || Math.round((currentVehicle.price || manualCarPrice) * (100 - bank.minDownPayment) / 100)).toLocaleString()}</div>
+                                      <div className="text-sm font-semibold">{getCurrencyDisplay()} {(bank.financingAmount || bank.principal || Math.round((currentVehicle.price || manualCarPrice || 100000) * (100 - (bank.minDownPayment || 20)) / 100) || 0).toLocaleString()}</div>
                                     </div>
                                     <div className="text-center">
                                       <div className="text-xs text-muted-foreground">{t.totalInterest}</div>
-                                      <div className="text-sm font-semibold">{getCurrencyDisplay()} {Math.round(bank.profitAmount || 0).toLocaleString()}</div>
+                                      <div className="text-sm font-semibold">{getCurrencyDisplay()} {(Math.round(bank.profitAmount || 0) || 0).toLocaleString()}</div>
                                     </div>
                                     <div className="text-center">
                                       <div className="text-xs text-muted-foreground">{t.fees}</div>
-                                      <div className="text-sm font-semibold">{getCurrencyDisplay()} {bank.fees.toLocaleString()}</div>
+                                      <div className="text-sm font-semibold">{getCurrencyDisplay()} {(bank.fees || 0).toLocaleString()}</div>
                                     </div>
                                   </div>
 
