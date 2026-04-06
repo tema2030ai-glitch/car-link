@@ -8046,10 +8046,16 @@ export default function CarLinkPage() {
                         <Slider
                           value={[financingParams.downPayment]}
                           onValueChange={([value]) => {
-                            setFinancingParams({ downPayment: value });
-                            calculateFinancing(manualCarPrice || 100000, { downPayment: value });
+                            // Dynamic interest rate based on down payment
+                            // Lower down payment = higher interest rate
+                            const baseRate = 5.5;
+                            const downPaymentFactor = (20 - value) * 0.05; // 0% down = +1%, 20% down = base rate
+                            const newRate = Math.max(4.5, Math.min(7, baseRate + downPaymentFactor));
+                            
+                            setFinancingParams({ downPayment: value, interestRate: newRate });
+                            calculateFinancing(manualCarPrice || 100000, { downPayment: value, interestRate: newRate });
                           }}
-                          min={5}
+                          min={0}
                           max={50}
                           step={5}
                           className="py-2"
@@ -8069,8 +8075,15 @@ export default function CarLinkPage() {
                         <Slider
                           value={[financingParams.loanTerm]}
                           onValueChange={([value]) => {
-                            setFinancingParams({ loanTerm: value });
-                            calculateFinancing(manualCarPrice || 100000, { loanTerm: value });
+                            // Dynamic interest rate based on loan term
+                            // Longer term = higher interest rate
+                            const baseRate = 5.5;
+                            const termFactor = (value - 48) * 0.02; // 48 months = base, +0.02% per extra month
+                            const downPaymentFactor = (20 - financingParams.downPayment) * 0.05;
+                            const newRate = Math.max(4.5, Math.min(7, baseRate + termFactor + downPaymentFactor));
+                            
+                            setFinancingParams({ loanTerm: value, interestRate: newRate });
+                            calculateFinancing(manualCarPrice || 100000, { loanTerm: value, interestRate: newRate });
                           }}
                           min={12}
                           max={84}
@@ -8210,6 +8223,151 @@ export default function CarLinkPage() {
                     ))}
                   </CardContent>
                 </Card>
+
+                {/* Cars Within Budget Section */}
+                {salaryEligibility && financingParams.salary > 0 && (
+                  <Card className="overflow-hidden">
+                    <div className="relative overflow-hidden rounded-t-xl bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 p-4">
+                      <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+                      <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2" />
+                      
+                      <div className={`relative ${isRTL ? 'text-right direction-rtl' : 'text-left'}`}>
+                        <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+                          <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                            <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg">
+                              <Car className="w-6 h-6 text-white" />
+                            </div>
+                            <div>
+                              <h3 className="text-base font-black text-black drop-shadow-sm">
+                                <span className="font-black">{t.carsWithinBudget}</span>
+                              </h3>
+                              <span className="font-normal text-black/70 text-xs">{t.basedOnYourSalary}</span>
+                            </div>
+                          </div>
+                          <div className="hidden sm:flex items-center gap-1 px-2 py-1 rounded-full bg-white/40 backdrop-blur-sm border border-white/50">
+                            <RefreshCw className="w-3.5 h-3.5 text-emerald-600" />
+                            <span className="text-xs font-black text-black">{isRTL ? 'تحديث' : 'Refresh'}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <CardContent className="p-4">
+                      {(() => {
+                        // Car categories: 1=economy, 2=compact, 3=mid-size, 4=full-size, 5=luxury
+                        const allCars = [
+                          // Economy Cars
+                          { brand: 'تويوتا', brandEn: 'Toyota', model: 'يارس', modelEn: 'Yaris', year: 2024, price: 58000, hp: 107, fuelConsumption: '5.5', engine: '1.5L', seats: 5, transmission: 'أوتوماتيك', category: 1 },
+                          { brand: 'نيسان', brandEn: 'Nissan', model: 'صني', modelEn: 'Sunny', year: 2024, price: 55000, hp: 108, fuelConsumption: '5.8', engine: '1.6L', seats: 5, transmission: 'أوتوماتيك', category: 1 },
+                          { brand: 'هيونداي', brandEn: 'Hyundai', model: 'أكسنت', modelEn: 'Accent', year: 2024, price: 62000, hp: 120, fuelConsumption: '5.4', engine: '1.4L', seats: 5, transmission: 'أوتوماتيك', category: 1 },
+                          { brand: 'كيا', brandEn: 'Kia', model: 'بيكانتو', modelEn: 'Picanto', year: 2024, price: 52000, hp: 85, fuelConsumption: '5.0', engine: '1.0L', seats: 5, transmission: 'أوتوماتيك', category: 1 },
+                          // Compact Cars
+                          { brand: 'كيا', brandEn: 'Kia', model: 'ريو', modelEn: 'Rio', year: 2024, price: 65000, hp: 118, fuelConsumption: '5.6', engine: '1.4L', seats: 5, transmission: 'أوتوماتيك', category: 2 },
+                          { brand: 'كيا', brandEn: 'Kia', model: 'سيراتو', modelEn: 'Cerato', year: 2024, price: 78000, hp: 147, fuelConsumption: '6.0', engine: '2.0L', seats: 5, transmission: 'أوتوماتيك', category: 2 },
+                          { brand: 'هيونداي', brandEn: 'Hyundai', model: 'فيرونا', modelEn: 'Verna', year: 2024, price: 68000, hp: 123, fuelConsumption: '5.5', engine: '1.4L', seats: 5, transmission: 'أوتوماتيك', category: 2 },
+                          // Mid-Size Cars
+                          { brand: 'هيونداي', brandEn: 'Hyundai', model: 'إلنترا', modelEn: 'Elantra', year: 2024, price: 82000, hp: 147, fuelConsumption: '5.9', engine: '2.0L', seats: 5, transmission: 'أوتوماتيك', category: 3 },
+                          { brand: 'تويوتا', brandEn: 'Toyota', model: 'كورولا', modelEn: 'Corolla', year: 2024, price: 85000, hp: 169, fuelConsumption: '5.2', engine: '2.0L', seats: 5, transmission: 'أوتوماتيك', category: 3 },
+                          { brand: 'هوندا', brandEn: 'Honda', model: 'سيفيك', modelEn: 'Civic', year: 2024, price: 88000, hp: 158, fuelConsumption: '5.7', engine: '2.0L', seats: 5, transmission: 'أوتوماتيك', category: 3 },
+                          { brand: 'فولكسفاغن', brandEn: 'Volkswagen', model: 'جيتا', modelEn: 'Jetta', year: 2024, price: 90000, hp: 158, fuelConsumption: '5.6', engine: '1.4L TSI', seats: 5, transmission: 'أوتوماتيك', category: 3 },
+                          // Full-Size Cars
+                          { brand: 'نيسان', brandEn: 'Nissan', model: 'التيما', modelEn: 'Altima', year: 2024, price: 98000, hp: 188, fuelConsumption: '6.2', engine: '2.5L', seats: 5, transmission: 'أوتوماتيك', category: 4 },
+                          { brand: 'هيونداي', brandEn: 'Hyundai', model: 'سوناتا', modelEn: 'Sonata', year: 2024, price: 108000, hp: 191, fuelConsumption: '6.3', engine: '2.5L', seats: 5, transmission: 'أوتوماتيك', category: 4 },
+                          { brand: 'هوندا', brandEn: 'Honda', model: 'أكورد', modelEn: 'Accord', year: 2024, price: 115000, hp: 192, fuelConsumption: '5.9', engine: '1.5L Turbo', seats: 5, transmission: 'أوتوماتيك', category: 4 },
+                          { brand: 'كيا', brandEn: 'Kia', model: 'كي 5', modelEn: 'K5', year: 2024, price: 102000, hp: 180, fuelConsumption: '6.1', engine: '2.0L', seats: 5, transmission: 'أوتوماتيك', category: 4 },
+                          // Luxury Cars
+                          { brand: 'تويوتا', brandEn: 'Toyota', model: 'كامري', modelEn: 'Camry', year: 2024, price: 118000, hp: 206, fuelConsumption: '5.8', engine: '2.5L', seats: 5, transmission: 'أوتوماتيك', category: 5 },
+                          // SUV Category
+                          { brand: 'تويوتا', brandEn: 'Toyota', model: 'راش', modelEn: 'Rush', year: 2024, price: 85000, hp: 105, fuelConsumption: '7.2', engine: '1.5L', seats: 7, transmission: 'أوتوماتيك', category: 3 },
+                          { brand: 'هيونداي', brandEn: 'Hyundai', model: 'كريتا', modelEn: 'Creta', year: 2024, price: 88000, hp: 123, fuelConsumption: '6.8', engine: '1.6L', seats: 5, transmission: 'أوتوماتيك', category: 3 },
+                          { brand: 'كيا', brandEn: 'Kia', model: 'سبورتاج', modelEn: 'Sportage', year: 2024, price: 105000, hp: 187, fuelConsumption: '7.5', engine: '2.0L', seats: 5, transmission: 'أوتوماتيك', category: 4 },
+                          { brand: 'نيسان', brandEn: 'Nissan', model: 'اكس تريل', modelEn: 'X-Trail', year: 2024, price: 115000, hp: 188, fuelConsumption: '7.8', engine: '2.5L', seats: 7, transmission: 'أوتوماتيك', category: 4 },
+                          { brand: 'هوندا', brandEn: 'Honda', model: 'سي آر في', modelEn: 'CR-V', year: 2024, price: 125000, hp: 190, fuelConsumption: '7.2', engine: '1.5L Turbo', seats: 5, transmission: 'أوتوماتيك', category: 4 },
+                          { brand: 'تويوتا', brandEn: 'Toyota', model: 'راف 4', modelEn: 'RAV4', year: 2024, price: 135000, hp: 203, fuelConsumption: '7.0', engine: '2.5L', seats: 5, transmission: 'أوتوماتيك', category: 5 },
+                          { brand: 'مازدا', brandEn: 'Mazda', model: 'سي اكس 5', modelEn: 'CX-5', year: 2024, price: 118000, hp: 187, fuelConsumption: '7.1', engine: '2.5L', seats: 5, transmission: 'أوتوماتيك', category: 4 },
+                        ];
+
+                        const calculateCarPayment = (price: number) => {
+                          const principal = price * (1 - financingParams.downPayment / 100);
+                          const monthlyRate = financingParams.interestRate / 100 / 12;
+                          const numPayments = financingParams.loanTerm;
+                          const payment = principal * (monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / (Math.pow(1 + monthlyRate, numPayments) - 1);
+                          return payment;
+                        };
+
+                        // Calculate all cars with payments
+                        const carsWithPayments = allCars
+                          .map(car => ({
+                            ...car,
+                            monthlyPayment: calculateCarPayment(car.price),
+                            isWithinBudget: calculateCarPayment(car.price) <= salaryEligibility.maxMonthlyPayment,
+                          }));
+
+                        // Affordable cars (within budget)
+                        const affordableCars = carsWithPayments
+                          .filter(car => car.isWithinBudget)
+                          .sort((a, b) => b.monthlyPayment - a.monthlyPayment)
+                          .slice(0, 6);
+
+                        if (affordableCars.length === 0) {
+                          return (
+                            <div className="text-center py-6 px-3 rounded-xl bg-muted/20 border border-dashed border-muted-foreground/30">
+                              <AlertCircle className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                              <p className="text-xs font-medium">{t.noAffordableCars}</p>
+                              <p className="text-[10px] text-muted-foreground mt-1">{t.increaseDownPayment}</p>
+                            </div>
+                          );
+                        }
+
+                        return (
+                          <div className="space-y-2 max-h-72 overflow-y-auto">
+                            {affordableCars.map((car, i) => (
+                              <motion.div
+                                key={`${car.brand}-${car.model}`}
+                                initial={{ opacity: 0, x: isRTL ? 10 : -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: i * 0.05 }}
+                                className={`p-3 rounded-xl border ${i === 0 ? 'border-amber-500/50 bg-amber-500/5' : 'border-border bg-muted/30'} hover:border-primary/50 transition-colors cursor-pointer ${isRTL ? 'flex-row-reverse' : ''} flex items-center justify-between gap-3`}
+                              >
+                                {/* Rank */}
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 ${i === 0 ? 'bg-gradient-to-br from-amber-400 to-orange-500 text-white' : 'bg-muted text-muted-foreground'}`}>
+                                  {i === 0 ? '🥇' : i + 1}
+                                </div>
+                                
+                                {/* Car Info */}
+                                <div className={`flex-1 min-w-0 ${isRTL ? 'text-right' : 'text-left'}`}>
+                                  <div className="font-semibold text-sm truncate">
+                                    {isRTL ? car.brand : car.brandEn} {isRTL ? car.model : car.modelEn}
+                                  </div>
+                                  <div className="text-[10px] text-muted-foreground flex items-center gap-1">
+                                    <span>{car.year}</span>
+                                    <span className="w-0.5 h-0.5 rounded-full bg-muted-foreground"></span>
+                                    <span>{getCurrencyDisplay()} {car.price.toLocaleString()}</span>
+                                  </div>
+                                </div>
+                                
+                                {/* Payment */}
+                                <div className={`flex-shrink-0 ${isRTL ? 'text-left' : 'text-right'}`}>
+                                  <div className="font-bold text-sm text-emerald-600">
+                                    {getCurrencyDisplay()} {Math.round(car.monthlyPayment).toLocaleString()}
+                                  </div>
+                                  <div className="text-[9px] text-muted-foreground text-center">{isRTL ? 'شهرياً' : 'monthly'}</div>
+                                </div>
+                              </motion.div>
+                            ))}
+                            
+                            <div className={`flex items-center justify-between pt-2 border-t text-[10px] text-muted-foreground ${isRTL ? 'flex-row-reverse' : ''}`}>
+                              <span className="flex items-center gap-1">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                {isRTL ? `${affordableCars.length} سيارات ضمن الميزانية` : `${affordableCars.length} cars within budget`}
+                              </span>
+                              <span>{isRTL ? 'الحد الأقصى:' : 'Max:'} {getCurrencyDisplay()} {Math.round(salaryEligibility.maxMonthlyPayment).toLocaleString()}</span>
+                            </div>
+                          </div>
+                        );
+                      })()}
+                    </CardContent>
+                  </Card>
+                )}
               </div>
             )}
             

@@ -60,8 +60,8 @@ const initialState = {
   chatMessages: [] as ChatMessage[],
   chatLoading: false,
   financingParams: {
-    downPayment: 20,
-    loanTerm: 60,
+    downPayment: 0,
+    loanTerm: 48,
     interestRate: 5.5,
     salary: 0,
     selectedBank: null,
