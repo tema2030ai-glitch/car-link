@@ -8430,10 +8430,19 @@ export default function CarLinkPage() {
                                   animate={{ opacity: 1, x: 0 }}
                                   transition={{ delay: i * 0.03 }}
                                   onClick={() => {
-                                    setSelectedBudgetCar(car);
-                                    setBudgetCarRequestOpen(true);
-                                    setBudgetCarRequestSubmitted(false);
-                                    setBudgetCarRequestData({ name: '', phone: '', city: '', notes: '' });
+                                    // Transform car data for chatbot
+                                    const carForChatbot = {
+                                      brand: isRTL ? car.brand : car.brandEn,
+                                      brandEn: car.brandEn,
+                                      model: isRTL ? car.model : car.modelEn,
+                                      modelEn: car.modelEn,
+                                      year: car.year,
+                                      price: car.price,
+                                      monthlyPayment: car.monthlyPayment,
+                                      hp: car.hp,
+                                      seats: car.seats,
+                                    };
+                                    openFinancingChatbot('', null, carForChatbot);
                                   }}
                                   className={`p-3 rounded-xl border ${i === 0 ? 'border-amber-500/50 bg-amber-500/5' : 'border-border bg-muted/30'} hover:border-primary/50 transition-colors cursor-pointer ${isRTL ? 'flex-row-reverse' : ''} flex items-center justify-between gap-3`}
                                 >
