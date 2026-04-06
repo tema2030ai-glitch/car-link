@@ -930,6 +930,25 @@ export default function CarLinkPage() {
   const [carRequestSubmitted, setCarRequestSubmitted] = useState(false);
   const [carRequestTrackingNumber, setCarRequestTrackingNumber] = useState('');
 
+  // Manual Car Entry for Analysis States
+  const [manualCarEntryOpen, setManualCarEntryOpen] = useState(false);
+  const [manualCarData, setManualCarData] = useState({
+    brand: '',
+    model: '',
+    year: '',
+    trim: '',
+    price: '',
+    mileage: '',
+    condition: 'new' as 'new' | 'used',
+    color: '',
+    fuelType: '',
+    transmission: '',
+    engine: '',
+    horsepower: '',
+    seats: '',
+    drivetrain: '',
+  });
+
   // Market Price Car Registration States
   const [showMarketPriceForm, setShowMarketPriceForm] = useState(false);
   const [marketPriceCars, setMarketPriceCars] = useState<any[]>([]);
@@ -1169,6 +1188,52 @@ export default function CarLinkPage() {
       });
     }
   }, [applicationMessages, applicationLoading]);
+
+  // Handle Manual Car Entry Analysis
+  const handleManualCarAnalysis = () => {
+    if (!manualCarData.brand || !manualCarData.model) {
+      toast({ title: isRTL ? 'الرجاء إدخال الماركة والموديل' : 'Please enter brand and model', variant: 'destructive' });
+      return;
+    }
+
+    // Create vehicle object from manual data
+    const vehicle: Vehicle = {
+      id: `manual-${Date.now()}`,
+      brand: manualCarData.brand,
+      model: manualCarData.model,
+      year: manualCarData.year ? parseInt(manualCarData.year) : undefined,
+      trim: manualCarData.trim || undefined,
+      price: manualCarData.price ? parseFloat(manualCarData.price) : undefined,
+      currency: 'SAR',
+      mileage: manualCarData.mileage ? parseInt(manualCarData.mileage) : undefined,
+      condition: manualCarData.condition,
+      color: manualCarData.color || undefined,
+      engine: manualCarData.engine || undefined,
+      horsepower: manualCarData.horsepower ? parseInt(manualCarData.horsepower) : undefined,
+      transmission: manualCarData.transmission || undefined,
+      fuelType: manualCarData.fuelType || undefined,
+      drivetrain: manualCarData.drivetrain || undefined,
+      seats: manualCarData.seats ? parseInt(manualCarData.seats) : undefined,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    setCurrentVehicle(vehicle);
+    setViewState('results');
+    setManualCarEntryOpen(false);
+
+    // Reset form
+    setManualCarData({
+      brand: '', model: '', year: '', trim: '', price: '', mileage: '',
+      condition: 'new', color: '', fuelType: '', transmission: '',
+      engine: '', horsepower: '', seats: '', drivetrain: '',
+    });
+
+    toast({
+      title: isRTL ? 'تم تحليل السيارة' : 'Car Analyzed',
+      description: `${vehicle.brand} ${vehicle.model}`,
+    });
+  };
 
   // Analyze link
   const handleAnalyzeLink = async () => {
@@ -2729,23 +2794,20 @@ export default function CarLinkPage() {
                         </TooltipContent>
                       </Tooltip>
 
-                      {/* New Car Request */}
+                      {/* Manual Car Entry for Analysis */}
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Button
                             variant="outline"
                             size="icon"
-                            className="h-12 w-12 rounded-xl"
-                            onClick={() => {
-                              setSelectedService('new-car-request');
-                              setServiceDetailOpen(true);
-                            }}
+                            className="h-12 w-12 rounded-xl sky-gradient border-0"
+                            onClick={() => setManualCarEntryOpen(true)}
                           >
-                            <Plus className="w-5 h-5 text-primary" strokeWidth={2.5} />
+                            <Plus className="w-5 h-5 text-white" strokeWidth={2.5} />
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>{isRTL ? 'طلب سيارة جديدة' : 'New Car Request'}</p>
+                          <p>{isRTL ? 'إدخال بيانات سيارة للتحليل' : 'Add Car Data for Analysis'}</p>
                         </TooltipContent>
                       </Tooltip>
                     </div>
@@ -2807,36 +2869,6 @@ export default function CarLinkPage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
             >
-              {/* Floating Plus Button - New Analysis */}
-              <motion.button
-                onClick={() => {
-                  setViewState('input');
-                  setCurrentVehicle(null);
-                  setLinkUrl('');
-                  setMarketAnalysis(null);
-                  setCompetitors(null);
-                }}
-                className="fixed bottom-24 right-6 z-50 w-16 h-16 rounded-full sky-gradient shadow-lg flex items-center justify-center hover:scale-110 transition-transform cursor-pointer group"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-              >
-                <Plus className="w-8 h-8 text-white group-hover:rotate-90 transition-transform" strokeWidth={2.5} />
-                {/* Pulse animation */}
-                <motion.div
-                  className="absolute inset-0 rounded-full sky-gradient"
-                  animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0, 0.5] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
-              </motion.button>
-              
-              {/* Tooltip for floating button */}
-              <div className={`fixed bottom-40 right-6 z-50 bg-popover text-popover-foreground px-3 py-1.5 rounded-lg text-sm font-medium shadow-md ${isRTL ? 'rtl' : 'ltr'}`}>
-                {isRTL ? 'تحليل سيارة جديدة' : 'New Car Analysis'}
-              </div>
-
               {/* Vehicle Header */}
               <Card className="mb-6 sky-gradient">
                 <CardContent className="p-6">
@@ -9787,6 +9819,262 @@ export default function CarLinkPage() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Manual Car Entry Dialog */}
+      <Dialog open={manualCarEntryOpen} onOpenChange={setManualCarEntryOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" dir={isRTL ? 'rtl' : 'ltr'}>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-xl">
+              <div className="w-10 h-10 rounded-xl sky-gradient flex items-center justify-center">
+                <Car className="w-5 h-5 text-white" />
+              </div>
+              {isRTL ? 'إدخال بيانات السيارة للتحليل' : 'Enter Car Data for Analysis'}
+            </DialogTitle>
+            <DialogDescription>
+              {isRTL ? 'أدخل بيانات السيارة يدوياً للحصول على تحليل شامل' : 'Enter car details manually to get a comprehensive analysis'}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-6 py-4">
+            {/* Basic Info */}
+            <div className="space-y-4">
+              <h4 className="font-semibold flex items-center gap-2 text-primary">
+                <Car className="w-4 h-4" />
+                {isRTL ? 'المعلومات الأساسية' : 'Basic Information'}
+              </h4>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>{isRTL ? 'الماركة *' : 'Brand *'}</Label>
+                  <select
+                    className="w-full h-11 rounded-xl border bg-background px-3 mt-1"
+                    value={manualCarData.brand}
+                    onChange={(e) => {
+                      setManualCarData({ ...manualCarData, brand: e.target.value, model: '' });
+                    }}
+                  >
+                    <option value="">{isRTL ? 'اختر الماركة' : 'Select Brand'}</option>
+                    {Object.keys(carModelsByBrand).map(brand => (
+                      <option key={brand} value={brand}>{brand}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <Label>{isRTL ? 'الموديل *' : 'Model *'}</Label>
+                  <select
+                    className="w-full h-11 rounded-xl border bg-background px-3 mt-1"
+                    value={manualCarData.model}
+                    onChange={(e) => setManualCarData({ ...manualCarData, model: e.target.value })}
+                    disabled={!manualCarData.brand}
+                  >
+                    <option value="">{isRTL ? 'اختر الموديل' : 'Select Model'}</option>
+                    {manualCarData.brand && carModelsByBrand[manualCarData.brand]?.map(model => (
+                      <option key={model} value={model}>{model}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <Label>{isRTL ? 'السنة' : 'Year'}</Label>
+                  <select
+                    className="w-full h-11 rounded-xl border bg-background px-3 mt-1"
+                    value={manualCarData.year}
+                    onChange={(e) => setManualCarData({ ...manualCarData, year: e.target.value })}
+                  >
+                    <option value="">{isRTL ? 'اختر' : 'Select'}</option>
+                    {[2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015].map(y => (
+                      <option key={y} value={y}>{y}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <Label>{isRTL ? 'مستوى التجهيز' : 'Trim'}</Label>
+                  <Input
+                    placeholder={isRTL ? 'مثال: LX, EX' : 'e.g., LX, EX'}
+                    value={manualCarData.trim}
+                    onChange={(e) => setManualCarData({ ...manualCarData, trim: e.target.value })}
+                    className="h-11 rounded-xl mt-1"
+                  />
+                </div>
+                <div>
+                  <Label>{isRTL ? 'الحالة' : 'Condition'}</Label>
+                  <select
+                    className="w-full h-11 rounded-xl border bg-background px-3 mt-1"
+                    value={manualCarData.condition}
+                    onChange={(e) => setManualCarData({ ...manualCarData, condition: e.target.value as 'new' | 'used' })}
+                  >
+                    <option value="new">{isRTL ? 'جديدة' : 'New'}</option>
+                    <option value="used">{isRTL ? 'مستعملة' : 'Used'}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Price & Mileage */}
+            <div className="space-y-4">
+              <h4 className="font-semibold flex items-center gap-2 text-primary">
+                <DollarSign className="w-4 h-4" />
+                {isRTL ? 'السعر والممشى' : 'Price & Mileage'}
+              </h4>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>{isRTL ? 'السعر (ريال)' : 'Price (SAR)'}</Label>
+                  <Input
+                    type="number"
+                    placeholder={isRTL ? 'مثال: 85000' : 'e.g., 85000'}
+                    value={manualCarData.price}
+                    onChange={(e) => setManualCarData({ ...manualCarData, price: e.target.value })}
+                    className="h-11 rounded-xl mt-1"
+                    dir="ltr"
+                  />
+                </div>
+                <div>
+                  <Label>{isRTL ? 'الممشى (كم)' : 'Mileage (km)'}</Label>
+                  <Input
+                    type="number"
+                    placeholder={isRTL ? 'مثال: 50000' : 'e.g., 50000'}
+                    value={manualCarData.mileage}
+                    onChange={(e) => setManualCarData({ ...manualCarData, mileage: e.target.value })}
+                    className="h-11 rounded-xl mt-1"
+                    dir="ltr"
+                    disabled={manualCarData.condition === 'new'}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Specifications */}
+            <div className="space-y-4">
+              <h4 className="font-semibold flex items-center gap-2 text-primary">
+                <Cog className="w-4 h-4" />
+                {isRTL ? 'المواصفات التقنية' : 'Technical Specifications'}
+              </h4>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>{isRTL ? 'المحرك' : 'Engine'}</Label>
+                  <Input
+                    placeholder={isRTL ? 'مثال: 2.5L' : 'e.g., 2.5L'}
+                    value={manualCarData.engine}
+                    onChange={(e) => setManualCarData({ ...manualCarData, engine: e.target.value })}
+                    className="h-11 rounded-xl mt-1"
+                  />
+                </div>
+                <div>
+                  <Label>{isRTL ? 'القوة (حصان)' : 'Horsepower'}</Label>
+                  <Input
+                    type="number"
+                    placeholder={isRTL ? 'مثال: 200' : 'e.g., 200'}
+                    value={manualCarData.horsepower}
+                    onChange={(e) => setManualCarData({ ...manualCarData, horsepower: e.target.value })}
+                    className="h-11 rounded-xl mt-1"
+                    dir="ltr"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <Label>{isRTL ? 'نوع الوقود' : 'Fuel Type'}</Label>
+                  <select
+                    className="w-full h-11 rounded-xl border bg-background px-3 mt-1"
+                    value={manualCarData.fuelType}
+                    onChange={(e) => setManualCarData({ ...manualCarData, fuelType: e.target.value })}
+                  >
+                    <option value="">{isRTL ? 'اختر' : 'Select'}</option>
+                    <option value="gasoline">{isRTL ? 'بنزين' : 'Gasoline'}</option>
+                    <option value="hybrid">{isRTL ? 'هايبرد' : 'Hybrid'}</option>
+                    <option value="electric">{isRTL ? 'كهربائي' : 'Electric'}</option>
+                    <option value="diesel">{isRTL ? 'ديزل' : 'Diesel'}</option>
+                  </select>
+                </div>
+                <div>
+                  <Label>{isRTL ? 'ناقل الحركة' : 'Transmission'}</Label>
+                  <select
+                    className="w-full h-11 rounded-xl border bg-background px-3 mt-1"
+                    value={manualCarData.transmission}
+                    onChange={(e) => setManualCarData({ ...manualCarData, transmission: e.target.value })}
+                  >
+                    <option value="">{isRTL ? 'اختر' : 'Select'}</option>
+                    <option value="automatic">{isRTL ? 'أوتوماتيك' : 'Automatic'}</option>
+                    <option value="manual">{isRTL ? 'يدوي' : 'Manual'}</option>
+                    <option value="cvt">{isRTL ? 'CVT' : 'CVT'}</option>
+                  </select>
+                </div>
+                <div>
+                  <Label>{isRTL ? 'الدفع' : 'Drivetrain'}</Label>
+                  <select
+                    className="w-full h-11 rounded-xl border bg-background px-3 mt-1"
+                    value={manualCarData.drivetrain}
+                    onChange={(e) => setManualCarData({ ...manualCarData, drivetrain: e.target.value })}
+                  >
+                    <option value="">{isRTL ? 'اختر' : 'Select'}</option>
+                    <option value="FWD">{isRTL ? 'أمامي' : 'FWD'}</option>
+                    <option value="RWD">{isRTL ? 'خلفي' : 'RWD'}</option>
+                    <option value="AWD">{isRTL ? 'كلي' : 'AWD'}</option>
+                    <option value="4WD">{isRTL ? 'رباعي' : '4WD'}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>{isRTL ? 'عدد المقاعد' : 'Seats'}</Label>
+                  <select
+                    className="w-full h-11 rounded-xl border bg-background px-3 mt-1"
+                    value={manualCarData.seats}
+                    onChange={(e) => setManualCarData({ ...manualCarData, seats: e.target.value })}
+                  >
+                    <option value="">{isRTL ? 'اختر' : 'Select'}</option>
+                    {[2, 4, 5, 6, 7, 8].map(s => (
+                      <option key={s} value={s}>{s}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <Label>{isRTL ? 'اللون' : 'Color'}</Label>
+                  <select
+                    className="w-full h-11 rounded-xl border bg-background px-3 mt-1"
+                    value={manualCarData.color}
+                    onChange={(e) => setManualCarData({ ...manualCarData, color: e.target.value })}
+                  >
+                    <option value="">{isRTL ? 'اختر' : 'Select'}</option>
+                    <option value="white">{isRTL ? 'أبيض' : 'White'}</option>
+                    <option value="black">{isRTL ? 'أسود' : 'Black'}</option>
+                    <option value="silver">{isRTL ? 'فضي' : 'Silver'}</option>
+                    <option value="gray">{isRTL ? 'رمادي' : 'Gray'}</option>
+                    <option value="blue">{isRTL ? 'أزرق' : 'Blue'}</option>
+                    <option value="red">{isRTL ? 'أحمر' : 'Red'}</option>
+                    <option value="green">{isRTL ? 'أخضر' : 'Green'}</option>
+                    <option value="brown">{isRTL ? 'بني' : 'Brown'}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex gap-3 pt-4 border-t">
+            <Button
+              variant="outline"
+              className="flex-1 h-12 rounded-xl"
+              onClick={() => setManualCarEntryOpen(false)}
+            >
+              {isRTL ? 'إلغاء' : 'Cancel'}
+            </Button>
+            <Button
+              className="flex-1 h-12 rounded-xl sky-gradient text-white"
+              onClick={handleManualCarAnalysis}
+              disabled={!manualCarData.brand || !manualCarData.model}
+            >
+              <Sparkles className={`w-5 h-5 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+              {isRTL ? 'تحليل السيارة' : 'Analyze Car'}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Floating Action Button - تحليل سيارة سريع */}
       <motion.button
