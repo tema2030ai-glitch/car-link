@@ -813,7 +813,16 @@ export default function CarLinkPage() {
   // Budget Cars Refresh State
   const [budgetCarsOffset, setBudgetCarsOffset] = useState(0);
   const [isRefreshingBudgetCars, setIsRefreshingBudgetCars] = useState(false);
-  
+  const [selectedBudgetCar, setSelectedBudgetCar] = useState<any | null>(null);
+  const [budgetCarRequestOpen, setBudgetCarRequestOpen] = useState(false);
+  const [budgetCarRequestData, setBudgetCarRequestData] = useState({
+    name: '',
+    phone: '',
+    city: '',
+    notes: ''
+  });
+  const [budgetCarRequestSubmitted, setBudgetCarRequestSubmitted] = useState(false);
+
   // Use comparisonVehicles from store - sync with main comparison
   const compareList = comparisonVehicles.map(cv => ({
     id: cv.vehicle.id,
@@ -8261,10 +8270,17 @@ export default function CarLinkPage() {
                               </span>
                             </div>
                           </div>
-                          <div className="hidden sm:flex items-center gap-1 px-2 py-1 rounded-full bg-white/40 backdrop-blur-sm border border-white/50">
-                            <RefreshCw className="w-3.5 h-3.5 text-emerald-600" />
+                          <button
+                            onClick={() => {
+                              setIsRefreshingBudgetCars(true);
+                              setBudgetCarsOffset(prev => prev + 1);
+                              setTimeout(() => setIsRefreshingBudgetCars(false), 500);
+                            }}
+                            className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-white/40 backdrop-blur-sm border border-white/50 hover:bg-white/60 transition-all cursor-pointer"
+                          >
+                            <RefreshCw className={`w-3.5 h-3.5 text-emerald-600 ${isRefreshingBudgetCars ? 'animate-spin' : ''}`} />
                             <span className="text-xs font-black text-black">{isRTL ? 'تحديث' : 'Refresh'}</span>
-                          </div>
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -8409,37 +8425,52 @@ export default function CarLinkPage() {
                             <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
                               {affordableCars.map((car, i) => (
                                 <motion.div
-                                  key={`${car.brand}-${car.model}`}
+                                  key={`${car.brand}-${car.model}-${budgetCarsOffset}`}
                                   initial={{ opacity: 0, x: isRTL ? 10 : -10 }}
                                   animate={{ opacity: 1, x: 0 }}
                                   transition={{ delay: i * 0.03 }}
-                                  className={`p-3 rounded-xl border ${i === 0 ? 'border-amber-500/50 bg-amber-500/5' : 'border-border bg-muted/30'} hover:border-primary/50 transition-colors cursor-pointer ${isRTL ? 'flex-row-reverse' : ''} flex items-center justify-between gap-3`}
+                                  className={`p-3 rounded-xl border ${i === 0 ? 'border-amber-500/50 bg-amber-500/5' : 'border-border bg-muted/30'} hover:border-primary/50 transition-colors ${isRTL ? 'flex-row-reverse' : ''} flex items-center justify-between gap-3`}
                                 >
                                   {/* Rank */}
                                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 ${i === 0 ? 'bg-gradient-to-br from-amber-400 to-orange-500 text-white' : i < 3 ? 'bg-emerald-500/20 text-emerald-600' : 'bg-muted text-muted-foreground'}`}>
                                     {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : i + 1}
                                   </div>
-                                  
+
                                   {/* Car Info */}
                                   <div className={`flex-1 min-w-0 ${isRTL ? 'text-right' : 'text-left'}`}>
                                     <div className="font-semibold text-sm truncate">
                                       {isRTL ? car.brand : car.brandEn} {isRTL ? car.model : car.modelEn}
                                     </div>
-                                    <div className="text-[10px] text-muted-foreground flex items-center gap-1">
+                                    <div className="text-[10px] text-muted-foreground flex items-center gap-1 flex-wrap">
                                       <span>{car.year}</span>
                                       <span className="w-0.5 h-0.5 rounded-full bg-muted-foreground"></span>
                                       <span>{getCurrencyDisplay()} {car.price.toLocaleString()}</span>
                                       <span className="w-0.5 h-0.5 rounded-full bg-muted-foreground"></span>
                                       <span>{car.hp} {isRTL ? 'حصان' : 'hp'}</span>
+                                      <span className="w-0.5 h-0.5 rounded-full bg-muted-foreground"></span>
+                                      <span>{car.seats} {isRTL ? 'مقاعد' : 'seats'}</span>
                                     </div>
                                   </div>
-                                  
-                                  {/* Payment */}
-                                  <div className={`flex-shrink-0 ${isRTL ? 'text-left' : 'text-right'}`}>
+
+                                  {/* Payment & Request Button */}
+                                  <div className={`flex flex-col items-center gap-1 flex-shrink-0 ${isRTL ? 'items-start' : 'items-end'}`}>
                                     <div className="font-bold text-sm text-emerald-600">
                                       {getCurrencyDisplay()} {Math.round(car.monthlyPayment).toLocaleString()}
                                     </div>
-                                    <div className="text-[9px] text-muted-foreground text-center">{isRTL ? 'شهرياً' : 'monthly'}</div>
+                                    <div className="text-[9px] text-muted-foreground">{isRTL ? 'شهرياً' : 'monthly'}</div>
+                                    <Button
+                                      size="sm"
+                                      className="h-6 px-2 text-[10px] sky-gradient text-white mt-1"
+                                      onClick={() => {
+                                        setSelectedBudgetCar(car);
+                                        setBudgetCarRequestOpen(true);
+                                        setBudgetCarRequestSubmitted(false);
+                                        setBudgetCarRequestData({ name: '', phone: '', city: '', notes: '' });
+                                      }}
+                                    >
+                                      <ShoppingCart className="w-3 h-3 mr-1" />
+                                      {isRTL ? 'طلب' : 'Request'}
+                                    </Button>
                                   </div>
                                 </motion.div>
                               ))}
@@ -9255,6 +9286,182 @@ export default function CarLinkPage() {
                   </Button>
                 </div>
               </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Budget Car Request Dialog */}
+      <Dialog open={budgetCarRequestOpen} onOpenChange={setBudgetCarRequestOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center">
+                <ShoppingCart className="w-5 h-5 text-white" />
+              </div>
+              <span>{isRTL ? 'طلب السيارة' : 'Request Car'}</span>
+            </DialogTitle>
+            <DialogDescription className={isRTL ? 'text-right' : 'text-left'}>
+              {isRTL ? 'أدخل بياناتك لطلب السيارة' : 'Enter your details to request this car'}
+            </DialogDescription>
+          </DialogHeader>
+
+          {!budgetCarRequestSubmitted ? (
+            <div className="space-y-4 mt-4">
+              {/* Selected Car Info */}
+              {selectedBudgetCar && (
+                <div className={`p-3 bg-emerald-500/10 rounded-xl border border-emerald-500/30 ${isRTL ? 'text-right' : 'text-left'}`}>
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center">
+                      <Car className="w-6 h-6 text-emerald-600" />
+                    </div>
+                    <div>
+                      <div className="font-bold">
+                        {isRTL ? selectedBudgetCar.brand : selectedBudgetCar.brandEn} {isRTL ? selectedBudgetCar.model : selectedBudgetCar.modelEn}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        {getCurrencyDisplay()} {selectedBudgetCar.price.toLocaleString()}
+                      </div>
+                      <div className="text-xs text-emerald-600 font-medium">
+                        {isRTL ? 'قسط شهري:' : 'Monthly:'} {getCurrencyDisplay()} {Math.round(selectedBudgetCar.monthlyPayment).toLocaleString()}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Request Form */}
+              <div className="space-y-3">
+                <div>
+                  <Label className={isRTL ? 'text-right block' : ''}>{isRTL ? 'الاسم الكامل' : 'Full Name'}</Label>
+                  <Input
+                    placeholder={isRTL ? 'أدخل اسمك الكامل' : 'Enter your full name'}
+                    value={budgetCarRequestData.name}
+                    onChange={(e) => setBudgetCarRequestData({ ...budgetCarRequestData, name: e.target.value })}
+                    className={isRTL ? 'text-right' : ''}
+                  />
+                </div>
+                <div>
+                  <Label className={isRTL ? 'text-right block' : ''}>{isRTL ? 'رقم الجوال' : 'Phone Number'}</Label>
+                  <Input
+                    type="tel"
+                    placeholder={isRTL ? '05xxxxxxxx' : '05xxxxxxxx'}
+                    value={budgetCarRequestData.phone}
+                    onChange={(e) => setBudgetCarRequestData({ ...budgetCarRequestData, phone: e.target.value })}
+                    className={isRTL ? 'text-right' : ''}
+                    dir="ltr"
+                  />
+                </div>
+                <div>
+                  <Label className={isRTL ? 'text-right block' : ''}>{isRTL ? 'المدينة' : 'City'}</Label>
+                  <select
+                    value={budgetCarRequestData.city}
+                    onChange={(e) => setBudgetCarRequestData({ ...budgetCarRequestData, city: e.target.value })}
+                    className={`w-full h-10 rounded-lg border bg-background px-3 ${isRTL ? 'text-right' : 'text-left'}`}
+                  >
+                    <option value="">{isRTL ? 'اختر المدينة' : 'Select city'}</option>
+                    <option value="الرياض">الرياض</option>
+                    <option value="جدة">جدة</option>
+                    <option value="مكة">مكة</option>
+                    <option value="المدينة">المدينة</option>
+                    <option value="الدمام">الدمام</option>
+                    <option value="الخبر">الخبر</option>
+                    <option value="الظهران">الظهران</option>
+                    <option value="تبوك">تبوك</option>
+                    <option value="أبها">أبها</option>
+                    <option value="جازان">جازان</option>
+                    <option value="نجران">نجران</option>
+                    <option value="حائل">حائل</option>
+                    <option value="القصيم">القصيم</option>
+                    <option value="الطائف">الطائف</option>
+                  </select>
+                </div>
+                <div>
+                  <Label className={isRTL ? 'text-right block' : ''}>{isRTL ? 'ملاحظات إضافية' : 'Additional Notes'}</Label>
+                  <Textarea
+                    placeholder={isRTL ? 'أي ملاحظات أو متطلبات إضافية' : 'Any additional notes or requirements'}
+                    value={budgetCarRequestData.notes}
+                    onChange={(e) => setBudgetCarRequestData({ ...budgetCarRequestData, notes: e.target.value })}
+                    className={isRTL ? 'text-right' : ''}
+                    rows={3}
+                  />
+                </div>
+              </div>
+
+              {/* Financing Details */}
+              <div className={`p-3 bg-primary/5 rounded-xl ${isRTL ? 'text-right' : 'text-left'}`}>
+                <div className="text-sm font-semibold mb-2">{isRTL ? 'تفاصيل التمويل:' : 'Financing Details:'}</div>
+                <div className="space-y-1 text-xs text-muted-foreground">
+                  <div className={`flex justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <span>{isRTL ? 'الدفعة المقدمة:' : 'Down Payment:'}</span>
+                    <span>{financingParams.downPayment}% ({getCurrencyDisplay()} {Math.round((selectedBudgetCar?.price || 0) * financingParams.downPayment / 100).toLocaleString()})</span>
+                  </div>
+                  <div className={`flex justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <span>{isRTL ? 'مدة التمويل:' : 'Loan Term:'}</span>
+                    <span>{financingParams.loanTerm} {isRTL ? 'شهر' : 'months'}</span>
+                  </div>
+                  <div className={`flex justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <span>{isRTL ? 'نسبة الربح:' : 'Profit Rate:'}</span>
+                    <span>{financingParams.interestRate}%</span>
+                  </div>
+                </div>
+              </div>
+
+              <Button
+                className="w-full sky-gradient text-white h-12"
+                disabled={!budgetCarRequestData.name || !budgetCarRequestData.phone || !budgetCarRequestData.city}
+                onClick={() => {
+                  setBudgetCarRequestSubmitted(true);
+                  toast({
+                    title: isRTL ? 'تم إرسال طلبك بنجاح!' : 'Request submitted successfully!',
+                    description: isRTL ? 'سيتم التواصل معك قريباً' : 'We will contact you soon',
+                  });
+                }}
+              >
+                <Send className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                {isRTL ? 'إرسال الطلب' : 'Submit Request'}
+              </Button>
+            </div>
+          ) : (
+            <div className="py-8 text-center">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="w-20 h-20 rounded-full bg-green-500/10 flex items-center justify-center mx-auto mb-4"
+              >
+                <CheckCircle2 className="w-10 h-10 text-green-500" />
+              </motion.div>
+              <h3 className="text-xl font-bold mb-2">{isRTL ? 'تم إرسال طلبك بنجاح!' : 'Request Submitted!'}</h3>
+              <p className="text-muted-foreground text-sm mb-4">
+                {isRTL
+                  ? `سيتم التواصل معك خلال 24 ساعة بخصوص ${selectedBudgetCar?.brand} ${selectedBudgetCar?.model}`
+                  : `We will contact you within 24 hours regarding the ${selectedBudgetCar?.brandEn} ${selectedBudgetCar?.modelEn}`}
+              </p>
+
+              {/* Request Summary */}
+              <div className={`p-4 bg-muted/50 rounded-xl text-sm ${isRTL ? 'text-right' : 'text-left'}`}>
+                <div className="space-y-2">
+                  <div className={`flex justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <span className="text-muted-foreground">{isRTL ? 'رقم الطلب' : 'Request Number'}</span>
+                    <span className="font-mono font-bold text-primary">#{Date.now().toString().slice(-8)}</span>
+                  </div>
+                  <div className={`flex justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <span className="text-muted-foreground">{isRTL ? 'السيارة' : 'Car'}</span>
+                    <span>{isRTL ? selectedBudgetCar?.brand : selectedBudgetCar?.brandEn} {isRTL ? selectedBudgetCar?.model : selectedBudgetCar?.modelEn}</span>
+                  </div>
+                  <div className={`flex justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <span className="text-muted-foreground">{isRTL ? 'القسط الشهري' : 'Monthly Payment'}</span>
+                    <span className="font-bold text-emerald-600">{getCurrencyDisplay()} {Math.round(selectedBudgetCar?.monthlyPayment || 0).toLocaleString()}</span>
+                  </div>
+                </div>
+              </div>
+
+              <Button
+                className="w-full mt-4 sky-gradient text-white"
+                onClick={() => setBudgetCarRequestOpen(false)}
+              >
+                {isRTL ? 'إغلاق' : 'Close'}
+              </Button>
             </div>
           )}
         </DialogContent>
