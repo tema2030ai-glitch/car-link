@@ -5818,7 +5818,7 @@ export default function CarLinkPage() {
 
       {/* Financing Application Chatbot Dialog */}
       <Dialog open={financingChatOpen} onOpenChange={setFinancingChatOpen}>
-        <DialogContent className="max-w-lg max-h-[90vh] overflow-hidden flex flex-col">
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse justify-start' : ''}`}>
               <div className="w-10 h-10 rounded-xl sky-gradient flex items-center justify-center">
@@ -5828,11 +5828,11 @@ export default function CarLinkPage() {
             </DialogTitle>
           </DialogHeader>
           
-          <div className="flex-1 overflow-hidden flex flex-col min-h-0">
+          <div className="flex flex-col">
             {applicationStatus === 'chat' && (
               <>
                 {/* Chat Messages - Scrollable */}
-                <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-4 min-h-0" style={{ maxHeight: '400px' }}>
+                <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-4" style={{ maxHeight: '400px' }}>
                   <div className="space-y-4">
                     {applicationMessages.map((msg: any) => (
                       <div
