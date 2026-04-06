@@ -8189,38 +8189,51 @@ export default function CarLinkPage() {
                     </div>
                   </div>
                   <CardContent className="p-4 space-y-3 max-h-80 overflow-y-auto">
-                    {bankOffers.slice(0, 4).map((bank, i) => (
-                      <motion.div
-                        key={bank.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: i * 0.1 }}
-                        className={`p-3 rounded-xl border ${i === 0 ? 'border-2 border-primary bg-primary/5' : 'border'}`}
-                      >
-                        <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
-                          <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg font-bold ${i === 0 ? 'bg-gradient-to-br from-amber-400 to-orange-500 text-white' : 'bg-muted'}`}>
-                              {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : i + 1}
-                            </div>
-                            <div className={isRTL ? 'text-right' : 'text-left'}>
-                              <h4 className="font-bold text-sm">{isRTL ? bank.bankName : bank.bankNameEn}</h4>
-                              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                <span>{bank.interestRate}% {isRTL ? 'ربح سنوي' : t.annually}</span>
-                                <span className="w-1 h-1 rounded-full bg-muted-foreground" />
-                                <span>{bank.maxLoanTerm} {isRTL ? 'شهر' : 'months'}</span>
+                    {bankOffers.slice(0, 4).map((bank, i) => {
+                      // Fixed 48 months duration for Services section
+                      const fixedTerm = 48;
+                      const carPrice = manualCarPrice || 100000;
+                      const downPaymentAmount = carPrice * (bank.minDownPayment / 100);
+                      const financingAmount = carPrice - downPaymentAmount;
+                      const monthlyRate = bank.interestRate / 100 / 12;
+                      const monthlyPayment = financingAmount * (monthlyRate * Math.pow(1 + monthlyRate, fixedTerm)) / (Math.pow(1 + monthlyRate, fixedTerm) - 1);
+
+                      return (
+                        <motion.div
+                          key={bank.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: i * 0.1 }}
+                          className={`p-3 rounded-xl border ${i === 0 ? 'border-2 border-primary bg-primary/5' : 'border'}`}
+                        >
+                          <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+                            <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                              <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg font-bold ${i === 0 ? 'bg-gradient-to-br from-amber-400 to-orange-500 text-white' : 'bg-muted'}`}>
+                                {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : i + 1}
+                              </div>
+                              <div className={isRTL ? 'text-right' : 'text-left'}>
+                                <h4 className="font-bold text-sm">{isRTL ? bank.bankName : bank.bankNameEn}</h4>
+                                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                  <span>{bank.interestRate}% {isRTL ? 'ربح سنوي' : t.annually}</span>
+                                  <span className="w-1 h-1 rounded-full bg-muted-foreground" />
+                                  <span className="font-semibold text-primary">{fixedTerm} {isRTL ? 'شهر' : 'months'}</span>
+                                </div>
+                                <div className="text-xs text-emerald-600 font-medium mt-0.5">
+                                  {isRTL ? 'قسط شهري:' : 'Monthly:'} {Math.round(monthlyPayment).toLocaleString()} {isRTL ? 'ريال' : 'SAR'}
+                                </div>
                               </div>
                             </div>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => openFinancingChatbot('', bank)}
+                            >
+                              {t.applyNow}
+                            </Button>
                           </div>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => openFinancingChatbot('', bank)}
-                          >
-                            {t.applyNow}
-                          </Button>
-                        </div>
-                      </motion.div>
-                    ))}
+                        </motion.div>
+                      );
+                    })}
                   </CardContent>
                 </Card>
 
