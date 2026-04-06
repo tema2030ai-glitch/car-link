@@ -9772,7 +9772,7 @@ export default function CarLinkPage() {
           // Scroll to top
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
-        className={`fixed bottom-24 z-50 w-16 h-16 rounded-full sky-gradient shadow-2xl flex items-center justify-center cursor-pointer group ${isRTL ? 'left-6' : 'right-6'}`}
+        className={`fixed bottom-28 z-[60] w-16 h-16 rounded-full sky-gradient shadow-2xl flex items-center justify-center cursor-pointer group ${isRTL ? 'left-6' : 'right-6'}`}
         title={isRTL ? 'تحليل سيارة جديدة' : 'Analyze New Car'}
       >
         <motion.div
