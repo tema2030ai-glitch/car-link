@@ -8429,7 +8429,13 @@ export default function CarLinkPage() {
                                   initial={{ opacity: 0, x: isRTL ? 10 : -10 }}
                                   animate={{ opacity: 1, x: 0 }}
                                   transition={{ delay: i * 0.03 }}
-                                  className={`p-3 rounded-xl border ${i === 0 ? 'border-amber-500/50 bg-amber-500/5' : 'border-border bg-muted/30'} hover:border-primary/50 transition-colors ${isRTL ? 'flex-row-reverse' : ''} flex items-center justify-between gap-3`}
+                                  onClick={() => {
+                                    setSelectedBudgetCar(car);
+                                    setBudgetCarRequestOpen(true);
+                                    setBudgetCarRequestSubmitted(false);
+                                    setBudgetCarRequestData({ name: '', phone: '', city: '', notes: '' });
+                                  }}
+                                  className={`p-3 rounded-xl border ${i === 0 ? 'border-amber-500/50 bg-amber-500/5' : 'border-border bg-muted/30'} hover:border-primary/50 transition-colors cursor-pointer ${isRTL ? 'flex-row-reverse' : ''} flex items-center justify-between gap-3`}
                                 >
                                   {/* Rank */}
                                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 ${i === 0 ? 'bg-gradient-to-br from-amber-400 to-orange-500 text-white' : i < 3 ? 'bg-emerald-500/20 text-emerald-600' : 'bg-muted text-muted-foreground'}`}>
@@ -8441,36 +8447,21 @@ export default function CarLinkPage() {
                                     <div className="font-semibold text-sm truncate">
                                       {isRTL ? car.brand : car.brandEn} {isRTL ? car.model : car.modelEn}
                                     </div>
-                                    <div className="text-[10px] text-muted-foreground flex items-center gap-1 flex-wrap">
+                                    <div className="text-[10px] text-muted-foreground flex items-center gap-1">
                                       <span>{car.year}</span>
                                       <span className="w-0.5 h-0.5 rounded-full bg-muted-foreground"></span>
                                       <span>{getCurrencyDisplay()} {car.price.toLocaleString()}</span>
                                       <span className="w-0.5 h-0.5 rounded-full bg-muted-foreground"></span>
                                       <span>{car.hp} {isRTL ? 'حصان' : 'hp'}</span>
-                                      <span className="w-0.5 h-0.5 rounded-full bg-muted-foreground"></span>
-                                      <span>{car.seats} {isRTL ? 'مقاعد' : 'seats'}</span>
                                     </div>
                                   </div>
 
-                                  {/* Payment & Request Button */}
-                                  <div className={`flex flex-col items-center gap-1 flex-shrink-0 ${isRTL ? 'items-start' : 'items-end'}`}>
+                                  {/* Payment */}
+                                  <div className={`flex-shrink-0 ${isRTL ? 'text-left' : 'text-right'}`}>
                                     <div className="font-bold text-sm text-emerald-600">
                                       {getCurrencyDisplay()} {Math.round(car.monthlyPayment).toLocaleString()}
                                     </div>
-                                    <div className="text-[9px] text-muted-foreground">{isRTL ? 'شهرياً' : 'monthly'}</div>
-                                    <Button
-                                      size="sm"
-                                      className="h-6 px-2 text-[10px] sky-gradient text-white mt-1"
-                                      onClick={() => {
-                                        setSelectedBudgetCar(car);
-                                        setBudgetCarRequestOpen(true);
-                                        setBudgetCarRequestSubmitted(false);
-                                        setBudgetCarRequestData({ name: '', phone: '', city: '', notes: '' });
-                                      }}
-                                    >
-                                      <ShoppingCart className="w-3 h-3 mr-1" />
-                                      {isRTL ? 'طلب' : 'Request'}
-                                    </Button>
+                                    <div className="text-[9px] text-muted-foreground text-center">{isRTL ? 'شهرياً' : 'monthly'}</div>
                                   </div>
                                 </motion.div>
                               ))}
