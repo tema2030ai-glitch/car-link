@@ -7879,135 +7879,11 @@ export default function CarLinkPage() {
               </div>
             )}
 
-            {/* ========== خدمة الحسبة/التمويل - تصميم مطور ========== */}
+            {/* ========== خدمة الحسبة/التمويل - حاسبة التمويل ========== */}
             {selectedService === 'financing' && (
               <div className="space-y-6">
-                {/* Financing Programs Section */}
-                <Card className="overflow-hidden">
-                  <CardHeader className="pb-4">
-                    <CardTitle className={`text-lg flex items-center gap-2 ${isRTL ? 'flex-row-reverse justify-start text-right' : ''}`}>
-                      <span className="text-2xl">💰</span>
-                      <span>{t.financingPrograms}</span>
-                    </CardTitle>
-                    <CardDescription className={isRTL ? 'text-right' : ''}>{t.financingProgramsDesc}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {/* Murabaha */}
-                      <Card className="bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer group">
-                        <CardContent className={`p-4 ${isRTL ? 'text-right' : 'text-left'}`}>
-                          <div className={`flex items-center gap-2 mb-3 ${isRTL ? 'flex-row-reverse justify-start' : ''}`}>
-                            <div className="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center">
-                              <CheckCircle2 className="w-5 h-5 text-green-500" />
-                            </div>
-                            <h4 className="font-bold text-sm">{t.murabaha}</h4>
-                          </div>
-                          <p className="text-xs text-muted-foreground mb-3">{t.murabahaDesc}</p>
-                          <div className="space-y-2 mb-3">
-                            <div className={`flex items-start gap-2 text-xs ${isRTL ? 'flex-row-reverse' : ''}`}>
-                              <CheckCircle2 className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
-                              <span>{t.murabahaFeatures.split(' | ')[0]}</span>
-                            </div>
-                            <div className={`flex items-start gap-2 text-xs ${isRTL ? 'flex-row-reverse' : ''}`}>
-                              <CheckCircle2 className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
-                              <span>{t.murabahaFeatures.split(' | ')[1]}</span>
-                            </div>
-                          </div>
-                          <Button className="w-full sky-gradient text-white group-hover:shadow-lg transition-shadow text-sm" onClick={() => openFinancingChatbot(t.murabaha)}>
-                            <Send className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                            {t.applyNow}
-                          </Button>
-                        </CardContent>
-                      </Card>
-
-                      {/* Ownership Financing */}
-                      <Card className="bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer group">
-                        <CardContent className={`p-4 ${isRTL ? 'text-right' : 'text-left'}`}>
-                          <div className={`flex items-center gap-2 mb-3 ${isRTL ? 'flex-row-reverse justify-start' : ''}`}>
-                            <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
-                              <Award className="w-5 h-5 text-blue-500" />
-                            </div>
-                            <h4 className="font-bold text-sm">{t.ownershipFinancing}</h4>
-                          </div>
-                          <p className="text-xs text-muted-foreground mb-3">{t.ownershipFinancingDesc}</p>
-                          <div className="space-y-2 mb-3">
-                            <div className={`flex items-start gap-2 text-xs ${isRTL ? 'flex-row-reverse' : ''}`}>
-                              <CheckCircle2 className="w-3 h-3 text-blue-500 mt-0.5 flex-shrink-0" />
-                              <span>{t.ownershipFinancingFeatures.split(' | ')[0]}</span>
-                            </div>
-                            <div className={`flex items-start gap-2 text-xs ${isRTL ? 'flex-row-reverse' : ''}`}>
-                              <CheckCircle2 className="w-3 h-3 text-blue-500 mt-0.5 flex-shrink-0" />
-                              <span>{t.ownershipFinancingFeatures.split(' | ')[1]}</span>
-                            </div>
-                          </div>
-                          <Button className="w-full sky-gradient text-white group-hover:shadow-lg transition-shadow text-sm" onClick={() => openFinancingChatbot(t.ownershipFinancing)}>
-                            <Send className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                            {t.applyNow}
-                          </Button>
-                        </CardContent>
-                      </Card>
-
-                      {/* Installment Program */}
-                      <Card className="bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer group">
-                        <CardContent className={`p-4 ${isRTL ? 'text-right' : 'text-left'}`}>
-                          <div className={`flex items-center gap-2 mb-3 ${isRTL ? 'flex-row-reverse justify-start' : ''}`}>
-                            <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center">
-                              <Calculator className="w-5 h-5 text-purple-500" />
-                            </div>
-                            <h4 className="font-bold text-sm">{t.installmentProgram}</h4>
-                          </div>
-                          <p className="text-xs text-muted-foreground mb-3">{t.installmentProgramDesc}</p>
-                          <div className="space-y-2 mb-3">
-                            <div className={`flex items-start gap-2 text-xs ${isRTL ? 'flex-row-reverse' : ''}`}>
-                              <CheckCircle2 className="w-3 h-3 text-purple-500 mt-0.5 flex-shrink-0" />
-                              <span>{t.installmentProgramFeatures.split(' | ')[0]}</span>
-                            </div>
-                            <div className={`flex items-start gap-2 text-xs ${isRTL ? 'flex-row-reverse' : ''}`}>
-                              <CheckCircle2 className="w-3 h-3 text-purple-500 mt-0.5 flex-shrink-0" />
-                              <span>{t.installmentProgramFeatures.split(' | ')[1]}</span>
-                            </div>
-                          </div>
-                          <Button className="w-full sky-gradient text-white group-hover:shadow-lg transition-shadow text-sm" onClick={() => openFinancingChatbot(t.installmentProgram)}>
-                            <Send className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                            {t.applyNow}
-                          </Button>
-                        </CardContent>
-                      </Card>
-
-                      {/* Lease Program */}
-                      <Card className="bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer group">
-                        <CardContent className={`p-4 ${isRTL ? 'text-right' : 'text-left'}`}>
-                          <div className={`flex items-center gap-2 mb-3 ${isRTL ? 'flex-row-reverse justify-start' : ''}`}>
-                            <div className="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center">
-                              <Car className="w-5 h-5 text-orange-500" />
-                            </div>
-                            <h4 className="font-bold text-sm">{t.leaseProgram}</h4>
-                          </div>
-                          <p className="text-xs text-muted-foreground mb-3">{t.leaseProgramDesc}</p>
-                          <div className="space-y-2 mb-3">
-                            <div className={`flex items-start gap-2 text-xs ${isRTL ? 'flex-row-reverse' : ''}`}>
-                              <CheckCircle2 className="w-3 h-3 text-orange-500 mt-0.5 flex-shrink-0" />
-                              <span>{t.leaseProgramFeatures.split(' | ')[0]}</span>
-                            </div>
-                            <div className={`flex items-start gap-2 text-xs ${isRTL ? 'flex-row-reverse' : ''}`}>
-                              <CheckCircle2 className="w-3 h-3 text-orange-500 mt-0.5 flex-shrink-0" />
-                              <span>{t.leaseProgramFeatures.split(' | ')[1]}</span>
-                            </div>
-                          </div>
-                          <Button className="w-full sky-gradient text-white group-hover:shadow-lg transition-shadow text-sm" onClick={() => openFinancingChatbot(t.leaseProgram)}>
-                            <Send className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                            {t.applyNow}
-                          </Button>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Calculator Section */}
-                <div className="grid lg:grid-cols-2 gap-6">
-                  {/* Calculator Card */}
-                  <Card className="overflow-hidden relative">
+                {/* Calculator Card */}
+                <Card className="overflow-hidden relative">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/20 to-transparent rounded-full blur-2xl -translate-y-16 translate-x-16 pointer-events-none" />
                     
                     <CardHeader className="relative z-10">
@@ -8043,7 +7919,7 @@ export default function CarLinkPage() {
                                 calculateFinancing(price);
                               }
                             }}
-                            className={`text-lg font-bold ${isRTL ? 'text-right pr-16' : 'text-left pl-16'} h-12 border-amber-500/30 focus:border-amber-500`}
+                            className={`text-lg font-bold ${isRTL ? 'text-right pr-16' : 'text-left pl-16'} h-12 border-amber-500/30 focus:border-amber-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
                           />
                           <span className={`absolute top-1/2 -translate-y-1/2 text-muted-foreground font-medium ${isRTL ? 'left-3' : 'right-3'}`}>
                             {isRTL ? 'ريال' : 'SAR'}
@@ -8078,7 +7954,7 @@ export default function CarLinkPage() {
                                 });
                               }
                             }}
-                            className={`text-lg font-bold ${isRTL ? 'text-right pr-16' : 'text-left pl-16'} h-12 border-emerald-500/30 focus:border-emerald-500`}
+                            className={`text-lg font-bold ${isRTL ? 'text-right pr-16' : 'text-left pl-16'} h-12 border-emerald-500/30 focus:border-emerald-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
                           />
                           <span className={`absolute top-1/2 -translate-y-1/2 text-muted-foreground font-medium ${isRTL ? 'left-3' : 'right-3'}`}>
                             {isRTL ? 'ريال' : 'SAR'}
@@ -8112,7 +7988,7 @@ export default function CarLinkPage() {
                               }
                             }
                           }}
-                          className={`w-full h-10 rounded-lg border border-blue-500/30 bg-background px-3 ${isRTL ? 'text-right' : 'text-left'} focus:border-blue-500`}
+                          className={`w-full h-10 rounded-lg border border-blue-500/30 bg-background px-3 ${isRTL ? 'text-right' : 'text-left'} focus:border-blue-500 focus:ring-1 focus:ring-blue-500`}
                         >
                           <option value="">{t.allBanks}</option>
                           {bankOffers.map(bank => (
@@ -8150,6 +8026,10 @@ export default function CarLinkPage() {
                               <span className={`font-semibold ${salaryEligibility.debtToIncomeRatio > 33 ? 'text-red-500' : 'text-green-500'}`}>
                                 {salaryEligibility.debtToIncomeRatio}%
                               </span>
+                            </div>
+                            <div className={`flex justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+                              <span className="text-muted-foreground">{t.recommendedDownPayment}</span>
+                              <span className="font-semibold">{salaryEligibility.recommendedDownPayment}%</span>
                             </div>
                           </div>
                         </motion.div>
@@ -8220,15 +8100,12 @@ export default function CarLinkPage() {
                           className="py-2"
                         />
                       </div>
-                    </CardContent>
-                  </Card>
 
-                  {/* Results Card */}
-                  <div className="space-y-4">
-                    {/* Monthly Payment Result */}
-                    {financingResult && (
-                      <Card className="overflow-hidden">
-                        <CardContent className="p-6">
+                      <Separator className="my-4" />
+
+                      {/* Results */}
+                      {financingResult && (
+                        <div className="space-y-3">
                           <div className={`p-4 rounded-xl bg-gradient-to-r from-primary/10 to-cyan-500/10 border border-primary/20 ${isRTL ? 'text-right' : 'text-left'}`}>
                             <div className="text-sm text-muted-foreground mb-1">{t.monthlyPayment}</div>
                             <div className="text-3xl font-bold text-primary">
@@ -8249,7 +8126,7 @@ export default function CarLinkPage() {
                             )}
                           </div>
 
-                          <div className={`grid grid-cols-2 gap-4 mt-4 ${isRTL ? 'text-right' : 'text-left'}`}>
+                          <div className={`grid grid-cols-2 gap-4 ${isRTL ? 'text-right' : 'text-left'}`}>
                             <div className="p-3 bg-muted/30 rounded-xl">
                               <p className="text-xs text-muted-foreground">{t.totalCost}</p>
                               <p className="font-bold text-lg">{getCurrencyDisplay()} {Math.round(financingResult.totalAmount || financingResult.totalPayment).toLocaleString()}</p>
@@ -8261,79 +8138,78 @@ export default function CarLinkPage() {
                           </div>
 
                           <Button 
-                            className="w-full sky-gradient text-white mt-4"
+                            className="w-full sky-gradient text-white"
                             onClick={() => openFinancingChatbot('', null)}
                           >
                             <Send className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
                             {t.applyNow}
                           </Button>
-                        </CardContent>
-                      </Card>
-                    )}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
 
-                    {/* Bank Offers */}
-                    <Card className="overflow-hidden">
-                      <div className="relative overflow-hidden rounded-t-xl bg-gradient-to-r from-sky-400 via-cyan-400 to-blue-400 p-4">
-                        <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
-                        <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2" />
-                        
-                        <div className={`relative ${isRTL ? 'text-right direction-rtl' : 'text-left'}`}>
-                          <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
-                            <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                              <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg">
-                                <Landmark className="w-6 h-6 text-white" />
-                              </div>
-                              <div>
-                                <h3 className="text-base font-black text-black drop-shadow-sm">
-                                  <span className="font-black">{t.bankOffers}</span>
-                                </h3>
-                                <span className="font-normal text-black/70 text-xs">{t.compareBanks}</span>
-                              </div>
-                            </div>
-                            <div className="hidden sm:flex items-center gap-1 px-2 py-1 rounded-full bg-white/40 backdrop-blur-sm border border-white/50">
-                              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                              <span className="text-xs font-black text-black">{isRTL ? 'أفضل العروض' : 'Best Offers'}</span>
-                            </div>
+                {/* Bank Offers */}
+                <Card className="overflow-hidden">
+                  <div className="relative overflow-hidden rounded-t-xl bg-gradient-to-r from-sky-400 via-cyan-400 to-blue-400 p-4">
+                    <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+                    <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2" />
+                    
+                    <div className={`relative ${isRTL ? 'text-right direction-rtl' : 'text-left'}`}>
+                      <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+                        <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                          <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg">
+                            <Landmark className="w-6 h-6 text-white" />
+                          </div>
+                          <div>
+                            <h3 className="text-base font-black text-black drop-shadow-sm">
+                              <span className="font-black">{t.bankOffers}</span>
+                            </h3>
+                            <span className="font-normal text-black/70 text-xs">{t.compareBanks}</span>
                           </div>
                         </div>
+                        <div className="hidden sm:flex items-center gap-1 px-2 py-1 rounded-full bg-white/40 backdrop-blur-sm border border-white/50">
+                          <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                          <span className="text-xs font-black text-black">{isRTL ? 'أفضل العروض' : 'Best Offers'}</span>
+                        </div>
                       </div>
-                      <CardContent className="p-4 space-y-3">
-                        {bankOffers.slice(0, 4).map((bank, i) => (
-                          <motion.div
-                            key={bank.id}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: i * 0.1 }}
-                            className={`p-3 rounded-xl border ${i === 0 ? 'border-2 border-primary bg-primary/5' : 'border'}`}
-                          >
-                            <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
-                              <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg font-bold ${i === 0 ? 'bg-gradient-to-br from-amber-400 to-orange-500 text-white' : 'bg-muted'}`}>
-                                  {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : i + 1}
-                                </div>
-                                <div className={isRTL ? 'text-right' : 'text-left'}>
-                                  <h4 className="font-bold text-sm">{isRTL ? bank.bankName : bank.bankNameEn}</h4>
-                                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                    <span>{bank.interestRate}% {isRTL ? 'ربح سنوي' : t.annually}</span>
-                                    <span className="w-1 h-1 rounded-full bg-muted-foreground" />
-                                    <span>{bank.maxLoanTerm} {isRTL ? 'شهر' : 'months'}</span>
-                                  </div>
-                                </div>
-                              </div>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => openFinancingChatbot('', bank)}
-                              >
-                                {t.applyNow}
-                              </Button>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </CardContent>
-                    </Card>
+                    </div>
                   </div>
-                </div>
+                  <CardContent className="p-4 space-y-3 max-h-80 overflow-y-auto">
+                    {bankOffers.slice(0, 4).map((bank, i) => (
+                      <motion.div
+                        key={bank.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.1 }}
+                        className={`p-3 rounded-xl border ${i === 0 ? 'border-2 border-primary bg-primary/5' : 'border'}`}
+                      >
+                        <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+                          <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg font-bold ${i === 0 ? 'bg-gradient-to-br from-amber-400 to-orange-500 text-white' : 'bg-muted'}`}>
+                              {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : i + 1}
+                            </div>
+                            <div className={isRTL ? 'text-right' : 'text-left'}>
+                              <h4 className="font-bold text-sm">{isRTL ? bank.bankName : bank.bankNameEn}</h4>
+                              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                <span>{bank.interestRate}% {isRTL ? 'ربح سنوي' : t.annually}</span>
+                                <span className="w-1 h-1 rounded-full bg-muted-foreground" />
+                                <span>{bank.maxLoanTerm} {isRTL ? 'شهر' : 'months'}</span>
+                              </div>
+                            </div>
+                          </div>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => openFinancingChatbot('', bank)}
+                          >
+                            {t.applyNow}
+                          </Button>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </CardContent>
+                </Card>
               </div>
             )}
             
