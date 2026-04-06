@@ -907,7 +907,7 @@ export default function CarLinkPage() {
   const [manualCarData, setManualCarData] = useState({
     brand: '',
     model: '',
-    year: '',
+    year: '2026',
     trim: '',
     price: '',
     mileage: '',
@@ -1236,7 +1236,7 @@ export default function CarLinkPage() {
 
     // Reset form
     setManualCarData({
-      brand: '', model: '', year: '', trim: '', price: '', mileage: '',
+      brand: '', model: '', year: '2026', trim: '', price: '', mileage: '',
       condition: 'new', color: '', fuelType: '', transmission: '',
       engine: '', horsepower: '', seats: '', drivetrain: '',
     });
@@ -9917,16 +9917,15 @@ export default function CarLinkPage() {
             {/* Year */}
             <div>
               <Label className="text-base font-semibold">{isRTL ? 'سنة الموديل' : 'Model Year'}</Label>
-              <select
-                className="w-full h-12 rounded-xl border bg-background px-4 mt-2 text-base"
+              <Input
+                type="number"
+                className="w-full h-12 rounded-xl mt-2 text-base text-center font-semibold"
                 value={manualCarData.year}
                 onChange={(e) => setManualCarData({ ...manualCarData, year: e.target.value })}
-              >
-                <option value="">{isRTL ? 'اختر السنة' : 'Select Year'}</option>
-                {[2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015].map(y => (
-                  <option key={y} value={y}>{y}</option>
-                ))}
-              </select>
+                placeholder={isRTL ? '2026' : '2026'}
+                min="1990"
+                max="2030"
+              />
             </div>
           </div>
 
