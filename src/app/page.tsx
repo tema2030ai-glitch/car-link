@@ -1048,7 +1048,7 @@ export default function CarLinkPage() {
   const [publishedOffers, setPublishedOffers] = useState<any[]>([]);
   const [hasNewOffers, setHasNewOffers] = useState(false);
 
-  // Car Services & Features
+  // Car Services & Features - مرتبة حسب الأهمية والأولوية
   const appFeatures = [
     {
       id: 'order-tracking',
@@ -1059,7 +1059,15 @@ export default function CarLinkPage() {
       icon: ClipboardList,
       color: 'bg-cyan-500',
     },
-
+    {
+      id: 'financing',
+      titleAr: 'الحسبة',
+      titleEn: 'Calculation',
+      descriptionAr: 'حساب التمويل حسب الراتب وعروض البنوك',
+      descriptionEn: 'Salary-based financing calculation and bank offers',
+      icon: Calculator,
+      color: 'bg-blue-500',
+    },
     {
       id: 'market-prices',
       titleAr: 'أسعار السوق',
@@ -1079,23 +1087,13 @@ export default function CarLinkPage() {
       color: 'bg-amber-500',
     },
     {
-      id: 'extended-warranty',
-      titleAr: 'الضمان الممتد',
-      titleEn: 'Extended Warranty',
-      descriptionAr: 'ضمان يبدأ بعد انتهاء ضمان الوكيل',
-      descriptionEn: 'Warranty after dealer warranty expires',
-      icon: Shield,
-      color: 'bg-teal-500',
-    },
-
-    {
-      id: 'financing',
-      titleAr: 'الحسبة',
-      titleEn: 'Calculation',
-      descriptionAr: 'حساب التمويل حسب الراتب وعروض البنوك',
-      descriptionEn: 'Salary-based financing calculation and bank offers',
-      icon: Calculator,
-      color: 'bg-blue-500',
+      id: 'valuation',
+      titleAr: 'تقييم السيارة',
+      titleEn: 'Car Valuation',
+      descriptionAr: 'تقييم قيمة سيارتك في السوق',
+      descriptionEn: 'Evaluate your car market value',
+      icon: DollarSign,
+      color: 'bg-purple-500',
     },
     {
       id: 'maintenance',
@@ -1107,13 +1105,13 @@ export default function CarLinkPage() {
       color: 'bg-orange-500',
     },
     {
-      id: 'valuation',
-      titleAr: 'تقييم السيارة',
-      titleEn: 'Car Valuation',
-      descriptionAr: 'تقييم قيمة سيارتك في السوق',
-      descriptionEn: 'Evaluate your car market value',
-      icon: DollarSign,
-      color: 'bg-purple-500',
+      id: 'extended-warranty',
+      titleAr: 'الضمان الممتد',
+      titleEn: 'Extended Warranty',
+      descriptionAr: 'ضمان يبدأ بعد انتهاء ضمان الوكيل',
+      descriptionEn: 'Warranty after dealer warranty expires',
+      icon: Shield,
+      color: 'bg-teal-500',
     },
     {
       id: 'settings',
