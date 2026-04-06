@@ -800,6 +800,7 @@ export default function CarLinkPage() {
   // Feature Dialog States
   const [finDownPayment, setFinDownPayment] = useState(20);
   const [finYears, setFinYears] = useState(5);
+  const [manualCarPrice, setManualCarPrice] = useState<number>(0);
   const [carMileage, setCarMileage] = useState(currentVehicle?.mileage || 50000);
   const [valBrand, setValBrand] = useState('');
   const [valModel, setValModel] = useState('');
@@ -1137,6 +1138,21 @@ export default function CarLinkPage() {
 
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  // Load bank offers on mount
+  useEffect(() => {
+    const defaultBankOffers = [
+      { id: 'alrajhi', bankName: 'بنك الراجحي', bankNameEn: 'Al Rajhi Bank', interestRate: 4.75, minDownPayment: 10, maxTerm: 60, minSalary: 3000, eligible: true, features: ['أقل نسبة ربح', 'موافقة سريعة', 'تأجيل قسط'] },
+      { id: 'albilad', bankName: 'بنك البلاد', bankNameEn: 'Al Bilad Bank', interestRate: 4.85, minDownPayment: 15, maxTerm: 60, minSalary: 3500, eligible: true, features: ['تمويل فوري', 'بدون رسوم'] },
+      { id: 'snb', bankName: 'البنك الأهلي السعودي', bankNameEn: 'SNB', interestRate: 4.9, minDownPayment: 15, maxTerm: 72, minSalary: 4000, eligible: true, features: ['أطول فترة سداد', 'برنامج ولاء'] },
+      { id: 'riyadbank', bankName: 'بنك الرياض', bankNameEn: 'Riyad Bank', interestRate: 5.0, minDownPayment: 20, maxTerm: 60, minSalary: 4500, eligible: true, features: ['تأمين مجاني', 'خدمة متميزة'] },
+      { id: 'arabnational', bankName: 'البنك العربي الوطني', bankNameEn: 'Arab National Bank', interestRate: 5.1, minDownPayment: 20, maxTerm: 60, minSalary: 4000, eligible: true, features: ['مرونة في السداد'] },
+      { id: 'sabb', bankName: 'بنك ساب', bankNameEn: 'SABB', interestRate: 5.25, minDownPayment: 20, maxTerm: 48, minSalary: 5000, eligible: true, features: ['خدمة VIP'] },
+      { id: 'alinma', bankName: 'بنك الإنماء', bankNameEn: 'Alinma Bank', interestRate: 4.95, minDownPayment: 15, maxTerm: 60, minSalary: 3500, eligible: true, features: ['تمويل إسلامي', 'موافقة فورية'] },
+      { id: 'firstab', bankName: 'البنك الأول', bankNameEn: 'First Abu Dhabi', interestRate: 5.15, minDownPayment: 20, maxTerm: 60, minSalary: 5000, eligible: true, features: ['خدمة مخصصة'] },
+    ];
+    setBankOffers(defaultBankOffers);
   }, []);
 
   useEffect(() => {
@@ -4252,7 +4268,40 @@ export default function CarLinkPage() {
                       </CardHeader>
                       
                       <CardContent className="space-y-5 relative z-10">
-                        {currentVehicle.price && (
+                        {/* Car Price Input - If no vehicle selected */}
+                        {!currentVehicle.price && (
+                          <div className="p-4 rounded-xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20">
+                            <div className={`flex items-center gap-2 mb-3 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
+                              <DollarSign className="w-5 h-5 text-amber-500" />
+                              <Label className="font-semibold text-amber-600">{isRTL ? 'سعر السيارة' : 'Car Price'}</Label>
+                            </div>
+                            <div className="relative">
+                              <Input
+                                type="text"
+                                inputMode="numeric"
+                                placeholder={isRTL ? 'أدخل سعر السيارة' : 'Enter car price'}
+                                value={manualCarPrice || ''}
+                                onChange={(e) => {
+                                  const value = e.target.value.replace(/[^0-9]/g, '');
+                                  const price = Number(value);
+                                  setManualCarPrice(price);
+                                  if (price > 0) {
+                                    calculateFinancing(price);
+                                  }
+                                }}
+                                className={`text-lg font-bold ${isRTL ? 'text-right pr-16' : 'text-left pl-16'} h-12 border-amber-500/30 focus:border-amber-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+                              />
+                              <span className={`absolute top-1/2 -translate-y-1/2 text-muted-foreground font-medium ${isRTL ? 'left-3' : 'right-3'}`}>
+                                {isRTL ? 'ريال' : 'SAR'}
+                              </span>
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-2">
+                              {isRTL ? 'أدخل سعر السيارة لحساب التمويل' : 'Enter the car price to calculate financing'}
+                            </p>
+                          </div>
+                        )}
+
+                        {(currentVehicle.price || manualCarPrice > 0) && (
                           <>
                             {/* Salary Input Section */}
                             <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20">
@@ -4277,7 +4326,7 @@ export default function CarLinkPage() {
                                       setSalaryEligibility({
                                         isEligible,
                                         maxMonthlyPayment: maxPayment,
-                                        recommendedDownPayment: Math.max(20, Math.round((1 - (maxPayment * financingParams.loanTerm) / currentVehicle.price) * 100)),
+                                        recommendedDownPayment: Math.max(20, Math.round((1 - (maxPayment * financingParams.loanTerm) / (currentVehicle.price || manualCarPrice)) * 100)),
                                         debtToIncomeRatio: Math.round((financingResult.monthlyPayment / salary) * 100)
                                       });
                                     }
@@ -4312,7 +4361,7 @@ export default function CarLinkPage() {
                                         interestRate: selectedBank.interestRate,
                                         selectedBank: bankId 
                                       });
-                                      calculateFinancing(currentVehicle.price, { interestRate: selectedBank.interestRate });
+                                      calculateFinancing(currentVehicle.price || manualCarPrice, { interestRate: selectedBank.interestRate });
                                     }
                                   }
                                 }}
@@ -4375,7 +4424,7 @@ export default function CarLinkPage() {
                                 value={[financingParams.downPayment]}
                                 onValueChange={([value]) => {
                                   setFinancingParams({ downPayment: value });
-                                  calculateFinancing(currentVehicle.price, { downPayment: value });
+                                  calculateFinancing(currentVehicle.price || manualCarPrice, { downPayment: value });
                                 }}
                                 min={5}
                                 max={50}
@@ -4384,7 +4433,7 @@ export default function CarLinkPage() {
                               />
                               <p className="text-sm text-muted-foreground mt-1 flex items-center gap-1">
                                 <DollarSign className="w-3 h-3" />
-                                = {getCurrencyDisplay()} {Math.round(currentVehicle.price * financingParams.downPayment / 100).toLocaleString()}
+                                = {getCurrencyDisplay()} {Math.round((currentVehicle.price || manualCarPrice) * financingParams.downPayment / 100).toLocaleString()}
                               </p>
                             </div>
 
@@ -4398,7 +4447,7 @@ export default function CarLinkPage() {
                                 value={[financingParams.loanTerm]}
                                 onValueChange={([value]) => {
                                   setFinancingParams({ loanTerm: value });
-                                  calculateFinancing(currentVehicle.price, { loanTerm: value });
+                                  calculateFinancing(currentVehicle.price || manualCarPrice, { loanTerm: value });
                                 }}
                                 min={12}
                                 max={84}
@@ -4420,7 +4469,7 @@ export default function CarLinkPage() {
                                 value={[financingParams.interestRate]}
                                 onValueChange={([value]) => {
                                   setFinancingParams({ interestRate: value });
-                                  calculateFinancing(currentVehicle.price, { interestRate: value });
+                                  calculateFinancing(currentVehicle.price || manualCarPrice, { interestRate: value });
                                 }}
                                 min={1}
                                 max={15}
@@ -4916,7 +4965,7 @@ export default function CarLinkPage() {
                                   <div className={`grid grid-cols-3 gap-2 mt-3 pt-3 border-t ${isRTL ? 'direction-rtl' : ''}`}>
                                     <div className="text-center">
                                       <div className="text-xs text-muted-foreground">{t.financingAmount}</div>
-                                      <div className="text-sm font-semibold">{getCurrencyDisplay()} {(bank.financingAmount || bank.principal || Math.round(currentVehicle.price * (100 - bank.minDownPayment) / 100)).toLocaleString()}</div>
+                                      <div className="text-sm font-semibold">{getCurrencyDisplay()} {(bank.financingAmount || bank.principal || Math.round((currentVehicle.price || manualCarPrice) * (100 - bank.minDownPayment) / 100)).toLocaleString()}</div>
                                     </div>
                                     <div className="text-center">
                                       <div className="text-xs text-muted-foreground">{t.totalInterest}</div>
