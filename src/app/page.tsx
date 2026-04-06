@@ -9758,6 +9758,43 @@ export default function CarLinkPage() {
         )}
       </AnimatePresence>
 
+      {/* Floating Action Button - تحليل سيارة سريع */}
+      <motion.button
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => {
+          setViewState('input');
+          setCurrentVehicle(null);
+          setLinkUrl('');
+          // Scroll to top
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        className={`fixed bottom-24 z-50 w-16 h-16 rounded-full sky-gradient shadow-2xl flex items-center justify-center cursor-pointer group ${isRTL ? 'left-6' : 'right-6'}`}
+        title={isRTL ? 'تحليل سيارة جديدة' : 'Analyze New Car'}
+      >
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+          className="absolute inset-0 rounded-full border-2 border-white/30"
+        />
+        <Plus className="w-7 h-7 text-white group-hover:rotate-90 transition-transform duration-300" strokeWidth={3} />
+        
+        {/* Pulse effect */}
+        <motion.div
+          animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="absolute inset-0 rounded-full bg-sky-400"
+        />
+        
+        {/* Label */}
+        <span className={`absolute whitespace-nowrap bg-background/95 backdrop-blur-sm px-3 py-1.5 rounded-lg shadow-lg text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity ${isRTL ? 'right-full mr-3' : 'left-full ml-3'}`}>
+          {isRTL ? 'تحليل سيارة' : 'Analyze Car'}
+        </span>
+      </motion.button>
+
       {/* Blue Gradient Divider Line before Footer */}
       <div className="w-full py-2">
         <div className="w-full h-0.5 bg-gradient-to-r from-transparent via-blue-500 to-transparent" />
