@@ -9820,9 +9820,9 @@ export default function CarLinkPage() {
         )}
       </AnimatePresence>
 
-      {/* Manual Car Entry Dialog */}
+      {/* Manual Car Entry Dialog - Simple Form with Brand, Model, Year only */}
       <Dialog open={manualCarEntryOpen} onOpenChange={setManualCarEntryOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" dir={isRTL ? 'rtl' : 'ltr'}>
+        <DialogContent className="max-w-md" dir={isRTL ? 'rtl' : 'ltr'}>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-xl">
               <div className="w-10 h-10 rounded-xl sky-gradient flex items-center justify-center">
@@ -9831,228 +9831,57 @@ export default function CarLinkPage() {
               {isRTL ? 'إدخال بيانات السيارة للتحليل' : 'Enter Car Data for Analysis'}
             </DialogTitle>
             <DialogDescription>
-              {isRTL ? 'أدخل بيانات السيارة يدوياً للحصول على تحليل شامل' : 'Enter car details manually to get a comprehensive analysis'}
+              {isRTL ? 'أدخل الماركة والموديل وسنة الموديل للتحليل' : 'Enter brand, model, and year for analysis'}
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-6 py-4">
-            {/* Basic Info */}
-            <div className="space-y-4">
-              <h4 className="font-semibold flex items-center gap-2 text-primary">
-                <Car className="w-4 h-4" />
-                {isRTL ? 'المعلومات الأساسية' : 'Basic Information'}
-              </h4>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label>{isRTL ? 'الماركة *' : 'Brand *'}</Label>
-                  <select
-                    className="w-full h-11 rounded-xl border bg-background px-3 mt-1"
-                    value={manualCarData.brand}
-                    onChange={(e) => {
-                      setManualCarData({ ...manualCarData, brand: e.target.value, model: '' });
-                    }}
-                  >
-                    <option value="">{isRTL ? 'اختر الماركة' : 'Select Brand'}</option>
-                    {Object.keys(carModelsByBrand).map(brand => (
-                      <option key={brand} value={brand}>{brand}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <Label>{isRTL ? 'الموديل *' : 'Model *'}</Label>
-                  <select
-                    className="w-full h-11 rounded-xl border bg-background px-3 mt-1"
-                    value={manualCarData.model}
-                    onChange={(e) => setManualCarData({ ...manualCarData, model: e.target.value })}
-                    disabled={!manualCarData.brand}
-                  >
-                    <option value="">{isRTL ? 'اختر الموديل' : 'Select Model'}</option>
-                    {manualCarData.brand && carModelsByBrand[manualCarData.brand]?.map(model => (
-                      <option key={model} value={model}>{model}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <Label>{isRTL ? 'السنة' : 'Year'}</Label>
-                  <select
-                    className="w-full h-11 rounded-xl border bg-background px-3 mt-1"
-                    value={manualCarData.year}
-                    onChange={(e) => setManualCarData({ ...manualCarData, year: e.target.value })}
-                  >
-                    <option value="">{isRTL ? 'اختر' : 'Select'}</option>
-                    {[2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015].map(y => (
-                      <option key={y} value={y}>{y}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <Label>{isRTL ? 'مستوى التجهيز' : 'Trim'}</Label>
-                  <Input
-                    placeholder={isRTL ? 'مثال: LX, EX' : 'e.g., LX, EX'}
-                    value={manualCarData.trim}
-                    onChange={(e) => setManualCarData({ ...manualCarData, trim: e.target.value })}
-                    className="h-11 rounded-xl mt-1"
-                  />
-                </div>
-                <div>
-                  <Label>{isRTL ? 'الحالة' : 'Condition'}</Label>
-                  <select
-                    className="w-full h-11 rounded-xl border bg-background px-3 mt-1"
-                    value={manualCarData.condition}
-                    onChange={(e) => setManualCarData({ ...manualCarData, condition: e.target.value as 'new' | 'used' })}
-                  >
-                    <option value="new">{isRTL ? 'جديدة' : 'New'}</option>
-                    <option value="used">{isRTL ? 'مستعملة' : 'Used'}</option>
-                  </select>
-                </div>
-              </div>
+          <div className="space-y-4 py-4">
+            {/* Brand */}
+            <div>
+              <Label className="text-base font-semibold">{isRTL ? 'الماركة *' : 'Brand *'}</Label>
+              <select
+                className="w-full h-12 rounded-xl border bg-background px-4 mt-2 text-base"
+                value={manualCarData.brand}
+                onChange={(e) => {
+                  setManualCarData({ ...manualCarData, brand: e.target.value, model: '' });
+                }}
+              >
+                <option value="">{isRTL ? 'اختر الماركة' : 'Select Brand'}</option>
+                {Object.keys(carModelsByBrand).map(brand => (
+                  <option key={brand} value={brand}>{brand}</option>
+                ))}
+              </select>
             </div>
 
-            {/* Price & Mileage */}
-            <div className="space-y-4">
-              <h4 className="font-semibold flex items-center gap-2 text-primary">
-                <DollarSign className="w-4 h-4" />
-                {isRTL ? 'السعر والممشى' : 'Price & Mileage'}
-              </h4>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label>{isRTL ? 'السعر (ريال)' : 'Price (SAR)'}</Label>
-                  <Input
-                    type="number"
-                    placeholder={isRTL ? 'مثال: 85000' : 'e.g., 85000'}
-                    value={manualCarData.price}
-                    onChange={(e) => setManualCarData({ ...manualCarData, price: e.target.value })}
-                    className="h-11 rounded-xl mt-1"
-                    dir="ltr"
-                  />
-                </div>
-                <div>
-                  <Label>{isRTL ? 'الممشى (كم)' : 'Mileage (km)'}</Label>
-                  <Input
-                    type="number"
-                    placeholder={isRTL ? 'مثال: 50000' : 'e.g., 50000'}
-                    value={manualCarData.mileage}
-                    onChange={(e) => setManualCarData({ ...manualCarData, mileage: e.target.value })}
-                    className="h-11 rounded-xl mt-1"
-                    dir="ltr"
-                    disabled={manualCarData.condition === 'new'}
-                  />
-                </div>
-              </div>
+            {/* Model */}
+            <div>
+              <Label className="text-base font-semibold">{isRTL ? 'الموديل *' : 'Model *'}</Label>
+              <select
+                className="w-full h-12 rounded-xl border bg-background px-4 mt-2 text-base"
+                value={manualCarData.model}
+                onChange={(e) => setManualCarData({ ...manualCarData, model: e.target.value })}
+                disabled={!manualCarData.brand}
+              >
+                <option value="">{isRTL ? 'اختر الموديل' : 'Select Model'}</option>
+                {manualCarData.brand && carModelsByBrand[manualCarData.brand]?.map(model => (
+                  <option key={model} value={model}>{model}</option>
+                ))}
+              </select>
             </div>
 
-            {/* Specifications */}
-            <div className="space-y-4">
-              <h4 className="font-semibold flex items-center gap-2 text-primary">
-                <Cog className="w-4 h-4" />
-                {isRTL ? 'المواصفات التقنية' : 'Technical Specifications'}
-              </h4>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label>{isRTL ? 'المحرك' : 'Engine'}</Label>
-                  <Input
-                    placeholder={isRTL ? 'مثال: 2.5L' : 'e.g., 2.5L'}
-                    value={manualCarData.engine}
-                    onChange={(e) => setManualCarData({ ...manualCarData, engine: e.target.value })}
-                    className="h-11 rounded-xl mt-1"
-                  />
-                </div>
-                <div>
-                  <Label>{isRTL ? 'القوة (حصان)' : 'Horsepower'}</Label>
-                  <Input
-                    type="number"
-                    placeholder={isRTL ? 'مثال: 200' : 'e.g., 200'}
-                    value={manualCarData.horsepower}
-                    onChange={(e) => setManualCarData({ ...manualCarData, horsepower: e.target.value })}
-                    className="h-11 rounded-xl mt-1"
-                    dir="ltr"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <Label>{isRTL ? 'نوع الوقود' : 'Fuel Type'}</Label>
-                  <select
-                    className="w-full h-11 rounded-xl border bg-background px-3 mt-1"
-                    value={manualCarData.fuelType}
-                    onChange={(e) => setManualCarData({ ...manualCarData, fuelType: e.target.value })}
-                  >
-                    <option value="">{isRTL ? 'اختر' : 'Select'}</option>
-                    <option value="gasoline">{isRTL ? 'بنزين' : 'Gasoline'}</option>
-                    <option value="hybrid">{isRTL ? 'هايبرد' : 'Hybrid'}</option>
-                    <option value="electric">{isRTL ? 'كهربائي' : 'Electric'}</option>
-                    <option value="diesel">{isRTL ? 'ديزل' : 'Diesel'}</option>
-                  </select>
-                </div>
-                <div>
-                  <Label>{isRTL ? 'ناقل الحركة' : 'Transmission'}</Label>
-                  <select
-                    className="w-full h-11 rounded-xl border bg-background px-3 mt-1"
-                    value={manualCarData.transmission}
-                    onChange={(e) => setManualCarData({ ...manualCarData, transmission: e.target.value })}
-                  >
-                    <option value="">{isRTL ? 'اختر' : 'Select'}</option>
-                    <option value="automatic">{isRTL ? 'أوتوماتيك' : 'Automatic'}</option>
-                    <option value="manual">{isRTL ? 'يدوي' : 'Manual'}</option>
-                    <option value="cvt">{isRTL ? 'CVT' : 'CVT'}</option>
-                  </select>
-                </div>
-                <div>
-                  <Label>{isRTL ? 'الدفع' : 'Drivetrain'}</Label>
-                  <select
-                    className="w-full h-11 rounded-xl border bg-background px-3 mt-1"
-                    value={manualCarData.drivetrain}
-                    onChange={(e) => setManualCarData({ ...manualCarData, drivetrain: e.target.value })}
-                  >
-                    <option value="">{isRTL ? 'اختر' : 'Select'}</option>
-                    <option value="FWD">{isRTL ? 'أمامي' : 'FWD'}</option>
-                    <option value="RWD">{isRTL ? 'خلفي' : 'RWD'}</option>
-                    <option value="AWD">{isRTL ? 'كلي' : 'AWD'}</option>
-                    <option value="4WD">{isRTL ? 'رباعي' : '4WD'}</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label>{isRTL ? 'عدد المقاعد' : 'Seats'}</Label>
-                  <select
-                    className="w-full h-11 rounded-xl border bg-background px-3 mt-1"
-                    value={manualCarData.seats}
-                    onChange={(e) => setManualCarData({ ...manualCarData, seats: e.target.value })}
-                  >
-                    <option value="">{isRTL ? 'اختر' : 'Select'}</option>
-                    {[2, 4, 5, 6, 7, 8].map(s => (
-                      <option key={s} value={s}>{s}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <Label>{isRTL ? 'اللون' : 'Color'}</Label>
-                  <select
-                    className="w-full h-11 rounded-xl border bg-background px-3 mt-1"
-                    value={manualCarData.color}
-                    onChange={(e) => setManualCarData({ ...manualCarData, color: e.target.value })}
-                  >
-                    <option value="">{isRTL ? 'اختر' : 'Select'}</option>
-                    <option value="white">{isRTL ? 'أبيض' : 'White'}</option>
-                    <option value="black">{isRTL ? 'أسود' : 'Black'}</option>
-                    <option value="silver">{isRTL ? 'فضي' : 'Silver'}</option>
-                    <option value="gray">{isRTL ? 'رمادي' : 'Gray'}</option>
-                    <option value="blue">{isRTL ? 'أزرق' : 'Blue'}</option>
-                    <option value="red">{isRTL ? 'أحمر' : 'Red'}</option>
-                    <option value="green">{isRTL ? 'أخضر' : 'Green'}</option>
-                    <option value="brown">{isRTL ? 'بني' : 'Brown'}</option>
-                  </select>
-                </div>
-              </div>
+            {/* Year */}
+            <div>
+              <Label className="text-base font-semibold">{isRTL ? 'سنة الموديل' : 'Model Year'}</Label>
+              <select
+                className="w-full h-12 rounded-xl border bg-background px-4 mt-2 text-base"
+                value={manualCarData.year}
+                onChange={(e) => setManualCarData({ ...manualCarData, year: e.target.value })}
+              >
+                <option value="">{isRTL ? 'اختر السنة' : 'Select Year'}</option>
+                {[2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015].map(y => (
+                  <option key={y} value={y}>{y}</option>
+                ))}
+              </select>
             </div>
           </div>
 
@@ -10075,43 +9904,6 @@ export default function CarLinkPage() {
           </div>
         </DialogContent>
       </Dialog>
-
-      {/* Floating Action Button - تحليل سيارة سريع */}
-      <motion.button
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => {
-          setViewState('input');
-          setCurrentVehicle(null);
-          setLinkUrl('');
-          // Scroll to top
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
-        className={`fixed bottom-28 z-[60] w-16 h-16 rounded-full sky-gradient shadow-2xl flex items-center justify-center cursor-pointer group ${isRTL ? 'left-6' : 'right-6'}`}
-        title={isRTL ? 'تحليل سيارة جديدة' : 'Analyze New Car'}
-      >
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-          className="absolute inset-0 rounded-full border-2 border-white/30"
-        />
-        <Plus className="w-7 h-7 text-white group-hover:rotate-90 transition-transform duration-300" strokeWidth={3} />
-        
-        {/* Pulse effect */}
-        <motion.div
-          animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="absolute inset-0 rounded-full bg-sky-400"
-        />
-        
-        {/* Label */}
-        <span className={`absolute whitespace-nowrap bg-background/95 backdrop-blur-sm px-3 py-1.5 rounded-lg shadow-lg text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity ${isRTL ? 'right-full mr-3' : 'left-full ml-3'}`}>
-          {isRTL ? 'تحليل سيارة' : 'Analyze Car'}
-        </span>
-      </motion.button>
 
       {/* Blue Gradient Divider Line before Footer */}
       <div className="w-full py-2">
