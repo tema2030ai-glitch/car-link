@@ -1142,16 +1142,41 @@ export default function CarLinkPage() {
 
   // Load bank offers on mount
   useEffect(() => {
+    // Helper function to calculate monthly payment
+    const calculateMonthlyPayment = (principal: number, months: number, annualRate: number) => {
+      const r = annualRate / 12;
+      return principal * (r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1);
+    };
+
+    // Default car price for initial calculations
+    const defaultCarPrice = 100000;
+
     const defaultBankOffers = [
-      { id: 'alrajhi', bankName: 'بنك الراجحي', bankNameEn: 'Al Rajhi Bank', interestRate: 4.75, minDownPayment: 10, maxTerm: 60, minSalary: 3000, eligible: true, features: ['أقل نسبة ربح', 'موافقة سريعة', 'تأجيل قسط'], fees: 1500, profitAmount: 0 },
-      { id: 'albilad', bankName: 'بنك البلاد', bankNameEn: 'Al Bilad Bank', interestRate: 4.85, minDownPayment: 15, maxTerm: 60, minSalary: 3500, eligible: true, features: ['تمويل فوري', 'بدون رسوم'], fees: 1000, profitAmount: 0 },
-      { id: 'snb', bankName: 'البنك الأهلي السعودي', bankNameEn: 'SNB', interestRate: 4.9, minDownPayment: 15, maxTerm: 72, minSalary: 4000, eligible: true, features: ['أطول فترة سداد', 'برنامج ولاء'], fees: 2000, profitAmount: 0 },
-      { id: 'riyadbank', bankName: 'بنك الرياض', bankNameEn: 'Riyad Bank', interestRate: 5.0, minDownPayment: 20, maxTerm: 60, minSalary: 4500, eligible: true, features: ['تأمين مجاني', 'خدمة متميزة'], fees: 1800, profitAmount: 0 },
-      { id: 'arabnational', bankName: 'البنك العربي الوطني', bankNameEn: 'Arab National Bank', interestRate: 5.1, minDownPayment: 20, maxTerm: 60, minSalary: 4000, eligible: true, features: ['مرونة في السداد'], fees: 1200, profitAmount: 0 },
-      { id: 'sabb', bankName: 'بنك ساب', bankNameEn: 'SABB', interestRate: 5.25, minDownPayment: 20, maxTerm: 48, minSalary: 5000, eligible: true, features: ['خدمة VIP'], fees: 2500, profitAmount: 0 },
-      { id: 'alinma', bankName: 'بنك الإنماء', bankNameEn: 'Alinma Bank', interestRate: 4.95, minDownPayment: 15, maxTerm: 60, minSalary: 3500, eligible: true, features: ['تمويل إسلامي', 'موافقة فورية'], fees: 800, profitAmount: 0 },
-      { id: 'firstab', bankName: 'البنك الأول', bankNameEn: 'First Abu Dhabi', interestRate: 5.15, minDownPayment: 20, maxTerm: 60, minSalary: 5000, eligible: true, features: ['خدمة مخصصة'], fees: 2200, profitAmount: 0 },
-    ];
+      { id: 'alrajhi', bankName: 'بنك الراجحي', bankNameEn: 'Al Rajhi Bank', interestRate: 4.75, minDownPayment: 10, maxLoanTerm: 60, minSalary: 3000, eligible: true, features: ['أقل نسبة ربح', 'موافقة سريعة', 'تأجيل قسط'], fees: 1500, logo: '🏦' },
+      { id: 'albilad', bankName: 'بنك البلاد', bankNameEn: 'Al Bilad Bank', interestRate: 4.85, minDownPayment: 15, maxLoanTerm: 60, minSalary: 3500, eligible: true, features: ['تمويل فوري', 'بدون رسوم'], fees: 1000, logo: '🏦' },
+      { id: 'snb', bankName: 'البنك الأهلي السعودي', bankNameEn: 'SNB', interestRate: 4.9, minDownPayment: 15, maxLoanTerm: 72, minSalary: 4000, eligible: true, features: ['أطول فترة سداد', 'برنامج ولاء'], fees: 2000, logo: '🏦' },
+      { id: 'riyadbank', bankName: 'بنك الرياض', bankNameEn: 'Riyad Bank', interestRate: 5.0, minDownPayment: 20, maxLoanTerm: 60, minSalary: 4500, eligible: true, features: ['تأمين مجاني', 'خدمة متميزة'], fees: 1800, logo: '🏦' },
+      { id: 'arabnational', bankName: 'البنك العربي الوطني', bankNameEn: 'Arab National Bank', interestRate: 5.1, minDownPayment: 20, maxLoanTerm: 60, minSalary: 4000, eligible: true, features: ['مرونة في السداد'], fees: 1200, logo: '🏦' },
+      { id: 'sabb', bankName: 'بنك ساب', bankNameEn: 'SABB', interestRate: 5.25, minDownPayment: 20, maxLoanTerm: 48, minSalary: 5000, eligible: true, features: ['خدمة VIP'], fees: 2500, logo: '🏦' },
+      { id: 'alinma', bankName: 'بنك الإنماء', bankNameEn: 'Alinma Bank', interestRate: 4.95, minDownPayment: 15, maxLoanTerm: 60, minSalary: 3500, eligible: true, features: ['تمويل إسلامي', 'موافقة فورية'], fees: 800, logo: '🏦' },
+      { id: 'firstab', bankName: 'البنك الأول', bankNameEn: 'First Abu Dhabi', interestRate: 5.15, minDownPayment: 20, maxLoanTerm: 60, minSalary: 5000, eligible: true, features: ['خدمة مخصصة'], fees: 2200, logo: '🏦' },
+    ].map(bank => {
+      const financingAmount = Math.round(defaultCarPrice * (100 - bank.minDownPayment) / 100);
+      const months = bank.maxLoanTerm;
+      const annualRate = bank.interestRate / 100;
+      const monthlyPayment = Math.round(calculateMonthlyPayment(financingAmount, months, annualRate));
+      const totalAmount = Math.round(monthlyPayment * months);
+      const profitAmount = Math.round(totalAmount - financingAmount);
+
+      return {
+        ...bank,
+        financingAmount,
+        monthlyPayment,
+        totalAmount,
+        profitAmount,
+      };
+    });
+
     setBankOffers(defaultBankOffers);
   }, []);
 
