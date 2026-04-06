@@ -8237,13 +8237,13 @@ export default function CarLinkPage() {
                   </CardContent>
                 </Card>
 
-                {/* Cars Within Budget Section */}
-                {salaryEligibility && financingParams.salary > 0 && (
+                {/* Cars Within Budget Section - Show when salary is entered OR when financing is calculated */}
+                {(salaryEligibility || financingResult) && (
                   <Card className="overflow-hidden">
                     <div className="relative overflow-hidden rounded-t-xl bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 p-4">
                       <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
                       <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2" />
-                      
+
                       <div className={`relative ${isRTL ? 'text-right direction-rtl' : 'text-left'}`}>
                         <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
                           <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
@@ -8254,7 +8254,11 @@ export default function CarLinkPage() {
                               <h3 className="text-base font-black text-black drop-shadow-sm">
                                 <span className="font-black">{t.carsWithinBudget}</span>
                               </h3>
-                              <span className="font-normal text-black/70 text-xs">{t.basedOnYourSalary}</span>
+                              <span className="font-normal text-black/70 text-xs">
+                                {salaryEligibility
+                                  ? t.basedOnYourSalary
+                                  : isRTL ? 'بناءً على القسط الشهري المحسوب' : 'Based on calculated monthly payment'}
+                              </span>
                             </div>
                           </div>
                           <div className="hidden sm:flex items-center gap-1 px-2 py-1 rounded-full bg-white/40 backdrop-blur-sm border border-white/50">
@@ -8349,15 +8353,19 @@ export default function CarLinkPage() {
                           return payment;
                         };
 
+                        // Determine budget based on salary or current financing calculation
+                        const budgetPayment = salaryEligibility?.maxMonthlyPayment || (financingResult?.monthlyPayment || 0);
+
                         // Calculate all cars with payments
                         const carsWithPayments = allCars
                           .map(car => ({
                             ...car,
                             monthlyPayment: calculateCarPayment(car.price),
-                            isWithinBudget: calculateCarPayment(car.price) <= salaryEligibility.maxMonthlyPayment,
+                            isWithinBudget: calculateCarPayment(car.price) <= budgetPayment,
                           }));
 
-                        // Affordable cars (within budget) - show ALL cars
+                        // Affordable cars (within budget) - show ALL cars within the budget range
+                        // Sort by payment descending to show the best value cars first
                         const affordableCars = carsWithPayments
                           .filter(car => car.isWithinBudget)
                           .sort((a, b) => b.monthlyPayment - a.monthlyPayment);
@@ -8368,6 +8376,11 @@ export default function CarLinkPage() {
                               <AlertCircle className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
                               <p className="text-xs font-medium">{t.noAffordableCars}</p>
                               <p className="text-[10px] text-muted-foreground mt-1">{t.increaseDownPayment}</p>
+                              <p className="text-[10px] text-muted-foreground mt-1">
+                                {isRTL
+                                                  ? `الميزانية الحالية: ${Math.round(budgetPayment).toLocaleString()} ريال/شهر`
+                                                  : `Current budget: ${Math.round(budgetPayment).toLocaleString()} SAR/month`}
+                              </p>
                             </div>
                           );
                         }
@@ -8387,7 +8400,8 @@ export default function CarLinkPage() {
                               </div>
                               <div className={`text-xs ${isRTL ? 'text-right' : 'text-left'}`}>
                                 <span className="text-muted-foreground">{isRTL ? 'الحد الأقصى:' : 'Max:'}</span>
-                                <span className="font-bold text-primary mr-1"> {getCurrencyDisplay()} {Math.round(salaryEligibility.maxMonthlyPayment).toLocaleString()}</span>
+                                <span className="font-bold text-primary mr-1"> {getCurrencyDisplay()} {Math.round(budgetPayment).toLocaleString()}</span>
+                                <span className="text-muted-foreground text-[9px]">{isRTL ? '/شهر' : '/mo'}</span>
                               </div>
                             </div>
 
