@@ -2340,128 +2340,228 @@ export default function CarLinkPage() {
 
   const renderOrderTracking = () => {
     const steps = [
-      { status: 'pending', label: t.statusPending, icon: Loader2 },
-      { status: 'approved', label: t.statusApproved, icon: CheckCircle2 },
-      { status: 'documents', label: t.statusDocuments, icon: Award },
-      { status: 'final_approval', label: t.statusFinalApproval, icon: CheckCircle2 },
-      { status: 'contract', label: t.statusContract, icon: Calendar },
-      { status: 'delivery', label: t.statusDelivery, icon: Car },
+      { status: 'pending', label: t.statusPending, labelEn: 'Under Review', icon: Loader2, color: 'amber', descAr: 'جاري تحليل طلبك تلقائياً بالذكاء الاصطناعي', descEn: 'Your application is being analyzed automatically by AI' },
+      { status: 'approved', label: t.statusApproved, labelEn: 'Initial Approval', icon: CheckCircle2, color: 'green', descAr: 'تمت الموافقة المبدئية - سيتم إرسال المستندات المطلوبة إليك', descEn: 'Initial approval received - required documents will be sent to you' },
+      { status: 'documents', label: t.statusDocuments, labelEn: 'Documents', icon: FileText, color: 'blue', descAr: 'يرجى استكمال المستندات المطلوبة', descEn: 'Please complete the required documents' },
+      { status: 'final_approval', label: t.statusFinalApproval, labelEn: 'Final Approval', icon: CheckCircle2, color: 'green', descAr: 'تمت الموافقة النهائية - جاري إعداد العقد', descEn: 'Final approval received - preparing contract' },
+      { status: 'contract', label: t.statusContract, labelEn: 'Contract', icon: Calendar, color: 'purple', descAr: 'العقد جاهز - سيتم إرساله إليك للتوقيع الإلكتروني', descEn: 'Contract ready - will be sent for electronic signature' },
+      { status: 'delivery', label: t.statusDelivery, labelEn: 'Delivery', icon: Car, color: 'emerald', descAr: 'السيارة جاهزة للاستلام!', descEn: 'Your car is ready for delivery!' },
     ];
 
     const currentIndex = steps.findIndex(s => s.status === orderStatus);
+    
+    // Generate timestamps for each stage
+    const getStageTime = (index: number) => {
+      if (index === 0) return isRTL ? 'منذ 5 دقائق' : '5 min ago';
+      if (index === 1) return isRTL ? 'منذ 3 دقائق' : '3 min ago';
+      if (index === 2) return isRTL ? 'منذ دقيقة' : '1 min ago';
+      return '';
+    };
 
     // Function to advance to next stage
     const advanceToNextStage = () => {
       if (currentIndex < steps.length - 1) {
         const nextStatus = steps[currentIndex + 1].status;
         setOrderStatus(nextStatus);
+        
+        // If next status is documents, show documents form
+        if (nextStatus === 'documents' && !documentsSubmitted) {
+          setShowDocumentsForm(true);
+          toast({ title: isRTL ? 'يرجى استكمال المستندات المطلوبة' : 'Please complete required documents' });
+        }
       }
     };
 
     return (
       <div className="py-4">
-        {/* Click to advance hint */}
-        <div
-          onClick={advanceToNextStage}
-          className={`cursor-pointer ${currentIndex < steps.length - 1 ? 'hover:opacity-90' : ''}`}
-        >
-          <div className="relative">
-            {/* Progress Line */}
-            <div className="absolute top-6 left-0 right-0 h-0.5 bg-muted">
-              <div
-                className="h-full bg-primary transition-all duration-500"
-                style={{ width: `${(currentIndex / (steps.length - 1)) * 100}%` }}
-              />
-            </div>
-
-            {/* Steps */}
-            <div className="relative flex justify-between">
-              {steps.map((step, index) => {
-                const isCompleted = index <= currentIndex;
-                const isCurrent = index === currentIndex;
-                const Icon = step.icon;
-
-                return (
-                  <div key={step.status} className="flex flex-col items-center">
-                    <motion.div
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
-                      className={`w-12 h-12 rounded-full flex items-center justify-center border-2 transition-all ${
-                        isCompleted ? 'bg-primary border-primary text-white' :
-                        isCurrent ? 'bg-primary/10 border-primary text-primary animate-pulse' :
-                        'bg-background border-muted text-muted-foreground'
-                      }`}
-                    >
-                      {isCurrent && index === 0 ? (
-                        <Loader2 className="w-5 h-5 animate-spin" />
-                      ) : (
-                        <Icon className={`w-5 h-5`} />
-                      )}
-                    </motion.div>
-                    <span className={`text-xs mt-2 text-center max-w-[60px] ${
-                      isCompleted ? 'text-primary font-medium' : 'text-muted-foreground'
-                    }`}>
-                      {step.label}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+        {/* Timeline Header */}
+        <div className={`flex items-center justify-between mb-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
+          <h4 className="font-semibold text-sm">{isRTL ? 'مراحل الطلب' : 'Order Stages'}</h4>
+          <Badge variant="outline" className="text-xs">
+            {isRTL ? `${currentIndex + 1} من ${steps.length}` : `${currentIndex + 1} of ${steps.length}`}
+          </Badge>
         </div>
 
-        {/* Current Status Details */}
-        <motion.div
-          key={orderStatus}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className={`mt-6 p-4 bg-muted/50 rounded-xl ${isRTL ? 'text-right' : 'text-left'}`}
-        >
-          <p className="font-medium">{t.nextStep}</p>
-          <p className="text-sm text-muted-foreground mt-1">
-            {orderStatus === 'pending' && (isRTL ? 'جاري تحليل طلبك تلقائياً بالذكاء الاصطناعي' : 'Your application is being analyzed automatically by AI')}
-            {orderStatus === 'approved' && (isRTL ? 'تمت الموافقة المبدئية - سيتم إرسال المستندات المطلوبة إليك' : 'Initial approval received - required documents will be sent to you')}
-            {orderStatus === 'documents' && (isRTL ? 'جاري التحقق من المستندات المقدمة تلقائياً' : 'Automatically verifying submitted documents')}
-            {orderStatus === 'final_approval' && (isRTL ? 'تمت الموافقة النهائية - جاري إعداد العقد' : 'Final approval received - preparing contract')}
-            {orderStatus === 'contract' && (isRTL ? 'العقد جاهز - سيتم إرساله إليك للتوقيع الإلكتروني' : 'Contract ready - will be sent for electronic signature')}
-            {orderStatus === 'delivery' && (isRTL ? 'السيارة جاهزة للاستلام!' : 'Your car is ready for delivery!')}
-          </p>
-        </motion.div>
+        {/* Vertical Timeline */}
+        <div className="relative space-y-0">
+          {steps.map((step, index) => {
+            const isCompleted = index < currentIndex;
+            const isCurrent = index === currentIndex;
+            const Icon = step.icon;
 
-        {/* Click to advance button */}
-        {currentIndex < steps.length - 1 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="mt-4"
-          >
-            <Button
-              onClick={advanceToNextStage}
-              className="w-full sky-gradient text-white"
+            return (
+              <motion.div
+                key={step.status}
+                initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className={`relative flex gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}
+              >
+                {/* Timeline Line */}
+                {index < steps.length - 1 && (
+                  <div 
+                    className={`absolute top-10 ${isRTL ? 'right-5' : 'left-5'} w-0.5 h-full ${
+                      index < currentIndex ? 'bg-primary' : 'bg-muted'
+                    }`}
+                  />
+                )}
+
+                {/* Status Icon */}
+                <div className={`
+                  relative z-10 w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all flex-shrink-0
+                  ${isCompleted ? `bg-${step.color}-500 border-${step.color}-500 text-white` :
+                    isCurrent ? `bg-${step.color}-500/20 border-${step.color}-500 text-${step.color}-500` :
+                    'bg-background border-muted text-muted-foreground'}
+                `}
+                style={{
+                  backgroundColor: isCompleted || isCurrent ? 
+                    (step.color === 'amber' ? '#f59e0b' : 
+                     step.color === 'green' ? '#22c55e' : 
+                     step.color === 'blue' ? '#3b82f6' : 
+                     step.color === 'purple' ? '#a855f7' : 
+                     step.color === 'emerald' ? '#10b981' : 'hsl(var(--primary))') : 
+                    undefined,
+                  borderColor: isCompleted || isCurrent ? 
+                    (step.color === 'amber' ? '#f59e0b' : 
+                     step.color === 'green' ? '#22c55e' : 
+                     step.color === 'blue' ? '#3b82f6' : 
+                     step.color === 'purple' ? '#a855f7' : 
+                     step.color === 'emerald' ? '#10b981' : 'hsl(var(--primary))') : 
+                    undefined
+                }}
+                >
+                  {isCurrent && index === 0 ? (
+                    <Loader2 className="w-5 h-5 animate-spin text-white" />
+                  ) : isCompleted ? (
+                    <CheckCircle2 className="w-5 h-5 text-white" />
+                  ) : (
+                    <Icon className="w-5 h-5" />
+                  )}
+                  
+                  {/* Pulse animation for current */}
+                  {isCurrent && (
+                    <div className="absolute inset-0 rounded-full animate-ping opacity-20"
+                      style={{
+                        backgroundColor: step.color === 'amber' ? '#f59e0b' : 
+                         step.color === 'green' ? '#22c55e' : 
+                         step.color === 'blue' ? '#3b82f6' : 
+                         step.color === 'purple' ? '#a855f7' : 
+                         step.color === 'emerald' ? '#10b981' : 'hsl(var(--primary))'
+                      }}
+                    />
+                  )}
+                </div>
+
+                {/* Content */}
+                <div className={`flex-1 pb-6 ${isRTL ? 'text-right' : 'text-left'}`}>
+                  <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse justify-start' : ''}`}>
+                    <span className={`font-medium text-sm ${isCurrent ? 'text-primary' : isCompleted ? 'text-foreground' : 'text-muted-foreground'}`}>
+                      {step.label}
+                    </span>
+                    
+                    {/* Status Badge */}
+                    {isCompleted && (
+                      <Badge className="bg-green-500 text-white text-[10px] px-1.5 py-0">
+                        <CheckCircle2 className="w-3 h-3 mr-0.5" />
+                        {isRTL ? 'مكتمل' : 'Done'}
+                      </Badge>
+                    )}
+                    {isCurrent && (
+                      <Badge className="text-[10px] px-1.5 py-0 animate-pulse"
+                        style={{
+                          backgroundColor: step.color === 'amber' ? '#fef3c7' : 
+                           step.color === 'green' ? '#dcfce7' : 
+                           step.color === 'blue' ? '#dbeafe' : 
+                           step.color === 'purple' ? '#f3e8ff' : 
+                           step.color === 'emerald' ? '#d1fae5' : 'hsl(var(--primary)/0.1)',
+                          color: step.color === 'amber' ? '#b45309' : 
+                           step.color === 'green' ? '#166534' : 
+                           step.color === 'blue' ? '#1e40af' : 
+                           step.color === 'purple' ? '#7e22ce' : 
+                           step.color === 'emerald' ? '#047857' : 'hsl(var(--primary))'
+                        }}
+                      >
+                        <Loader2 className="w-3 h-3 mr-0.5 animate-spin" />
+                        {isRTL ? 'جاري' : 'In Progress'}
+                      </Badge>
+                    )}
+                  </div>
+                  
+                  {/* Description */}
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {isRTL ? step.descAr : step.descEn}
+                  </p>
+                  
+                  {/* Timestamp */}
+                  {(isCompleted || isCurrent) && (
+                    <div className={`flex items-center gap-1 mt-2 text-xs ${isRTL ? 'flex-row-reverse' : ''}`}>
+                      <Clock className="w-3 h-3 text-muted-foreground" />
+                      <span className="text-muted-foreground">{getStageTime(index)}</span>
+                    </div>
+                  )}
+
+                  {/* Documents Button for Documents Stage */}
+                  {isCurrent && step.status === 'documents' && !documentsSubmitted && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mt-3"
+                    >
+                      <Button
+                        className="sky-gradient text-white text-sm"
+                        onClick={() => setShowDocumentsForm(true)}
+                      >
+                        <FileText className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                        {isRTL ? 'استكمال المستندات' : 'Complete Documents'}
+                      </Button>
+                    </motion.div>
+                  )}
+
+                  {/* Completed Documents Indicator */}
+                  {step.status === 'documents' && documentsSubmitted && (
+                    <div className={`flex items-center gap-2 mt-2 text-green-600 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span className="text-xs font-medium">{isRTL ? 'تم استكمال المستندات' : 'Documents completed'}</span>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* Action Buttons */}
+        <div className="mt-4 pt-4 border-t space-y-2">
+          {currentIndex < steps.length - 1 && (
+            <>
+              <Button
+                onClick={advanceToNextStage}
+                className="w-full sky-gradient text-white"
+              >
+                <ArrowRight className={`w-4 h-4 ${isRTL ? 'ml-2 rotate-180' : 'mr-2'}`} />
+                {isRTL ? 'المرحلة التالية' : 'Next Stage'}
+              </Button>
+              <p className="text-xs text-center text-muted-foreground">
+                {isRTL ? 'انقر للمحاكاة والتقدم للمرحلة التالية' : 'Click to simulate and advance to next stage'}
+              </p>
+            </>
+          )}
+
+          {/* Completion message */}
+          {currentIndex === steps.length - 1 && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="p-4 bg-green-500/10 border border-green-500/30 rounded-xl text-center"
             >
-              <ArrowRight className={`w-4 h-4 ${isRTL ? 'ml-2 rotate-180' : 'mr-2'}`} />
-              {isRTL ? 'المرحلة التالية' : 'Next Stage'}
-            </Button>
-            <p className="text-xs text-center text-muted-foreground mt-2">
-              {isRTL ? 'انقر للمحاكاة والتقدم للمرحلة التالية' : 'Click to simulate and advance to next stage'}
-            </p>
-          </motion.div>
-        )}
-
-        {/* Completion message */}
-        {currentIndex === steps.length - 1 && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="mt-4 p-4 bg-green-500/10 border border-green-500/30 rounded-xl text-center"
-          >
-            <CheckCircle2 className="w-8 h-8 text-green-500 mx-auto mb-2" />
-            <p className="font-bold text-green-600">{isRTL ? 'تم إكمال جميع المراحل!' : 'All stages completed!'}</p>
-            <p className="text-sm text-muted-foreground mt-1">
-              {isRTL ? 'سيارتك جاهزة للاستلام' : 'Your car is ready for delivery'}
-            </p>
-          </motion.div>
-        )}
+              <CheckCircle2 className="w-8 h-8 text-green-500 mx-auto mb-2" />
+              <p className="font-bold text-green-600">{isRTL ? 'تم إكمال جميع المراحل!' : 'All stages completed!'}</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                {isRTL ? 'سيارتك جاهزة للاستلام' : 'Your car is ready for delivery'}
+              </p>
+            </motion.div>
+          )}
+        </div>
 
         {/* AI Badge */}
         <div className={`mt-4 p-3 bg-primary/5 rounded-xl border border-primary/20 ${isRTL ? 'text-right' : 'text-left'}`}>
@@ -6286,39 +6386,103 @@ export default function CarLinkPage() {
             {/* Documents Upload Form */}
             {applicationStatus === 'submitted' && showDocumentsForm && (
               <div className="p-4">
-                {/* Header */}
-                <div className="flex items-center gap-3 mb-4">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setShowDocumentsForm(false)}
-                  >
-                    <ArrowRight className="w-5 h-5" />
-                  </Button>
-                  <div>
-                    <h3 className="text-lg font-bold">{isRTL ? 'استكمال المستندات' : 'Complete Documents'}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {isRTL ? 'يرجى رفع المستندات المطلوبة للمتابعة' : 'Please upload required documents to proceed'}
-                    </p>
+                {/* Header with Progress */}
+                <div className="mb-4">
+                  <div className="flex items-center gap-3 mb-3">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setShowDocumentsForm(false)}
+                    >
+                      <ArrowRight className="w-5 h-5" />
+                    </Button>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-bold">{isRTL ? 'استكمال المستندات' : 'Complete Documents'}</h3>
+                      <p className="text-sm text-muted-foreground">
+                        {isRTL ? 'يرجى استكمال البيانات ورفع المستندات المطلوبة' : 'Please complete your information and upload required documents'}
+                      </p>
+                    </div>
                   </div>
-                </div>
+                  
+                  {/* Progress Bar */}
+                  <div className="p-3 bg-muted/30 rounded-xl">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs font-medium">{isRTL ? 'نسبة الإكمال' : 'Completion Rate'}</span>
+                      <span className="text-xs font-bold text-primary">
+                        {Math.round((
+                          (documentsData.fullName ? 1 : 0) +
+                          (documentsData.nationalId ? 1 : 0) +
+                          (documentsData.birthDate ? 1 : 0) +
+                          (documentsData.phone ? 1 : 0) +
+                          (documentsData.employmentType ? 1 : 0) +
+                          (documentsData.companyName ? 1 : 0) +
+                          (documentsData.salary ? 1 : 0) +
+                          (documentsData.idDocument ? 1 : 0) +
+                          (documentsData.salaryCertificate ? 1 : 0) +
+                          (documentsData.bankStatement ? 1 : 0)
+                        ) / 10 * 100)}%
+                      </span>
+                    </div>
+                    <Progress 
+                      value={(
+                        (documentsData.fullName ? 1 : 0) +
+                        (documentsData.nationalId ? 1 : 0) +
+                        (documentsData.birthDate ? 1 : 0) +
+                        (documentsData.phone ? 1 : 0) +
+                        (documentsData.employmentType ? 1 : 0) +
+                        (documentsData.companyName ? 1 : 0) +
+                        (documentsData.salary ? 1 : 0) +
+                        (documentsData.idDocument ? 1 : 0) +
+                        (documentsData.salaryCertificate ? 1 : 0) +
+                        (documentsData.bankStatement ? 1 : 0)
+                      ) / 10 * 100} 
+                      className="h-2"
+                    />
+                  </div>
 
-                {/* Order Number Badge */}
-                <div className="p-3 bg-primary/5 rounded-lg border border-primary/20 mb-4 flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">{t.applicationNumber}</span>
-                  <span className="font-mono font-bold text-primary">{applicationData.orderNumber}</span>
+                  {/* Order Number Badge */}
+                  <div className="p-3 bg-primary/5 rounded-lg border border-primary/20 mt-3 flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">{t.applicationNumber}</span>
+                    <span className="font-mono font-bold text-primary">{applicationData.orderNumber}</span>
+                  </div>
                 </div>
 
                 <div className="space-y-4">
                   {/* Personal Information Section */}
-                  <div className={`p-4 bg-blue-500/10 rounded-xl border border-blue-500/20 ${isRTL ? 'text-right' : 'text-left'}`}>
-                    <h4 className="font-semibold mb-3 flex items-center gap-2">
-                      <User className="w-5 h-5 text-blue-500" />
-                      {isRTL ? 'البيانات الشخصية' : 'Personal Information'}
-                    </h4>
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`p-4 rounded-xl border-2 transition-all ${
+                      documentsData.fullName && documentsData.nationalId && documentsData.phone && documentsData.birthDate
+                        ? 'bg-green-500/5 border-green-500/30'
+                        : 'bg-blue-500/10 border-blue-500/20'
+                    } ${isRTL ? 'text-right' : 'text-left'}`}
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="font-semibold flex items-center gap-2">
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                          documentsData.fullName && documentsData.nationalId && documentsData.phone && documentsData.birthDate
+                            ? 'bg-green-500 text-white'
+                            : 'bg-blue-500/20 text-blue-500'
+                        }`}>
+                          {documentsData.fullName && documentsData.nationalId && documentsData.phone && documentsData.birthDate ? (
+                            <CheckCircle2 className="w-4 h-4" />
+                          ) : (
+                            <User className="w-4 h-4" />
+                          )}
+                        </div>
+                        {isRTL ? 'البيانات الشخصية' : 'Personal Information'}
+                      </h4>
+                      {documentsData.fullName && documentsData.nationalId && documentsData.phone && documentsData.birthDate && (
+                        <Badge className="bg-green-500 text-white text-xs">
+                          <CheckCircle2 className="w-3 h-3 mr-1" />
+                          {isRTL ? 'مكتمل' : 'Complete'}
+                        </Badge>
+                      )}
+                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div>
-                        <Label className="text-sm">{isRTL ? 'الاسم الكامل' : 'Full Name'}</Label>
+                        <Label className="text-sm">{isRTL ? 'الاسم الكامل' : 'Full Name'} *</Label>
                         <Input
                           value={documentsData.fullName}
                           onChange={(e) => setDocumentsData({...documentsData, fullName: e.target.value})}
@@ -6327,7 +6491,7 @@ export default function CarLinkPage() {
                         />
                       </div>
                       <div>
-                        <Label className="text-sm">{isRTL ? 'رقم الهوية' : 'National ID'}</Label>
+                        <Label className="text-sm">{isRTL ? 'رقم الهوية' : 'National ID'} *</Label>
                         <Input
                           value={documentsData.nationalId}
                           onChange={(e) => setDocumentsData({...documentsData, nationalId: e.target.value.replace(/\D/g, '').slice(0, 10)})}
@@ -6337,7 +6501,7 @@ export default function CarLinkPage() {
                         />
                       </div>
                       <div>
-                        <Label className="text-sm">{isRTL ? 'تاريخ الميلاد' : 'Birth Date'}</Label>
+                        <Label className="text-sm">{isRTL ? 'تاريخ الميلاد' : 'Birth Date'} *</Label>
                         <Input
                           type="date"
                           value={documentsData.birthDate}
@@ -6345,7 +6509,7 @@ export default function CarLinkPage() {
                         />
                       </div>
                       <div>
-                        <Label className="text-sm">{isRTL ? 'رقم الجوال' : 'Mobile Number'}</Label>
+                        <Label className="text-sm">{isRTL ? 'رقم الجوال' : 'Mobile Number'} *</Label>
                         <Input
                           value={documentsData.phone}
                           onChange={(e) => setDocumentsData({...documentsData, phone: e.target.value})}
@@ -6381,17 +6545,44 @@ export default function CarLinkPage() {
                         </select>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
 
                   {/* Employment Information Section */}
-                  <div className={`p-4 bg-emerald-500/10 rounded-xl border border-emerald-500/20 ${isRTL ? 'text-right' : 'text-left'}`}>
-                    <h4 className="font-semibold mb-3 flex items-center gap-2">
-                      <Building2 className="w-5 h-5 text-emerald-500" />
-                      {isRTL ? 'البيانات الوظيفية' : 'Employment Information'}
-                    </h4>
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                    className={`p-4 rounded-xl border-2 transition-all ${
+                      documentsData.employmentType && documentsData.companyName && documentsData.salary
+                        ? 'bg-green-500/5 border-green-500/30'
+                        : 'bg-emerald-500/10 border-emerald-500/20'
+                    } ${isRTL ? 'text-right' : 'text-left'}`}
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="font-semibold flex items-center gap-2">
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                          documentsData.employmentType && documentsData.companyName && documentsData.salary
+                            ? 'bg-green-500 text-white'
+                            : 'bg-emerald-500/20 text-emerald-500'
+                        }`}>
+                          {documentsData.employmentType && documentsData.companyName && documentsData.salary ? (
+                            <CheckCircle2 className="w-4 h-4" />
+                          ) : (
+                            <Building2 className="w-4 h-4" />
+                          )}
+                        </div>
+                        {isRTL ? 'البيانات الوظيفية' : 'Employment Information'}
+                      </h4>
+                      {documentsData.employmentType && documentsData.companyName && documentsData.salary && (
+                        <Badge className="bg-green-500 text-white text-xs">
+                          <CheckCircle2 className="w-3 h-3 mr-1" />
+                          {isRTL ? 'مكتمل' : 'Complete'}
+                        </Badge>
+                      )}
+                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div>
-                        <Label className="text-sm">{isRTL ? 'نوع الوظيفة' : 'Employment Type'}</Label>
+                        <Label className="text-sm">{isRTL ? 'نوع الوظيفة' : 'Employment Type'} *</Label>
                         <select
                           className="w-full h-10 rounded-md border bg-background px-3"
                           value={documentsData.employmentType}
@@ -6405,7 +6596,7 @@ export default function CarLinkPage() {
                         </select>
                       </div>
                       <div>
-                        <Label className="text-sm">{isRTL ? 'اسم الجهة' : 'Company Name'}</Label>
+                        <Label className="text-sm">{isRTL ? 'اسم الجهة' : 'Company Name'} *</Label>
                         <Input
                           value={documentsData.companyName}
                           onChange={(e) => setDocumentsData({...documentsData, companyName: e.target.value})}
@@ -6437,7 +6628,7 @@ export default function CarLinkPage() {
                         </select>
                       </div>
                       <div>
-                        <Label className="text-sm">{isRTL ? 'الراتب الشهري' : 'Monthly Salary'}</Label>
+                        <Label className="text-sm">{isRTL ? 'الراتب الشهري' : 'Monthly Salary'} *</Label>
                         <Input
                           type="number"
                           value={documentsData.salary}
@@ -6463,30 +6654,68 @@ export default function CarLinkPage() {
                         </select>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
 
                   {/* Required Documents Section */}
-                  <div className={`p-4 bg-amber-500/10 rounded-xl border border-amber-500/20 ${isRTL ? 'text-right' : 'text-left'}`}>
-                    <h4 className="font-semibold mb-3 flex items-center gap-2">
-                      <FileText className="w-5 h-5 text-amber-500" />
-                      {isRTL ? 'المستندات المطلوبة' : 'Required Documents'}
-                    </h4>
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className={`p-4 rounded-xl border-2 transition-all ${
+                      documentsData.idDocument && documentsData.salaryCertificate && documentsData.bankStatement
+                        ? 'bg-green-500/5 border-green-500/30'
+                        : 'bg-amber-500/10 border-amber-500/20'
+                    } ${isRTL ? 'text-right' : 'text-left'}`}
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="font-semibold flex items-center gap-2">
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                          documentsData.idDocument && documentsData.salaryCertificate && documentsData.bankStatement
+                            ? 'bg-green-500 text-white'
+                            : 'bg-amber-500/20 text-amber-500'
+                        }`}>
+                          {documentsData.idDocument && documentsData.salaryCertificate && documentsData.bankStatement ? (
+                            <CheckCircle2 className="w-4 h-4" />
+                          ) : (
+                            <FileText className="w-4 h-4" />
+                          )}
+                        </div>
+                        {isRTL ? 'المستندات المطلوبة' : 'Required Documents'}
+                      </h4>
+                      {documentsData.idDocument && documentsData.salaryCertificate && documentsData.bankStatement && (
+                        <Badge className="bg-green-500 text-white text-xs">
+                          <CheckCircle2 className="w-3 h-3 mr-1" />
+                          {isRTL ? 'مكتمل' : 'Complete'}
+                        </Badge>
+                      )}
+                    </div>
+                    
                     <div className="space-y-3">
                       {/* ID Document */}
-                      <div className="p-3 bg-background rounded-lg border-2 border-dashed border-muted-foreground/30 hover:border-primary/50 transition-colors">
+                      <div className={`p-3 rounded-xl border-2 transition-all ${
+                        documentsData.idDocument 
+                          ? 'bg-green-500/5 border-green-500/30' 
+                          : 'bg-background border-dashed border-muted-foreground/30 hover:border-primary/50'
+                      }`}>
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
-                              <FileText className="w-5 h-5 text-blue-500" />
+                          <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                              documentsData.idDocument ? 'bg-green-500/20' : 'bg-blue-500/20'
+                            }`}>
+                              {documentsData.idDocument ? (
+                                <CheckCircle2 className="w-5 h-5 text-green-500" />
+                              ) : (
+                                <FileText className="w-5 h-5 text-blue-500" />
+                              )}
                             </div>
-                            <div>
-                              <p className="font-medium text-sm">{isRTL ? 'صورة الهوية الوطنية' : 'National ID Copy'}</p>
+                            <div className={isRTL ? 'text-right' : 'text-left'}>
+                              <p className="font-medium text-sm">{isRTL ? 'صورة الهوية الوطنية' : 'National ID Copy'} *</p>
                               <p className="text-xs text-muted-foreground">{isRTL ? 'ملف PDF أو صورة' : 'PDF or Image'}</p>
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
                             {documentsData.idDocument && (
-                              <Badge className="bg-green-500 text-white">
+                              <Badge className="bg-green-500 text-white text-xs">
                                 <CheckCircle2 className="w-3 h-3 mr-1" />
                                 {isRTL ? 'تم الرفع' : 'Uploaded'}
                               </Badge>
@@ -6499,32 +6728,43 @@ export default function CarLinkPage() {
                               onChange={(e) => setDocumentsData({...documentsData, idDocument: e.target.files?.[0] || null})}
                             />
                             <Button
-                              variant="outline"
+                              variant={documentsData.idDocument ? "outline" : "default"}
                               size="sm"
+                              className={documentsData.idDocument ? '' : 'sky-gradient text-white'}
                               onClick={() => document.getElementById('idDocument')?.click()}
                             >
-                              <Upload className="w-4 h-4 ml-1" />
-                              {isRTL ? 'رفع' : 'Upload'}
+                              <Upload className={`w-4 h-4 ${isRTL ? 'ml-1' : 'mr-1'}`} />
+                              {documentsData.idDocument ? (isRTL ? 'تغيير' : 'Change') : (isRTL ? 'رفع' : 'Upload')}
                             </Button>
                           </div>
                         </div>
                       </div>
 
                       {/* Salary Certificate */}
-                      <div className="p-3 bg-background rounded-lg border-2 border-dashed border-muted-foreground/30 hover:border-primary/50 transition-colors">
+                      <div className={`p-3 rounded-xl border-2 transition-all ${
+                        documentsData.salaryCertificate 
+                          ? 'bg-green-500/5 border-green-500/30' 
+                          : 'bg-background border-dashed border-muted-foreground/30 hover:border-primary/50'
+                      }`}>
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-emerald-500/20 flex items-center justify-center">
-                              <FileText className="w-5 h-5 text-emerald-500" />
+                          <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                              documentsData.salaryCertificate ? 'bg-green-500/20' : 'bg-emerald-500/20'
+                            }`}>
+                              {documentsData.salaryCertificate ? (
+                                <CheckCircle2 className="w-5 h-5 text-green-500" />
+                              ) : (
+                                <FileText className="w-5 h-5 text-emerald-500" />
+                              )}
                             </div>
-                            <div>
-                              <p className="font-medium text-sm">{isRTL ? 'شهادة الراتب' : 'Salary Certificate'}</p>
+                            <div className={isRTL ? 'text-right' : 'text-left'}>
+                              <p className="font-medium text-sm">{isRTL ? 'شهادة الراتب' : 'Salary Certificate'} *</p>
                               <p className="text-xs text-muted-foreground">{isRTL ? 'حديثة (خلال 3 أشهر)' : 'Recent (within 3 months)'}</p>
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
                             {documentsData.salaryCertificate && (
-                              <Badge className="bg-green-500 text-white">
+                              <Badge className="bg-green-500 text-white text-xs">
                                 <CheckCircle2 className="w-3 h-3 mr-1" />
                                 {isRTL ? 'تم الرفع' : 'Uploaded'}
                               </Badge>
@@ -6537,32 +6777,43 @@ export default function CarLinkPage() {
                               onChange={(e) => setDocumentsData({...documentsData, salaryCertificate: e.target.files?.[0] || null})}
                             />
                             <Button
-                              variant="outline"
+                              variant={documentsData.salaryCertificate ? "outline" : "default"}
                               size="sm"
+                              className={documentsData.salaryCertificate ? '' : 'sky-gradient text-white'}
                               onClick={() => document.getElementById('salaryCertificate')?.click()}
                             >
-                              <Upload className="w-4 h-4 ml-1" />
-                              {isRTL ? 'رفع' : 'Upload'}
+                              <Upload className={`w-4 h-4 ${isRTL ? 'ml-1' : 'mr-1'}`} />
+                              {documentsData.salaryCertificate ? (isRTL ? 'تغيير' : 'Change') : (isRTL ? 'رفع' : 'Upload')}
                             </Button>
                           </div>
                         </div>
                       </div>
 
                       {/* Bank Statement */}
-                      <div className="p-3 bg-background rounded-lg border-2 border-dashed border-muted-foreground/30 hover:border-primary/50 transition-colors">
+                      <div className={`p-3 rounded-xl border-2 transition-all ${
+                        documentsData.bankStatement 
+                          ? 'bg-green-500/5 border-green-500/30' 
+                          : 'bg-background border-dashed border-muted-foreground/30 hover:border-primary/50'
+                      }`}>
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center">
-                              <FileText className="w-5 h-5 text-amber-500" />
+                          <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                              documentsData.bankStatement ? 'bg-green-500/20' : 'bg-amber-500/20'
+                            }`}>
+                              {documentsData.bankStatement ? (
+                                <CheckCircle2 className="w-5 h-5 text-green-500" />
+                              ) : (
+                                <FileText className="w-5 h-5 text-amber-500" />
+                              )}
                             </div>
-                            <div>
-                              <p className="font-medium text-sm">{isRTL ? 'كشف حساب بنكي' : 'Bank Statement'}</p>
+                            <div className={isRTL ? 'text-right' : 'text-left'}>
+                              <p className="font-medium text-sm">{isRTL ? 'كشف حساب بنكي' : 'Bank Statement'} *</p>
                               <p className="text-xs text-muted-foreground">{isRTL ? 'آخر 3 أشهر' : 'Last 3 months'}</p>
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
                             {documentsData.bankStatement && (
-                              <Badge className="bg-green-500 text-white">
+                              <Badge className="bg-green-500 text-white text-xs">
                                 <CheckCircle2 className="w-3 h-3 mr-1" />
                                 {isRTL ? 'تم الرفع' : 'Uploaded'}
                               </Badge>
@@ -6575,32 +6826,39 @@ export default function CarLinkPage() {
                               onChange={(e) => setDocumentsData({...documentsData, bankStatement: e.target.files?.[0] || null})}
                             />
                             <Button
-                              variant="outline"
+                              variant={documentsData.bankStatement ? "outline" : "default"}
                               size="sm"
+                              className={documentsData.bankStatement ? '' : 'sky-gradient text-white'}
                               onClick={() => document.getElementById('bankStatement')?.click()}
                             >
-                              <Upload className="w-4 h-4 ml-1" />
-                              {isRTL ? 'رفع' : 'Upload'}
+                              <Upload className={`w-4 h-4 ${isRTL ? 'ml-1' : 'mr-1'}`} />
+                              {documentsData.bankStatement ? (isRTL ? 'تغيير' : 'Change') : (isRTL ? 'رفع' : 'Upload')}
                             </Button>
                           </div>
                         </div>
                       </div>
 
-                      {/* Work Contract */}
-                      <div className="p-3 bg-background rounded-lg border-2 border-dashed border-muted-foreground/30 hover:border-primary/50 transition-colors">
+                      {/* Work Contract - Optional */}
+                      <div className="p-3 bg-background rounded-xl border-2 border-dashed border-muted-foreground/30 hover:border-primary/50 transition-all">
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
-                              <FileText className="w-5 h-5 text-purple-500" />
+                          <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                              documentsData.workContract ? 'bg-green-500/20' : 'bg-purple-500/20'
+                            }`}>
+                              {documentsData.workContract ? (
+                                <CheckCircle2 className="w-5 h-5 text-green-500" />
+                              ) : (
+                                <FileText className="w-5 h-5 text-purple-500" />
+                              )}
                             </div>
-                            <div>
+                            <div className={isRTL ? 'text-right' : 'text-left'}>
                               <p className="font-medium text-sm">{isRTL ? 'عقد العمل' : 'Work Contract'}</p>
                               <p className="text-xs text-muted-foreground">{isRTL ? 'اختياري' : 'Optional'}</p>
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
                             {documentsData.workContract && (
-                              <Badge className="bg-green-500 text-white">
+                              <Badge className="bg-green-500 text-white text-xs">
                                 <CheckCircle2 className="w-3 h-3 mr-1" />
                                 {isRTL ? 'تم الرفع' : 'Uploaded'}
                               </Badge>
@@ -6617,17 +6875,17 @@ export default function CarLinkPage() {
                               size="sm"
                               onClick={() => document.getElementById('workContract')?.click()}
                             >
-                              <Upload className="w-4 h-4 ml-1" />
-                              {isRTL ? 'رفع' : 'Upload'}
+                              <Upload className={`w-4 h-4 ${isRTL ? 'ml-1' : 'mr-1'}`} />
+                              {documentsData.workContract ? (isRTL ? 'تغيير' : 'Change') : (isRTL ? 'رفع' : 'Upload')}
                             </Button>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
 
                   {/* Action Buttons */}
-                  <div className="flex gap-2 pt-2">
+                  <div className="flex gap-2 pt-2 border-t">
                     <Button
                       variant="outline"
                       className="flex-1"
