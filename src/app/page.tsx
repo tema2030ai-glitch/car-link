@@ -2807,6 +2807,36 @@ export default function CarLinkPage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
             >
+              {/* Floating Plus Button - New Analysis */}
+              <motion.button
+                onClick={() => {
+                  setViewState('input');
+                  setCurrentVehicle(null);
+                  setLinkUrl('');
+                  setMarketAnalysis(null);
+                  setCompetitors(null);
+                }}
+                className="fixed bottom-24 right-6 z-50 w-16 h-16 rounded-full sky-gradient shadow-lg flex items-center justify-center hover:scale-110 transition-transform cursor-pointer group"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+              >
+                <Plus className="w-8 h-8 text-white group-hover:rotate-90 transition-transform" strokeWidth={2.5} />
+                {/* Pulse animation */}
+                <motion.div
+                  className="absolute inset-0 rounded-full sky-gradient"
+                  animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0, 0.5] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
+              </motion.button>
+              
+              {/* Tooltip for floating button */}
+              <div className={`fixed bottom-40 right-6 z-50 bg-popover text-popover-foreground px-3 py-1.5 rounded-lg text-sm font-medium shadow-md ${isRTL ? 'rtl' : 'ltr'}`}>
+                {isRTL ? 'تحليل سيارة جديدة' : 'New Car Analysis'}
+              </div>
+
               {/* Vehicle Header */}
               <Card className="mb-6 sky-gradient">
                 <CardContent className="p-6">
