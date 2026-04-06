@@ -8292,357 +8292,461 @@ export default function CarLinkPage() {
               </div>
             )}
             
-            {/* ========== خدمة الحسبة/التمويل - تصميم Wizard مبتكر ========== */}
+            {/* ========== خدمة الحسبة/التمويل - تصميم مطور ========== */}
             {selectedService === 'financing' && (
-              <div className="space-y-0">
-                {/* Progress Header */}
-                <div className="relative mb-6">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-muted-foreground">{isRTL ? 'الخطوة' : 'Step'} {financingParams.salary > 0 ? (financingParams.downPayment > 0 ? 3 : 2) : 1} {isRTL ? 'من' : 'of'} 3</span>
-                    <span className="text-xs font-bold text-emerald-600">{Math.round(((financingParams.salary > 0 ? 1 : 0) + (financingParams.downPayment > 0 ? 1 : 0) + (financingParams.loanTerm > 0 ? 1 : 0)) / 3 * 100)}%</span>
-                  </div>
-                  <div className="h-2 bg-muted rounded-full overflow-hidden">
-                    <motion.div 
-                      initial={{ width: 0 }}
-                      animate={{ width: `${((financingParams.salary > 0 ? 1 : 0) + (financingParams.downPayment > 0 ? 1 : 0) + (financingParams.loanTerm > 0 ? 1 : 0)) / 3 * 100}%` }}
-                      className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full"
-                    />
+              <div className="space-y-6">
+                {/* Financing Programs Section */}
+                <Card className="overflow-hidden">
+                  <CardHeader className="pb-4">
+                    <CardTitle className={`text-lg flex items-center gap-2 ${isRTL ? 'flex-row-reverse justify-start text-right' : ''}`}>
+                      <span className="text-2xl">💰</span>
+                      <span>{t.financingPrograms}</span>
+                    </CardTitle>
+                    <CardDescription className={isRTL ? 'text-right' : ''}>{t.financingProgramsDesc}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {/* Murabaha */}
+                      <Card className="bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer group">
+                        <CardContent className={`p-4 ${isRTL ? 'text-right' : 'text-left'}`}>
+                          <div className={`flex items-center gap-2 mb-3 ${isRTL ? 'flex-row-reverse justify-start' : ''}`}>
+                            <div className="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center">
+                              <CheckCircle2 className="w-5 h-5 text-green-500" />
+                            </div>
+                            <h4 className="font-bold text-sm">{t.murabaha}</h4>
+                          </div>
+                          <p className="text-xs text-muted-foreground mb-3">{t.murabahaDesc}</p>
+                          <div className="space-y-2 mb-3">
+                            <div className={`flex items-start gap-2 text-xs ${isRTL ? 'flex-row-reverse' : ''}`}>
+                              <CheckCircle2 className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
+                              <span>{t.murabahaFeatures.split(' | ')[0]}</span>
+                            </div>
+                            <div className={`flex items-start gap-2 text-xs ${isRTL ? 'flex-row-reverse' : ''}`}>
+                              <CheckCircle2 className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
+                              <span>{t.murabahaFeatures.split(' | ')[1]}</span>
+                            </div>
+                          </div>
+                          <Button className="w-full sky-gradient text-white group-hover:shadow-lg transition-shadow text-sm" onClick={() => openFinancingChatbot(t.murabaha)}>
+                            <Send className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                            {t.applyNow}
+                          </Button>
+                        </CardContent>
+                      </Card>
+
+                      {/* Ownership Financing */}
+                      <Card className="bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer group">
+                        <CardContent className={`p-4 ${isRTL ? 'text-right' : 'text-left'}`}>
+                          <div className={`flex items-center gap-2 mb-3 ${isRTL ? 'flex-row-reverse justify-start' : ''}`}>
+                            <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
+                              <Award className="w-5 h-5 text-blue-500" />
+                            </div>
+                            <h4 className="font-bold text-sm">{t.ownershipFinancing}</h4>
+                          </div>
+                          <p className="text-xs text-muted-foreground mb-3">{t.ownershipFinancingDesc}</p>
+                          <div className="space-y-2 mb-3">
+                            <div className={`flex items-start gap-2 text-xs ${isRTL ? 'flex-row-reverse' : ''}`}>
+                              <CheckCircle2 className="w-3 h-3 text-blue-500 mt-0.5 flex-shrink-0" />
+                              <span>{t.ownershipFinancingFeatures.split(' | ')[0]}</span>
+                            </div>
+                            <div className={`flex items-start gap-2 text-xs ${isRTL ? 'flex-row-reverse' : ''}`}>
+                              <CheckCircle2 className="w-3 h-3 text-blue-500 mt-0.5 flex-shrink-0" />
+                              <span>{t.ownershipFinancingFeatures.split(' | ')[1]}</span>
+                            </div>
+                          </div>
+                          <Button className="w-full sky-gradient text-white group-hover:shadow-lg transition-shadow text-sm" onClick={() => openFinancingChatbot(t.ownershipFinancing)}>
+                            <Send className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                            {t.applyNow}
+                          </Button>
+                        </CardContent>
+                      </Card>
+
+                      {/* Installment Program */}
+                      <Card className="bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer group">
+                        <CardContent className={`p-4 ${isRTL ? 'text-right' : 'text-left'}`}>
+                          <div className={`flex items-center gap-2 mb-3 ${isRTL ? 'flex-row-reverse justify-start' : ''}`}>
+                            <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center">
+                              <Calculator className="w-5 h-5 text-purple-500" />
+                            </div>
+                            <h4 className="font-bold text-sm">{t.installmentProgram}</h4>
+                          </div>
+                          <p className="text-xs text-muted-foreground mb-3">{t.installmentProgramDesc}</p>
+                          <div className="space-y-2 mb-3">
+                            <div className={`flex items-start gap-2 text-xs ${isRTL ? 'flex-row-reverse' : ''}`}>
+                              <CheckCircle2 className="w-3 h-3 text-purple-500 mt-0.5 flex-shrink-0" />
+                              <span>{t.installmentProgramFeatures.split(' | ')[0]}</span>
+                            </div>
+                            <div className={`flex items-start gap-2 text-xs ${isRTL ? 'flex-row-reverse' : ''}`}>
+                              <CheckCircle2 className="w-3 h-3 text-purple-500 mt-0.5 flex-shrink-0" />
+                              <span>{t.installmentProgramFeatures.split(' | ')[1]}</span>
+                            </div>
+                          </div>
+                          <Button className="w-full sky-gradient text-white group-hover:shadow-lg transition-shadow text-sm" onClick={() => openFinancingChatbot(t.installmentProgram)}>
+                            <Send className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                            {t.applyNow}
+                          </Button>
+                        </CardContent>
+                      </Card>
+
+                      {/* Lease Program */}
+                      <Card className="bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer group">
+                        <CardContent className={`p-4 ${isRTL ? 'text-right' : 'text-left'}`}>
+                          <div className={`flex items-center gap-2 mb-3 ${isRTL ? 'flex-row-reverse justify-start' : ''}`}>
+                            <div className="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center">
+                              <Car className="w-5 h-5 text-orange-500" />
+                            </div>
+                            <h4 className="font-bold text-sm">{t.leaseProgram}</h4>
+                          </div>
+                          <p className="text-xs text-muted-foreground mb-3">{t.leaseProgramDesc}</p>
+                          <div className="space-y-2 mb-3">
+                            <div className={`flex items-start gap-2 text-xs ${isRTL ? 'flex-row-reverse' : ''}`}>
+                              <CheckCircle2 className="w-3 h-3 text-orange-500 mt-0.5 flex-shrink-0" />
+                              <span>{t.leaseProgramFeatures.split(' | ')[0]}</span>
+                            </div>
+                            <div className={`flex items-start gap-2 text-xs ${isRTL ? 'flex-row-reverse' : ''}`}>
+                              <CheckCircle2 className="w-3 h-3 text-orange-500 mt-0.5 flex-shrink-0" />
+                              <span>{t.leaseProgramFeatures.split(' | ')[1]}</span>
+                            </div>
+                          </div>
+                          <Button className="w-full sky-gradient text-white group-hover:shadow-lg transition-shadow text-sm" onClick={() => openFinancingChatbot(t.leaseProgram)}>
+                            <Send className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                            {t.applyNow}
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Calculator Section */}
+                <div className="grid lg:grid-cols-2 gap-6">
+                  {/* Calculator Card */}
+                  <Card className="overflow-hidden relative">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/20 to-transparent rounded-full blur-2xl -translate-y-16 translate-x-16 pointer-events-none" />
+                    
+                    <CardHeader className="relative z-10">
+                      <CardTitle className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-cyan-500 flex items-center justify-center shadow-lg">
+                          <Calculator className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <span className="text-lg font-bold">{t.loanCalculator}</span>
+                          <p className="text-xs text-muted-foreground font-normal">{t.salaryBasedCalc}</p>
+                        </div>
+                      </CardTitle>
+                    </CardHeader>
+                    
+                    <CardContent className="space-y-5 relative z-10">
+                      {/* Car Price Input */}
+                      <div className="p-4 rounded-xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20">
+                        <div className={`flex items-center gap-2 mb-3 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
+                          <DollarSign className="w-5 h-5 text-amber-500" />
+                          <Label className="font-semibold text-amber-600">{isRTL ? 'سعر السيارة' : 'Car Price'}</Label>
+                        </div>
+                        <div className="relative">
+                          <Input
+                            type="text"
+                            inputMode="numeric"
+                            placeholder={isRTL ? 'أدخل سعر السيارة' : 'Enter car price'}
+                            value={manualCarPrice || ''}
+                            onChange={(e) => {
+                              const value = e.target.value.replace(/[^0-9]/g, '');
+                              const price = Number(value);
+                              setManualCarPrice(price);
+                              if (price > 0) {
+                                calculateFinancing(price);
+                              }
+                            }}
+                            className={`text-lg font-bold ${isRTL ? 'text-right pr-16' : 'text-left pl-16'} h-12 border-amber-500/30 focus:border-amber-500`}
+                          />
+                          <span className={`absolute top-1/2 -translate-y-1/2 text-muted-foreground font-medium ${isRTL ? 'left-3' : 'right-3'}`}>
+                            {isRTL ? 'ريال' : 'SAR'}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Salary Input */}
+                      <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20">
+                        <div className={`flex items-center gap-2 mb-3 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
+                          <DollarSign className="w-5 h-5 text-emerald-500" />
+                          <Label className="font-semibold text-emerald-600">{t.monthlySalary}</Label>
+                        </div>
+                        <div className="relative">
+                          <Input
+                            type="text"
+                            inputMode="numeric"
+                            placeholder={t.enterSalary}
+                            value={financingParams.salary || ''}
+                            onChange={(e) => {
+                              const value = e.target.value.replace(/[^0-9]/g, '');
+                              const salary = Number(value);
+                              setFinancingParams({ salary });
+                              if (salary > 0 && financingResult) {
+                                const maxPayment = salary * 0.33;
+                                const isEligible = financingResult.monthlyPayment <= maxPayment;
+                                setSalaryEligibility({
+                                  isEligible,
+                                  maxMonthlyPayment: maxPayment,
+                                  recommendedDownPayment: Math.max(20, Math.round((1 - (maxPayment * financingParams.loanTerm) / (manualCarPrice || 100000)) * 100)),
+                                  debtToIncomeRatio: Math.round((financingResult.monthlyPayment / salary) * 100)
+                                });
+                              }
+                            }}
+                            className={`text-lg font-bold ${isRTL ? 'text-right pr-16' : 'text-left pl-16'} h-12 border-emerald-500/30 focus:border-emerald-500`}
+                          />
+                          <span className={`absolute top-1/2 -translate-y-1/2 text-muted-foreground font-medium ${isRTL ? 'left-3' : 'right-3'}`}>
+                            {isRTL ? 'ريال' : 'SAR'}
+                          </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
+                          <AlertCircle className="w-3 h-3" />
+                          {t.salaryHint}
+                        </p>
+                      </div>
+
+                      {/* Bank Selection */}
+                      <div className="p-4 rounded-xl bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border border-blue-500/20">
+                        <div className={`flex items-center gap-2 mb-3 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
+                          <Building2 className="w-5 h-5 text-blue-500" />
+                          <Label className="font-semibold text-blue-600">{t.selectBank}</Label>
+                        </div>
+                        <select
+                          value={financingParams.selectedBank || ''}
+                          onChange={(e) => {
+                            const bankId = e.target.value;
+                            setFinancingParams({ selectedBank: bankId || null });
+                            if (bankId) {
+                              const selectedBank = bankOffers.find(b => b.id === bankId);
+                              if (selectedBank) {
+                                setFinancingParams({ 
+                                  interestRate: selectedBank.interestRate,
+                                  selectedBank: bankId 
+                                });
+                                calculateFinancing(manualCarPrice || 100000, { interestRate: selectedBank.interestRate });
+                              }
+                            }
+                          }}
+                          className={`w-full h-10 rounded-lg border border-blue-500/30 bg-background px-3 ${isRTL ? 'text-right' : 'text-left'} focus:border-blue-500`}
+                        >
+                          <option value="">{t.allBanks}</option>
+                          {bankOffers.map(bank => (
+                            <option key={bank.id} value={bank.id}>
+                              {isRTL ? bank.bankName : bank.bankNameEn} - {bank.interestRate}%
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      {/* Eligibility Check Result */}
+                      {salaryEligibility && financingParams.salary > 0 && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className={`p-4 rounded-xl border ${salaryEligibility.isEligible ? 'bg-green-500/10 border-green-500/30' : 'bg-red-500/10 border-red-500/30'}`}
+                        >
+                          <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
+                            {salaryEligibility.isEligible ? (
+                              <CheckCircle2 className="w-5 h-5 text-green-500" />
+                            ) : (
+                              <AlertCircle className="w-5 h-5 text-red-500" />
+                            )}
+                            <span className={`font-bold ${salaryEligibility.isEligible ? 'text-green-600' : 'text-red-600'}`}>
+                              {salaryEligibility.isEligible ? t.eligible : t.notEligible}
+                            </span>
+                          </div>
+                          <div className="space-y-2 text-sm">
+                            <div className={`flex justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+                              <span className="text-muted-foreground">{t.maxMonthlyPayment}</span>
+                              <span className="font-semibold">{getCurrencyDisplay()} {Math.round(salaryEligibility.maxMonthlyPayment).toLocaleString()}</span>
+                            </div>
+                            <div className={`flex justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+                              <span className="text-muted-foreground">{t.debtToIncomeRatio}</span>
+                              <span className={`font-semibold ${salaryEligibility.debtToIncomeRatio > 33 ? 'text-red-500' : 'text-green-500'}`}>
+                                {salaryEligibility.debtToIncomeRatio}%
+                              </span>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+
+                      <Separator />
+
+                      {/* Down Payment Slider */}
+                      <div>
+                        <div className={`flex justify-between mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                          <Label className="font-medium">{t.downPayment}</Label>
+                          <span className="text-sm font-bold text-primary">{financingParams.downPayment}%</span>
+                        </div>
+                        <Slider
+                          value={[financingParams.downPayment]}
+                          onValueChange={([value]) => {
+                            setFinancingParams({ downPayment: value });
+                            calculateFinancing(manualCarPrice || 100000, { downPayment: value });
+                          }}
+                          min={5}
+                          max={50}
+                          step={5}
+                          className="py-2"
+                        />
+                        <p className="text-sm text-muted-foreground mt-1 flex items-center gap-1">
+                          <DollarSign className="w-3 h-3" />
+                          = {getCurrencyDisplay()} {Math.round((manualCarPrice || 100000) * financingParams.downPayment / 100).toLocaleString()}
+                        </p>
+                      </div>
+
+                      {/* Loan Term Slider */}
+                      <div>
+                        <div className={`flex justify-between mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                          <Label className="font-medium">{t.loanTerm}</Label>
+                          <span className="text-sm font-bold text-primary">{financingParams.loanTerm} {t.months}</span>
+                        </div>
+                        <Slider
+                          value={[financingParams.loanTerm]}
+                          onValueChange={([value]) => {
+                            setFinancingParams({ loanTerm: value });
+                            calculateFinancing(manualCarPrice || 100000, { loanTerm: value });
+                          }}
+                          min={12}
+                          max={84}
+                          step={12}
+                          className="py-2"
+                        />
+                        <p className="text-sm text-muted-foreground mt-1">
+                          = {financingParams.loanTerm / 12} {t.years}
+                        </p>
+                      </div>
+
+                      {/* Interest Rate Slider */}
+                      <div>
+                        <div className={`flex justify-between mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                          <Label className="font-medium">{t.interestRate}</Label>
+                          <span className="text-sm font-bold text-primary">{financingParams.interestRate}%</span>
+                        </div>
+                        <Slider
+                          value={[financingParams.interestRate]}
+                          onValueChange={([value]) => {
+                            setFinancingParams({ interestRate: value });
+                            calculateFinancing(manualCarPrice || 100000, { interestRate: value });
+                          }}
+                          min={1}
+                          max={15}
+                          step={0.1}
+                          className="py-2"
+                        />
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Results Card */}
+                  <div className="space-y-4">
+                    {/* Monthly Payment Result */}
+                    {financingResult && (
+                      <Card className="overflow-hidden">
+                        <CardContent className="p-6">
+                          <div className={`p-4 rounded-xl bg-gradient-to-r from-primary/10 to-cyan-500/10 border border-primary/20 ${isRTL ? 'text-right' : 'text-left'}`}>
+                            <div className="text-sm text-muted-foreground mb-1">{t.monthlyPayment}</div>
+                            <div className="text-3xl font-bold text-primary">
+                              {getCurrencyDisplay()} {Math.round(financingResult.monthlyPayment).toLocaleString()}
+                            </div>
+                            {financingParams.salary > 0 && (
+                              <div className="mt-2 flex items-center gap-2">
+                                <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+                                  <div 
+                                    className={`h-full rounded-full ${salaryEligibility?.debtToIncomeRatio > 33 ? 'bg-red-500' : 'bg-green-500'}`}
+                                    style={{ width: `${Math.min(100, (financingResult.monthlyPayment / financingParams.salary) * 100)}%` }}
+                                  />
+                                </div>
+                                <span className="text-xs text-muted-foreground">
+                                  {Math.round((financingResult.monthlyPayment / financingParams.salary) * 100)}%
+                                </span>
+                              </div>
+                            )}
+                          </div>
+
+                          <div className={`grid grid-cols-2 gap-4 mt-4 ${isRTL ? 'text-right' : 'text-left'}`}>
+                            <div className="p-3 bg-muted/30 rounded-xl">
+                              <p className="text-xs text-muted-foreground">{t.totalCost}</p>
+                              <p className="font-bold text-lg">{getCurrencyDisplay()} {Math.round(financingResult.totalAmount || financingResult.totalPayment).toLocaleString()}</p>
+                            </div>
+                            <div className="p-3 bg-muted/30 rounded-xl">
+                              <p className="text-xs text-muted-foreground">{t.totalInterest}</p>
+                              <p className="font-bold text-lg">{getCurrencyDisplay()} {Math.round(financingResult.totalInterest || 0).toLocaleString()}</p>
+                            </div>
+                          </div>
+
+                          <Button 
+                            className="w-full sky-gradient text-white mt-4"
+                            onClick={() => openFinancingChatbot('', null)}
+                          >
+                            <Send className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                            {t.applyNow}
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    )}
+
+                    {/* Bank Offers */}
+                    <Card className="overflow-hidden">
+                      <div className="relative overflow-hidden rounded-t-xl bg-gradient-to-r from-sky-400 via-cyan-400 to-blue-400 p-4">
+                        <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+                        <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2" />
+                        
+                        <div className={`relative ${isRTL ? 'text-right direction-rtl' : 'text-left'}`}>
+                          <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+                            <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                              <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg">
+                                <Landmark className="w-6 h-6 text-white" />
+                              </div>
+                              <div>
+                                <h3 className="text-base font-black text-black drop-shadow-sm">
+                                  <span className="font-black">{t.bankOffers}</span>
+                                </h3>
+                                <span className="font-normal text-black/70 text-xs">{t.compareBanks}</span>
+                              </div>
+                            </div>
+                            <div className="hidden sm:flex items-center gap-1 px-2 py-1 rounded-full bg-white/40 backdrop-blur-sm border border-white/50">
+                              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                              <span className="text-xs font-black text-black">{isRTL ? 'أفضل العروض' : 'Best Offers'}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <CardContent className="p-4 space-y-3">
+                        {bankOffers.slice(0, 4).map((bank, i) => (
+                          <motion.div
+                            key={bank.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: i * 0.1 }}
+                            className={`p-3 rounded-xl border ${i === 0 ? 'border-2 border-primary bg-primary/5' : 'border'}`}
+                          >
+                            <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+                              <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg font-bold ${i === 0 ? 'bg-gradient-to-br from-amber-400 to-orange-500 text-white' : 'bg-muted'}`}>
+                                  {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : i + 1}
+                                </div>
+                                <div className={isRTL ? 'text-right' : 'text-left'}>
+                                  <h4 className="font-bold text-sm">{isRTL ? bank.bankName : bank.bankNameEn}</h4>
+                                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                    <span>{bank.interestRate}% {isRTL ? 'ربح سنوي' : t.annually}</span>
+                                    <span className="w-1 h-1 rounded-full bg-muted-foreground" />
+                                    <span>{bank.maxLoanTerm} {isRTL ? 'شهر' : 'months'}</span>
+                                  </div>
+                                </div>
+                              </div>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => openFinancingChatbot('', bank)}
+                              >
+                                {t.applyNow}
+                              </Button>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </CardContent>
+                    </Card>
                   </div>
                 </div>
-
-                {/* Step 1: Salary Input */}
-                {financingParams.salary === 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="space-y-5"
-                  >
-                    <div className="text-center">
-                      <motion.div
-                        animate={{ 
-                          scale: [1, 1.05, 1],
-                          rotate: [0, 5, -5, 0]
-                        }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                        className="w-28 h-28 rounded-3xl bg-gradient-to-br from-emerald-500 via-green-500 to-teal-500 flex items-center justify-center mx-auto mb-5 shadow-2xl shadow-emerald-500/30"
-                      >
-                        <Wallet className="w-14 h-14 text-white" />
-                      </motion.div>
-                      <h3 className="text-2xl font-bold mb-2">{isRTL ? 'ما راتبك الشهري؟' : 'What\'s Your Salary?'}</h3>
-                      <p className="text-muted-foreground">{isRTL ? 'لنحسب أهليتك للتمويل' : 'Let\'s calculate your eligibility'}</p>
-                    </div>
-
-                    <div className="relative">
-                      <motion.div 
-                        whileFocus={{ scale: 1.02 }}
-                        className="relative"
-                      >
-                        <Input
-                          type="number"
-                          placeholder="0"
-                          value={financingParams.salary || ''}
-                          onChange={(e) => setFinancingParams({ ...financingParams, salary: Number(e.target.value) })}
-                          className="text-center text-5xl font-bold h-28 border-0 bg-gradient-to-b from-muted/50 to-muted/30 rounded-3xl focus:ring-4 focus:ring-emerald-500/30"
-                          dir="ltr"
-                        />
-                        <span className={`absolute top-1/2 -translate-y-1/2 text-muted-foreground text-xl font-medium ${isRTL ? 'left-6' : 'right-6'}`}>
-                          {isRTL ? 'ر.س' : 'SAR'}
-                        </span>
-                      </motion.div>
-                    </div>
-
-                    {/* Quick Amount Buttons */}
-                    <div className="grid grid-cols-4 gap-2">
-                      {[5000, 8000, 12000, 15000, 18000, 20000, 25000, 30000].map((amount, i) => (
-                        <motion.div
-                          key={amount}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: i * 0.05 }}
-                        >
-                          <Button
-                            variant="outline"
-                            className="w-full h-14 rounded-2xl font-bold hover:bg-emerald-500/10 hover:border-emerald-500 hover:text-emerald-600 transition-all"
-                            onClick={() => setFinancingParams({ ...financingParams, salary: amount })}
-                          >
-                            {(amount / 1000).toFixed(0)}K
-                          </Button>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-
-                {/* Step 2: Down Payment */}
-                {financingParams.salary > 0 && financingParams.downPayment === 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, x: 50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="space-y-5"
-                  >
-                    <div className="text-center">
-                      <motion.div
-                        animate={{ y: [0, -10, 0] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                        className="w-28 h-28 rounded-3xl bg-gradient-to-br from-blue-500 via-indigo-500 to-violet-500 flex items-center justify-center mx-auto mb-5 shadow-2xl shadow-blue-500/30"
-                      >
-                        <CreditCard className="w-14 h-14 text-white" />
-                      </motion.div>
-                      <h3 className="text-2xl font-bold mb-2">{isRTL ? 'الدفعة المقدمة' : 'Down Payment'}</h3>
-                      <p className="text-muted-foreground">{isRTL ? 'كم يمكنك دفعه مقدمًا؟' : 'How much can you pay upfront?'}</p>
-                    </div>
-
-                    {/* Salary Display */}
-                    <div className="flex items-center justify-center gap-2 p-3 bg-emerald-500/10 rounded-xl">
-                      <DollarSign className="w-4 h-4 text-emerald-500" />
-                      <span className="text-sm">{isRTL ? 'راتبك:' : 'Your salary:'}</span>
-                      <span className="font-bold text-emerald-600">{financingParams.salary.toLocaleString()} {isRTL ? 'ر.س' : 'SAR'}</span>
-                    </div>
-
-                    <div className="relative">
-                      <Input
-                        type="number"
-                        placeholder="0"
-                        value={financingParams.downPayment || ''}
-                        onChange={(e) => setFinancingParams({ ...financingParams, downPayment: Number(e.target.value) })}
-                        className="text-center text-5xl font-bold h-28 border-0 bg-gradient-to-b from-muted/50 to-muted/30 rounded-3xl focus:ring-4 focus:ring-blue-500/30"
-                        dir="ltr"
-                      />
-                      <span className={`absolute top-1/2 -translate-y-1/2 text-muted-foreground text-xl font-medium ${isRTL ? 'left-6' : 'right-6'}`}>
-                        {isRTL ? 'ر.س' : 'SAR'}
-                      </span>
-                    </div>
-
-                    {/* Percentage Buttons */}
-                    <div className="grid grid-cols-4 gap-2">
-                      {[10, 15, 20, 25, 30, 35, 40, 50].map((percent, i) => {
-                        const maxCarPrice = financingParams.salary * 60;
-                        const amount = Math.round(maxCarPrice * percent / 100);
-                        return (
-                          <motion.div
-                            key={percent}
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: i * 0.05 }}
-                          >
-                            <Button
-                              variant="outline"
-                              className="w-full h-14 rounded-2xl flex flex-col items-center justify-center hover:bg-blue-500/10 hover:border-blue-500 transition-all"
-                              onClick={() => setFinancingParams({ ...financingParams, downPayment: amount })}
-                            >
-                              <span className="text-lg font-bold">{percent}%</span>
-                              <span className="text-[10px] text-muted-foreground">{(amount / 1000).toFixed(0)}K</span>
-                            </Button>
-                          </motion.div>
-                        );
-                      })}
-                    </div>
-
-                    <Button
-                      variant="ghost"
-                      className="w-full"
-                      onClick={() => setFinancingParams({ ...financingParams, salary: 0 })}
-                    >
-                      <ArrowRight className={`w-4 h-4 ${isRTL ? 'ml-2 rotate-180' : 'mr-2'}`} />
-                      {isRTL ? 'الرجوع للخطوة السابقة' : 'Go Back'}
-                    </Button>
-                  </motion.div>
-                )}
-
-                {/* Step 3: Loan Term */}
-                {financingParams.salary > 0 && financingParams.downPayment > 0 && financingParams.loanTerm === 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, x: 50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="space-y-5"
-                  >
-                    <div className="text-center">
-                      <motion.div
-                        animate={{ rotate: [0, 360] }}
-                        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                        className="w-28 h-28 rounded-3xl bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 flex items-center justify-center mx-auto mb-5 shadow-2xl shadow-amber-500/30"
-                      >
-                        <Calendar className="w-14 h-14 text-white" />
-                      </motion.div>
-                      <h3 className="text-2xl font-bold mb-2">{isRTL ? 'مدة التمويل' : 'Loan Duration'}</h3>
-                      <p className="text-muted-foreground">{isRTL ? 'اختر عدد السنوات' : 'Choose the number of years'}</p>
-                    </div>
-
-                    {/* Info Cards */}
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="p-3 bg-emerald-500/10 rounded-xl text-center">
-                        <p className="text-xs text-muted-foreground">{isRTL ? 'الراتب' : 'Salary'}</p>
-                        <p className="font-bold text-emerald-600">{financingParams.salary.toLocaleString()}</p>
-                      </div>
-                      <div className="p-3 bg-blue-500/10 rounded-xl text-center">
-                        <p className="text-xs text-muted-foreground">{isRTL ? 'الدفعة' : 'Down Payment'}</p>
-                        <p className="font-bold text-blue-600">{financingParams.downPayment.toLocaleString()}</p>
-                      </div>
-                    </div>
-
-                    {/* Year Selection */}
-                    <div className="grid grid-cols-5 gap-3">
-                      {[1, 2, 3, 4, 5].map((year) => (
-                        <motion.div
-                          key={year}
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          <Button
-                            variant="outline"
-                            className="w-full h-20 rounded-2xl flex flex-col items-center justify-center hover:bg-amber-500/10 hover:border-amber-500 transition-all"
-                            onClick={() => setFinancingParams({ ...financingParams, loanTerm: year })}
-                          >
-                            <span className="text-3xl font-bold">{year}</span>
-                            <span className="text-xs text-muted-foreground">{isRTL ? 'سنوات' : 'years'}</span>
-                          </Button>
-                        </motion.div>
-                      ))}
-                    </div>
-
-                    <Button
-                      variant="ghost"
-                      className="w-full"
-                      onClick={() => setFinancingParams({ ...financingParams, downPayment: 0 })}
-                    >
-                      <ArrowRight className={`w-4 h-4 ${isRTL ? 'ml-2 rotate-180' : 'mr-2'}`} />
-                      {isRTL ? 'الرجوع للخطوة السابقة' : 'Go Back'}
-                    </Button>
-                  </motion.div>
-                )}
-
-                {/* Results */}
-                {financingParams.salary > 0 && financingParams.downPayment > 0 && financingParams.loanTerm > 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="space-y-5"
-                  >
-                    {/* Success Header */}
-                    <div className="text-center">
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ type: "spring", stiffness: 200 }}
-                        className="w-24 h-24 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center mx-auto mb-4 shadow-2xl"
-                      >
-                        <CheckCircle2 className="w-12 h-12 text-white" />
-                      </motion.div>
-                      <h3 className="text-xl font-bold">{isRTL ? 'تم حساب التمويل!' : 'Financing Calculated!'}</h3>
-                    </div>
-
-                    {/* Main Result Card */}
-                    {(() => {
-                      const maxCarPrice = financingParams.salary * 60;
-                      const loanAmount = maxCarPrice - financingParams.downPayment;
-                      const monthlyPayment = Math.round(loanAmount / (financingParams.loanTerm * 12) * 1.05);
-                      const totalAmount = monthlyPayment * financingParams.loanTerm * 12;
-                      
-                      return (
-                        <>
-                          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500 p-6 text-white shadow-2xl">
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
-                            <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2" />
-                            <div className="relative z-10 text-center">
-                              <p className="text-sm opacity-80 mb-1">{isRTL ? 'القسط الشهري' : 'Monthly Payment'}</p>
-                              <motion.p 
-                                initial={{ scale: 0 }}
-                                animate={{ scale: 1 }}
-                                className="text-5xl font-black mb-2"
-                              >
-                                {monthlyPayment.toLocaleString()}
-                              </motion.p>
-                              <p className="text-sm opacity-80">{isRTL ? 'ريال / شهر' : 'SAR / month'}</p>
-                            </div>
-                          </div>
-
-                          {/* Details Grid */}
-                          <div className="grid grid-cols-3 gap-3">
-                            {[
-                              { label: isRTL ? 'سعر السيارة' : 'Car Price', value: maxCarPrice, icon: Car, color: 'text-blue-500 bg-blue-500/10' },
-                              { label: isRTL ? 'القرض' : 'Loan', value: loanAmount, icon: Landmark, color: 'text-purple-500 bg-purple-500/10' },
-                              { label: isRTL ? 'التكلفة الكلية' : 'Total Cost', value: totalAmount, icon: DollarSign, color: 'text-amber-500 bg-amber-500/10' },
-                            ].map((item, i) => {
-                              const Icon = item.icon;
-                              return (
-                                <motion.div
-                                  key={i}
-                                  initial={{ opacity: 0, y: 20 }}
-                                  animate={{ opacity: 1, y: 0 }}
-                                  transition={{ delay: i * 0.1 }}
-                                  className={`p-4 rounded-2xl ${item.color} text-center`}
-                                >
-                                  <Icon className="w-6 h-6 mx-auto mb-2" />
-                                  <p className="text-xs text-muted-foreground mb-1">{item.label}</p>
-                                  <p className="font-bold text-lg">{item.value.toLocaleString()}</p>
-                                </motion.div>
-                              );
-                            })}
-                          </div>
-
-                          {/* Bank Offers */}
-                          <div className="space-y-3">
-                            <h4 className="font-semibold flex items-center gap-2">
-                              <Building2 className="w-4 h-4 text-primary" />
-                              {isRTL ? 'أفضل عروض البنوك' : 'Best Bank Offers'}
-                            </h4>
-                            <div className="space-y-2">
-                              {saudiBanks.slice(0, 3).map((bank, i) => (
-                                <motion.div
-                                  key={bank.id}
-                                  initial={{ opacity: 0, x: -20 }}
-                                  animate={{ opacity: 1, x: 0 }}
-                                  transition={{ delay: i * 0.1 }}
-                                  className={`p-4 rounded-2xl border ${i === 0 ? 'border-emerald-500 bg-emerald-500/5' : 'border-border bg-muted/30'}`}
-                                >
-                                  <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-3">
-                                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center text-xl">
-                                        {bank.logo}
-                                      </div>
-                                      <div>
-                                        <p className="font-semibold">{isRTL ? bank.nameAr : bank.nameEn}</p>
-                                        <p className="text-xs text-muted-foreground">{bank.rate}% {isRTL ? 'سنوياً' : 'annual'}</p>
-                                      </div>
-                                    </div>
-                                    {i === 0 && (
-                                      <Badge className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white">
-                                        {isRTL ? 'الأفضل' : 'Best'}
-                                      </Badge>
-                                    )}
-                                  </div>
-                                </motion.div>
-                              ))}
-                            </div>
-                          </div>
-                        </>
-                      );
-                    })()}
-
-                    {/* Action Buttons */}
-                    <div className="flex gap-3">
-                      <Button
-                        variant="outline"
-                        className="flex-1 h-14 rounded-2xl"
-                        onClick={() => setFinancingParams({ salary: 0, downPayment: 0, loanTerm: 0, interestRate: 4.5, vehiclePrice: 0 })}
-                      >
-                        <RefreshCw className={`w-5 h-5 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                        {isRTL ? 'حساب جديد' : 'New Calculation'}
-                      </Button>
-                      <Button
-                        className="flex-1 h-14 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg"
-                        onClick={() => {
-                          setServiceDetailOpen(false);
-                          setSelectedService('new-car-request');
-                          setTimeout(() => setServiceDetailOpen(true), 300);
-                        }}
-                      >
-                        <Send className={`w-5 h-5 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                        {isRTL ? 'طلب تمويل' : 'Apply Now'}
-                      </Button>
-                    </div>
-                  </motion.div>
-                )}
               </div>
             )}
             
