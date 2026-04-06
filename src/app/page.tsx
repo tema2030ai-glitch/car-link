@@ -1216,6 +1216,15 @@ export default function CarLinkPage() {
       engine: '', horsepower: '', seats: '', drivetrain: '',
     });
 
+    // Fetch market analysis and competitors for the manual entry
+    fetchMarketAnalysis(vehicle);
+    fetchCompetitors(vehicle);
+
+    // Calculate financing if price is provided
+    if (vehicle.price) {
+      calculateFinancing(vehicle.price);
+    }
+
     toast({
       title: isRTL ? 'تم تحليل السيارة' : 'Car Analyzed',
       description: `${vehicle.brand} ${vehicle.model}`,
