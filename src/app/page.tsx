@@ -2577,17 +2577,6 @@ export default function CarLinkPage() {
     );
   };
 
-  // Show loader only during initial hydration
-  const [showContent, setShowContent] = useState(false);
-  
-  useEffect(() => {
-    // Small delay to ensure smooth transition
-    const timer = setTimeout(() => {
-      setShowContent(true);
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
-
   const ChevronIcon = isRTL ? ChevronLeft : ChevronRight;
 
   return (
