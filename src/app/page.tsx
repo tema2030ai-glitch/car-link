@@ -2577,13 +2577,16 @@ export default function CarLinkPage() {
     );
   };
 
-  if (!mounted) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
-  }
+  // Show loader only during initial hydration
+  const [showContent, setShowContent] = useState(false);
+  
+  useEffect(() => {
+    // Small delay to ensure smooth transition
+    const timer = setTimeout(() => {
+      setShowContent(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   const ChevronIcon = isRTL ? ChevronLeft : ChevronRight;
 
