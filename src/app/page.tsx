@@ -56,7 +56,7 @@ import {
   Ruler, Users, Box, Award, Car, Palette, Road, CircleDot, DoorOpen, Package, GaugeIcon, LayoutGrid,
   FileText, ClipboardList, Building2, LogIn, LogOut, Settings, Bell, Ticket, MapPin, Phone, Clock,
   Star, ArrowRight, Lightbulb, ShoppingCart, GitCompare, ArrowLeftRight, PartyPopper, Search, Copy,
-  Target, Wallet, Percent, Handshake, TrendingDown, PieChart, BarChart3, CreditCard, Landmark
+  Target, Wallet, Percent, Handshake, TrendingDown, PieChart, BarChart3, CreditCard, Landmark, Info
 } from 'lucide-react';
 
 // Translations
@@ -1067,6 +1067,15 @@ export default function CarLinkPage() {
       descriptionEn: 'Salary-based financing calculation and bank offers',
       icon: Calculator,
       color: 'bg-blue-500',
+    },
+    {
+      id: 'bank-offers',
+      titleAr: 'عروض التمويل',
+      titleEn: 'Bank Offers',
+      descriptionAr: 'قارن عروض التمويل من البنوك السعودية',
+      descriptionEn: 'Compare financing offers from Saudi banks',
+      icon: Landmark,
+      color: 'bg-green-600',
     },
     {
       id: 'market-prices',
@@ -8491,6 +8500,203 @@ export default function CarLinkPage() {
                     </CardContent>
                   </Card>
                 )}
+              </div>
+            )}
+            
+            {/* ========== خدمة عروض التمويل من البنوك السعودية ========== */}
+            {selectedService === 'bank-offers' && (
+              <div className="space-y-6">
+                {/* Premium Header */}
+                <motion.div
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 shadow-xl"
+                >
+                  <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+                  <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2" />
+                  
+                  <div className={`relative p-6 ${isRTL ? 'text-right direction-rtl' : 'text-left'}`}>
+                    <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+                      <div className={`flex items-center gap-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                        <motion.div 
+                          className="w-14 h-14 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg"
+                          animate={{ scale: [1, 1.05, 1] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        >
+                          <Landmark className="w-7 h-7 text-white drop-shadow-lg" />
+                        </motion.div>
+                        <div>
+                          <h3 className="text-xl font-black text-white drop-shadow-sm">
+                            {isRTL ? 'عروض التمويل من البنوك السعودية' : 'Saudi Banks Financing Offers'}
+                          </h3>
+                          <p className="text-sm text-white/80 mt-0.5">
+                            {isRTL ? 'قارن أفضل عروض التمويل من البنوك السعودية' : 'Compare the best financing offers from Saudi banks'}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-sm border border-white/30">
+                        <Sparkles className="w-4 h-4 text-amber-300" />
+                        <span className="text-sm font-bold text-white">{isRTL ? '8 بنوك' : '8 Banks'}</span>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Al Rajhi Bank - Featured */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 }}
+                >
+                  <Card className="relative overflow-hidden border-2 border-green-500 bg-gradient-to-r from-green-500/5 to-emerald-500/5">
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500" />
+                    <div className={`absolute top-3 ${isRTL ? 'left-3' : 'right-3'}`}>
+                      <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0 shadow-lg">
+                        <Star className="w-3 h-3 mr-1" />
+                        {isRTL ? 'الأفضل' : 'Best Offer'}
+                      </Badge>
+                    </div>
+                    
+                    <CardHeader className="pb-2">
+                      <div className={`flex items-center gap-4 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
+                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center shadow-lg">
+                          <span className="text-3xl">🏦</span>
+                        </div>
+                        <div>
+                          <CardTitle className="text-xl text-green-600">
+                            {isRTL ? 'بنك الراجحي' : 'Al Rajhi Bank'}
+                          </CardTitle>
+                          <CardDescription className="text-sm">
+                            {isRTL ? 'أقل نسبة ربح في السوق السعودي' : 'Lowest profit rate in Saudi market'}
+                          </CardDescription>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    
+                    <CardContent className="space-y-4">
+                      {/* Key Stats */}
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div className="p-3 bg-green-500/10 rounded-xl text-center">
+                          <div className="text-2xl font-bold text-green-600">4.75%</div>
+                          <div className="text-xs text-muted-foreground">{isRTL ? 'نسبة الربح السنوية' : 'Annual Profit Rate'}</div>
+                        </div>
+                        <div className="p-3 bg-blue-500/10 rounded-xl text-center">
+                          <div className="text-2xl font-bold text-blue-600">10%</div>
+                          <div className="text-xs text-muted-foreground">{isRTL ? 'أقل دفعة مقدمة' : 'Min Down Payment'}</div>
+                        </div>
+                        <div className="p-3 bg-purple-500/10 rounded-xl text-center">
+                          <div className="text-2xl font-bold text-purple-600">60</div>
+                          <div className="text-xs text-muted-foreground">{isRTL ? 'شهر كحد أقصى' : 'Max Months'}</div>
+                        </div>
+                        <div className="p-3 bg-amber-500/10 rounded-xl text-center">
+                          <div className="text-2xl font-bold text-amber-600">3,000</div>
+                          <div className="text-xs text-muted-foreground">{isRTL ? 'الحد الأدنى للراتب' : 'Min Salary'}</div>
+                        </div>
+                      </div>
+
+                      {/* Features */}
+                      <div className="flex flex-wrap gap-2">
+                        <Badge variant="outline" className="bg-green-500/10 text-green-600 border-green-500/30">
+                          <CheckCircle2 className="w-3 h-3 mr-1" />
+                          {isRTL ? 'أقل نسبة ربح' : 'Lowest Profit Rate'}
+                        </Badge>
+                        <Badge variant="outline" className="bg-blue-500/10 text-blue-600 border-blue-500/30">
+                          <Zap className="w-3 h-3 mr-1" />
+                          {isRTL ? 'موافقة سريعة' : 'Fast Approval'}
+                        </Badge>
+                        <Badge variant="outline" className="bg-purple-500/10 text-purple-600 border-purple-500/30">
+                          <Calendar className="w-3 h-3 mr-1" />
+                          {isRTL ? 'تأجيل قسط' : 'Payment Deferment'}
+                        </Badge>
+                        <Badge variant="outline" className="bg-amber-500/10 text-amber-600 border-amber-500/30">
+                          <Shield className="w-3 h-3 mr-1" />
+                          {isRTL ? 'تمويل إسلامي' : 'Islamic Finance'}
+                        </Badge>
+                      </div>
+
+                      {/* Action */}
+                      <Button 
+                        className="w-full h-12 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white text-base font-bold shadow-lg"
+                        onClick={() => openFinancingChatbot('', bankOffers.find(b => b.id === 'alrajhi'))}
+                      >
+                        <Send className={`w-5 h-5 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                        {isRTL ? 'قدم طلبك الآن في بنك الراجحي' : 'Apply Now at Al Rajhi Bank'}
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+
+                {/* Other Banks */}
+                <div className="space-y-3">
+                  <h4 className={`font-bold text-lg ${isRTL ? 'text-right' : 'text-left'}`}>
+                    {isRTL ? 'بنوك أخرى متاحة' : 'Other Available Banks'}
+                  </h4>
+                  
+                  {bankOffers.filter(b => b.id !== 'alrajhi').map((bank, i) => (
+                    <motion.div
+                      key={bank.id}
+                      initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.2 + i * 0.05 }}
+                    >
+                      <Card className="hover:shadow-lg transition-all duration-300 hover:border-primary/30">
+                        <CardContent className="p-4">
+                          <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+                            <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/10 to-indigo-500/10 flex items-center justify-center text-2xl">
+                                {bank.logo || '🏦'}
+                              </div>
+                              <div className={isRTL ? 'text-right' : 'text-left'}>
+                                <h5 className="font-bold">{isRTL ? bank.bankName : bank.bankNameEn}</h5>
+                                <div className={`flex items-center gap-2 text-xs text-muted-foreground ${isRTL ? 'flex-row-reverse' : ''}`}>
+                                  <span className="text-green-600 font-medium">{bank.interestRate}%</span>
+                                  <span>•</span>
+                                  <span>{isRTL ? 'حتى' : 'up to'} {bank.maxLoanTerm} {isRTL ? 'شهر' : 'months'}</span>
+                                  <span>•</span>
+                                  <span>{bank.minDownPayment}% {isRTL ? 'دفعة' : 'down'}</span>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              className="hover:bg-primary/5 hover:border-primary/50"
+                              onClick={() => openFinancingChatbot('', bank)}
+                            >
+                              {isRTL ? 'تقديم' : 'Apply'}
+                              <ArrowRight className={`w-4 h-4 ${isRTL ? 'mr-1 rotate-180' : 'ml-1'}`} />
+                            </Button>
+                          </div>
+                          
+                          {/* Features */}
+                          <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t">
+                            {bank.features?.map((feature: string, j: number) => (
+                              <Badge key={j} variant="outline" className="text-xs bg-muted/30">
+                                {feature}
+                              </Badge>
+                            ))}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Comparison Note */}
+                <div className={`p-4 bg-blue-500/10 rounded-xl border border-blue-500/20 ${isRTL ? 'text-right' : 'text-left'}`}>
+                  <div className={`flex items-start gap-3 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
+                    <Info className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h5 className="font-semibold text-sm">{isRTL ? 'ملاحظة مهمة' : 'Important Note'}</h5>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {isRTL 
+                          ? 'الأسعار المعروضة هي تقديرية وقد تختلف حسب سياسات البنك والشروط والأحكام. يُنصح بالتواصل مع البنك مباشرة للحصول على العرض النهائي.'
+                          : 'The rates shown are estimates and may vary based on bank policies and terms. We recommend contacting the bank directly for the final offer.'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
             
