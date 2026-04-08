@@ -9086,9 +9086,48 @@ export default function CarLinkPage() {
             
             {selectedService === 'settings' && (
               <div className="space-y-4">
+                {/* Appearance Section - المظهر */}
+                <div className={`p-4 bg-muted/30 rounded-xl ${isRTL ? 'text-right' : 'text-left'}`}>
+                  <h4 className="font-semibold mb-3">{isRTL ? 'المظهر' : 'Appearance'}</h4>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div
+                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl hover:bg-muted/50"
+                    onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  >
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg ${theme === 'dark' ? 'bg-gradient-to-br from-indigo-500 to-violet-600' : 'bg-gradient-to-br from-amber-400 to-orange-500'}`}>
+                      {theme === 'dark' ? (
+                        <Moon className="w-6 h-6 text-white" />
+                      ) : (
+                        <Sun className="w-6 h-6 text-white" />
+                      )}
+                    </div>
+                    <span className="text-sm text-center font-medium leading-tight">
+                      {isRTL ? (theme === 'dark' ? 'الوضع الليلي' : 'الوضع النهاري') : (theme === 'dark' ? 'Dark Mode' : 'Light Mode')}
+                    </span>
+                    <span className="text-xs text-muted-foreground text-center mt-1">
+                      {isRTL ? 'انقر للتبديل' : 'Tap to switch'}
+                    </span>
+                  </div>
+                  <div
+                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl hover:bg-muted/50"
+                    onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}
+                  >
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
+                      <Globe className="w-6 h-6 text-white" />
+                    </div>
+                    <span className="text-sm text-center font-medium leading-tight">
+                      {isRTL ? 'اللغة' : 'Language'}
+                    </span>
+                    <span className="text-xs text-muted-foreground text-center mt-1">
+                      {language === 'ar' ? 'العربية' : 'English'}
+                    </span>
+                  </div>
+                </div>
+                
                 {/* Admin & Management Section */}
                 <div className={`p-4 bg-muted/30 rounded-xl ${isRTL ? 'text-right' : 'text-left'}`}>
-                  <h4 className="font-semibold mb-2">{isRTL ? 'الإدارة والتحكم' : 'Admin & Management'}</h4>
+                  <h4 className="font-semibold mb-3">{isRTL ? 'الإدارة والتحكم' : 'Admin & Management'}</h4>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div
@@ -9151,7 +9190,7 @@ export default function CarLinkPage() {
                 
                 {/* Privacy Section */}
                 <div className={`p-4 bg-muted/30 rounded-xl ${isRTL ? 'text-right' : 'text-left'}`}>
-                  <h4 className="font-semibold mb-2">{isRTL ? 'الخصوصية والبيانات' : 'Privacy & Data'}</h4>
+                  <h4 className="font-semibold mb-3">{isRTL ? 'الخصوصية والبيانات' : 'Privacy & Data'}</h4>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div
