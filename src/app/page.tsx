@@ -1102,25 +1102,7 @@ export default function CarLinkPage() {
       descriptionAr: 'تقييم قيمة سيارتك في السوق',
       descriptionEn: 'Evaluate your car market value',
       icon: DollarSign,
-      color: 'bg-purple-500',
-    },
-    {
-      id: 'offers',
-      titleAr: 'العروض',
-      titleEn: 'Offers',
-      descriptionAr: 'عروض السيارات والعناية بالسيارات',
-      descriptionEn: 'Cars and car care offers',
-      icon: Sparkles,
       color: 'bg-amber-500',
-    },
-    {
-      id: 'maintenance',
-      titleAr: 'الصيانة',
-      titleEn: 'Maintenance',
-      descriptionAr: 'جدول صيانة سيارتك ونصائح العناية',
-      descriptionEn: 'Your car maintenance schedule and care tips',
-      icon: Cog,
-      color: 'bg-orange-500',
     },
     {
       id: 'extended-warranty',
@@ -8034,147 +8016,6 @@ export default function CarLinkPage() {
               </div>
             )}
             
-            {/* ========== خدمة العروض - تصميم جديد ========== */}
-            {selectedService === 'offers' && (
-              <div className="space-y-4">
-                {/* ترحيب */}
-                <motion.div 
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="relative overflow-hidden"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-amber-500/20 to-orange-500/20 rounded-2xl blur-xl" />
-                  <div className="relative p-5 bg-gradient-to-r from-amber-500/10 to-orange-500/10 rounded-2xl border border-amber-500/30">
-                    <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-lg">
-                        <Sparkles className="w-7 h-7 text-white" />
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-lg">{isRTL ? 'عروض حصرية' : 'Exclusive Offers'}</h4>
-                        <p className="text-sm text-muted-foreground">{isRTL ? 'استفد من أحدث العروض والخصومات' : 'Take advantage of latest offers'}</p>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-
-                {/* قائمة العروض */}
-                <div className="grid gap-3">
-                  {[
-                    {
-                      id: 1,
-                      title: isRTL ? 'خصم 15% على صيانة السيارة' : '15% Off Car Maintenance',
-                      description: isRTL ? 'خصم على جميع خدمات الصيانة في المراكز المعتمدة' : 'Discount on all maintenance services',
-                      discount: '15%',
-                      validUntil: isRTL ? 'ينتهي 30 ديسمبر 2024' : 'Until Dec 30, 2024',
-                      code: 'MAINT15',
-                      gradient: 'from-blue-500 to-cyan-500',
-                      icon: Cog
-                    },
-                    {
-                      id: 2,
-                      title: isRTL ? 'عرض خاص على تأمين السيارة' : 'Special Insurance Offer',
-                      description: isRTL ? 'وفر حتى 20% على تأمين سيارتك الجديدة' : 'Save up to 20% on new car insurance',
-                      discount: '20%',
-                      validUntil: isRTL ? 'ينتهي 15 يناير 2025' : 'Until Jan 15, 2025',
-                      code: 'INSURE20',
-                      gradient: 'from-green-500 to-emerald-500',
-                      icon: Shield
-                    },
-                    {
-                      id: 3,
-                      title: isRTL ? 'غسيل وتنظيف مجاني' : 'Free Car Wash',
-                      description: isRTL ? 'احصل على غسيل وتنظيف داخلي مجاني' : 'Get free interior and exterior wash',
-                      discount: isRTL ? 'مجاني' : 'Free',
-                      validUntil: isRTL ? 'ينتهي 31 ديسمبر 2024' : 'Until Dec 31, 2024',
-                      code: 'WASH2024',
-                      gradient: 'from-purple-500 to-pink-500',
-                      icon: Sparkles
-                    },
-                    {
-                      id: 4,
-                      title: isRTL ? 'فحص مجاني للسيارة' : 'Free Car Inspection',
-                      description: isRTL ? 'فحص شامل لسيارتك بالكامل' : 'Complete comprehensive car inspection',
-                      discount: isRTL ? 'مجاني' : 'Free',
-                      validUntil: isRTL ? 'ينتهي 15 فبراير 2025' : 'Until Feb 15, 2025',
-                      code: 'CHECK25',
-                      gradient: 'from-amber-500 to-orange-500',
-                      icon: Car
-                    }
-                  ].map((offer, i) => {
-                    const IconComp = offer.icon;
-                    return (
-                      <motion.div
-                        key={offer.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: i * 0.1 }}
-                        className="relative overflow-hidden"
-                      >
-                        <div className={`absolute inset-0 bg-gradient-to-r ${offer.gradient} opacity-5 rounded-2xl`} />
-                        <Card className="border-0 bg-background/50 backdrop-blur-sm hover:shadow-lg transition-all cursor-pointer">
-                          <div className={`h-1 bg-gradient-to-r ${offer.gradient}`} />
-                          <CardContent className="p-4">
-                            <div className="flex items-start gap-4">
-                              <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${offer.gradient} flex items-center justify-center shadow-lg flex-shrink-0`}>
-                                <IconComp className="w-6 h-6 text-white" />
-                              </div>
-                              <div className="flex-1">
-                                <div className="flex items-start justify-between mb-2">
-                                  <h3 className="font-bold">{offer.title}</h3>
-                                  <Badge className={`bg-gradient-to-r ${offer.gradient} text-white`}>{offer.discount}</Badge>
-                                </div>
-                                <p className="text-sm text-muted-foreground mb-3">{offer.description}</p>
-                                <div className="flex items-center justify-between">
-                                  <span className="text-xs text-muted-foreground flex items-center gap-1">
-                                    <Clock className="w-3 h-3" />
-                                    {offer.validUntil}
-                                  </span>
-                                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                    <Button
-                                      size="sm"
-                                      variant="outline"
-                                      className="text-xs rounded-lg"
-                                      onClick={() => {
-                                        navigator.clipboard.writeText(offer.code);
-                                        toast({ title: isRTL ? '📋 تم نسخ الكود!' : '📋 Code Copied!', description: offer.code });
-                                      }}
-                                    >
-                                      <Ticket className={`w-3 h-3 ${isRTL ? 'ml-1' : 'mr-1'}`} />
-                                      {offer.code}
-                                    </Button>
-                                  </motion.div>
-                                </div>
-                              </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </motion.div>
-                    );
-                  })}
-                </div>
-
-                {/* قسم إدخال كود الخصم */}
-                <div className="p-5 bg-gradient-to-r from-amber-500/5 to-orange-500/5 rounded-2xl border border-amber-500/20">
-                  <div className="text-center mb-3">
-                    <Ticket className="w-10 h-10 mx-auto text-amber-500 mb-2" />
-                    <p className="font-semibold">{isRTL ? 'هل لديك كود خصم؟' : 'Have a discount code?'}</p>
-                  </div>
-                  <div className="flex gap-2">
-                    <Input 
-                      placeholder={isRTL ? 'أدخل الكود هنا' : 'Enter code here'} 
-                      className="text-center h-12 rounded-xl" 
-                    />
-                    <Button 
-                      className="h-12 px-6 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl"
-                      onClick={() => toast({ title: isRTL ? '✅ تم تطبيق الكود بنجاح!' : '✅ Code applied successfully!' })}
-                    >
-                      {isRTL ? 'تطبيق' : 'Apply'}
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            )}
-            
             {/* ========== خدمة الضمان الممتد - تصميم جديد ========== */}
             {selectedService === 'extended-warranty' && (
               <div className="space-y-4">
@@ -9101,102 +8942,9 @@ export default function CarLinkPage() {
               </div>
             )}
             
-            {selectedService === 'maintenance' && (
-              <div className="space-y-4">
-                <div className={`p-4 bg-gradient-to-r from-orange-500/10 to-amber-500/10 rounded-xl border border-orange-500/30 ${isRTL ? 'text-right' : 'text-left'}`}>
-                  <h4 className="font-bold text-lg mb-1">{isRTL ? 'جدول الصيانة' : 'Maintenance Schedule'}</h4>
-                  <p className="text-sm text-muted-foreground">{isRTL ? 'جدول صيانة سيارتك وتذكيرات الخدمة' : 'Your car maintenance schedule and service reminders'}</p>
-                </div>
-
-                {/* Current Mileage Input */}
-                <div className="p-4 bg-muted/30 rounded-xl">
-                  <Label className="font-semibold">{isRTL ? 'الممشى الحالي (كم)' : 'Current Mileage (km)'}</Label>
-                  <div className="flex items-center gap-2 mt-2">
-                    <Input
-                      type="number"
-                      placeholder={isRTL ? "مثال: 45000" : "e.g., 45000"}
-                      className="text-lg font-bold h-12"
-                      value={carMileage || ''}
-                      onChange={(e) => setCarMileage(parseInt(e.target.value) || 0)}
-                    />
-                    <span className="text-sm text-muted-foreground whitespace-nowrap">{isRTL ? 'كم' : 'km'}</span>
-                  </div>
-                </div>
-
-                {/* Maintenance Schedule */}
-                <div className="space-y-3">
-                  {[
-                    { km: 5000, title: isRTL ? 'الصيانة الأولى' : 'First Service', items: isRTL ? ['تغيير الزيت', 'فحص السوائل', 'فحص الإطارات'] : ['Oil Change', 'Fluid Check', 'Tire Inspection'] },
-                    { km: 10000, title: isRTL ? 'الصيانة الثانية' : 'Second Service', items: isRTL ? ['تغيير الزيت', 'تغيير فلتر الهواء', 'فحص الفرامل'] : ['Oil Change', 'Air Filter', 'Brake Check'] },
-                    { km: 20000, title: isRTL ? 'الصيانة الكبرى' : 'Major Service', items: isRTL ? ['جميع الخدمات السابقة', 'تغيير سائل الفرامل', 'فحص التعليق'] : ['All Previous Services', 'Brake Fluid', 'Suspension Check'] },
-                    { km: 40000, title: isRTL ? 'الصيانة الشاملة' : 'Full Service', items: isRTL ? ['صيانة شاملة', 'تغيير جميع السوائل', 'فحص الأمان'] : ['Full Maintenance', 'All Fluids Change', 'Safety Check'] },
-                  ].map((service, i) => {
-                    const isPast = carMileage >= service.km;
-                    const isNext = carMileage < service.km && (i === 0 || carMileage >= [5000, 10000, 20000, 40000][i - 1]);
-                    const remaining = service.km - carMileage;
-
-                    return (
-                      <Card key={i} className={`${isNext ? 'border-orange-500 border-2 bg-orange-500/5' : ''} ${isPast ? 'opacity-60' : ''}`}>
-                        <CardContent className="p-4">
-                          <div className="flex items-center gap-4">
-                            <div className={`w-12 h-12 rounded-full flex items-center justify-center ${isPast ? 'bg-green-500/20' : isNext ? 'bg-orange-500/20' : 'bg-muted'}`}>
-                              {isPast ? (
-                                <CheckCircle2 className="w-6 h-6 text-green-500" />
-                              ) : isNext ? (
-                                <Clock className="w-6 h-6 text-orange-500" />
-                              ) : (
-                                <span className="font-bold text-muted-foreground">{service.km / 1000}K</span>
-                              )}
-                            </div>
-                            <div className="flex-1">
-                              <div className="flex justify-between items-start">
-                                <div>
-                                  <h4 className="font-semibold">{service.title}</h4>
-                                  <p className="text-xs text-muted-foreground">{service.km.toLocaleString()} {isRTL ? 'كم' : 'km'}</p>
-                                </div>
-                                {isNext && (
-                                  <Badge className="bg-orange-500 text-white">
-                                    {isRTL ? `${remaining.toLocaleString()} كم متبقي` : `${remaining.toLocaleString()} km left`}
-                                  </Badge>
-                                )}
-                                {isPast && (
-                                  <Badge variant="outline" className="text-green-500 border-green-500">
-                                    {isRTL ? 'تم' : 'Done'}
-                                  </Badge>
-                                )}
-                              </div>
-                              <div className="flex flex-wrap gap-1 mt-2">
-                                {service.items.map((item, j) => (
-                                  <span key={j} className="text-xs bg-muted px-2 py-1 rounded-full">{item}</span>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
-                </div>
-
-                {/* Schedule Service Button */}
-                <Button
-                  className="w-full sky-gradient text-white h-12"
-                  onClick={() => {
-                    toast({
-                      title: isRTL ? 'تم حجز موعد الصيانة' : 'Maintenance Appointment Scheduled',
-                      description: isRTL ? 'سيتم التواصل معك لتأكيد الموعد' : 'You will be contacted to confirm the appointment'
-                    });
-                  }}
-                >
-                  <Calendar className={`w-5 h-5 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                  {isRTL ? 'حجز موعد صيانة' : 'Schedule Maintenance'}
-                </Button>
-              </div>
-            )}
-            
             {selectedService === 'valuation' && (
               <div className="space-y-4">
-                <div className={`p-4 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl border border-purple-500/30 ${isRTL ? 'text-right' : 'text-left'}`}>
+                <div className={`p-4 bg-gradient-to-r from-amber-500/10 to-yellow-500/10 rounded-xl border border-amber-500/30 ${isRTL ? 'text-right' : 'text-left'}`}>
                   <h4 className="font-bold text-lg mb-1">{isRTL ? 'تقييم السيارة' : 'Car Valuation'}</h4>
                   <p className="text-sm text-muted-foreground">{isRTL ? 'احصل على تقييم تقديري لسيارتك في السوق' : 'Get an estimated valuation for your car in the market'}</p>
                 </div>
@@ -9260,9 +9008,9 @@ export default function CarLinkPage() {
                   /* Valuation Results */
                   <div className="space-y-4">
                     {/* Estimated Value Card */}
-                    <div className="p-6 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl border border-purple-500/30 text-center">
+                    <div className="p-6 bg-gradient-to-r from-amber-500/10 to-yellow-500/10 rounded-xl border border-amber-500/30 text-center">
                       <p className="text-sm text-muted-foreground mb-2">{isRTL ? 'القيمة التقديرية' : 'Estimated Value'}</p>
-                      <p className="text-4xl font-bold text-purple-600">85,000 - 95,000</p>
+                      <p className="text-4xl font-bold text-amber-600">85,000 - 95,000</p>
                       <p className="text-lg text-muted-foreground">{isRTL ? 'ريال سعودي' : 'SAR'}</p>
                     </div>
 
@@ -9272,7 +9020,7 @@ export default function CarLinkPage() {
                       {[
                         { label: isRTL ? 'القيمة السوقية' : 'Market Value', value: '90,000', color: 'text-blue-600' },
                         { label: isRTL ? 'قيمة الوكيل' : 'Dealer Value', value: '85,000', color: 'text-green-600' },
-                        { label: isRTL ? 'قيمة البيع المباشر' : 'Private Sale', value: '92,000', color: 'text-purple-600' },
+                        { label: isRTL ? 'قيمة البيع المباشر' : 'Private Sale', value: '92,000', color: 'text-amber-600' },
                       ].map((item, i) => (
                         <div key={i} className={`p-3 bg-muted/50 rounded-lg flex justify-between items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
                           <span className="text-sm text-muted-foreground">{item.label}</span>
