@@ -50,7 +50,7 @@ import {
 // Icons
 import {
   Link, Upload, Image as ImageIcon, Sparkles, Calculator, MessageCircle,
-  TrendingUp, Sun, Moon, Zap, Fuel, Gauge, Cog, Shield, Wifi, Lock,
+  TrendingUp, Sun, Moon, Zap, Fuel, Gauge, Cog, Shield, Wifi,
   ChevronLeft, ChevronRight, Loader2, CheckCircle2, AlertCircle, DollarSign,
   Calendar, RefreshCw, X, Plus, Send, Bot, User, Globe, Languages, Camera, QrCode,
   Ruler, Users, Box, Award, Car, Palette, CircleDot, DoorOpen, Package, GaugeIcon, LayoutGrid,
@@ -804,7 +804,7 @@ export default function CarLinkPage() {
   const [carMileage, setCarMileage] = useState(currentVehicle?.mileage || 50000);
   const [valBrand, setValBrand] = useState('');
   const [valModel, setValModel] = useState('');
-  const [valYear, setValYear] = useState(2020);
+  const [valYear, setValYear] = useState(2026);
   const [valMileage, setValMileage] = useState(50000);
   const [valCondition, setValCondition] = useState<'excellent' | 'good' | 'fair'>('good');
   const [showValuation, setShowValuation] = useState(false);
@@ -936,9 +936,10 @@ export default function CarLinkPage() {
   const [mpBrand, setMpBrand] = useState('');
   const [mpCondition, setMpCondition] = useState<'new' | 'used'>('new');
   const [mpModel, setMpModel] = useState('');
-  const [mpYear, setMpYear] = useState('');
+  const [mpYear, setMpYear] = useState('2026');
   const [mpTrim, setMpTrim] = useState('');
   const [mpPrice, setMpPrice] = useState('');
+  const [dealerRefreshCount, setDealerRefreshCount] = useState(0);
 
   // Car Models by Brand - must be defined before getAvailableModels
   const carModelsByBrand: Record<string, string[]> = {
@@ -954,6 +955,431 @@ export default function CarLinkPage() {
     'BMW': ['3 Series', '5 Series', '7 Series', 'X3', 'X5', 'X7', 'M3', 'M5', 'X6', 'i4'],
     'Lexus': ['ES', 'LS', 'IS', 'RX', 'NX', 'GX', 'LX', 'UX', 'LC', 'RC'],
     'Audi': ['A3', 'A4', 'A6', 'A8', 'Q3', 'Q5', 'Q7', 'Q8', 'RS6', 'e-tron']
+  };
+
+  // Function to calculate market prices based on brand, model, year, and condition
+  const getMarketPrices = () => {
+    if (!mpBrand || !mpModel || !mpYear) return null;
+    
+    // Base prices by brand category
+    const brandBasePrices: Record<string, number> = {
+      'Toyota': 95000,
+      'Hyundai': 75000,
+      'Honda': 85000,
+      'Kia': 70000,
+      'Nissan': 80000,
+      'Mazda': 78000,
+      'Ford': 90000,
+      'Chevrolet': 85000,
+      'Mercedes': 250000,
+      'BMW': 220000,
+      'Lexus': 180000,
+      'Audi': 200000
+    };
+    
+    // Model price adjustment factors
+    const modelFactors: Record<string, number> = {
+      'Camry': 1.0, 'Corolla': 0.7, 'Land Cruiser': 2.8, 'Prado': 2.0, 'RAV4': 1.1,
+      'Elantra': 0.8, 'Sonata': 1.0, 'Tucson': 1.0, 'Santa Fe': 1.4,
+      'Accord': 1.1, 'Civic': 0.85, 'CR-V': 1.2,
+      'Optima': 0.9, 'Sportage': 1.0, 'Sorento': 1.3,
+      'Altima': 0.95, 'Patrol': 2.6, 'X-Trail': 1.1,
+      'Mazda3': 0.85, 'Mazda6': 1.0, 'CX-5': 1.15,
+      'Explorer': 1.5, 'F-150': 1.8,
+      'Tahoe': 2.2, 'Silverado': 1.7,
+      'C-Class': 1.0, 'E-Class': 1.4, 'S-Class': 2.5, 'G-Class': 4.0,
+      '3 Series': 0.9, '5 Series': 1.3, '7 Series': 2.2, 'X5': 1.5,
+      'ES': 1.0, 'LS': 2.0, 'LX': 3.5,
+      'A4': 1.0, 'A6': 1.4, 'Q7': 1.6
+    };
+    
+    const basePrice = brandBasePrices[mpBrand] || 80000;
+    const modelFactor = modelFactors[mpModel] || 1.0;
+    const yearNum = parseInt(mpYear);
+    const currentYear = 2026;
+    
+    // Year depreciation (5% per year for used, 0% for new)
+    const yearDiff = currentYear - yearNum;
+    const yearFactor = mpCondition === 'new' ? 1.0 : Math.max(0.5, 1 - (yearDiff * 0.08));
+    
+    // Condition factor
+    const conditionFactor = mpCondition === 'new' ? 1.0 : 0.75;
+    
+    // Calculate prices
+    const avgPrice = Math.round(basePrice * modelFactor * yearFactor * conditionFactor);
+    const lowestPrice = Math.round(avgPrice * 0.85);
+    const highestPrice = Math.round(avgPrice * 1.15);
+    
+    return { lowestPrice, avgPrice, highestPrice };
+  };
+
+  // Calculate car valuation based on brand, model, year, condition, and mileage
+  const calculateValuation = () => {
+    if (!valBrand || !valModel) return null;
+
+    // Base prices by brand
+    const brandBasePrices: Record<string, number> = {
+      'Toyota': 95000,
+      'Hyundai': 75000,
+      'Honda': 85000,
+      'Kia': 70000,
+      'Nissan': 80000,
+      'Mazda': 78000,
+      'Ford': 90000,
+      'Chevrolet': 85000,
+      'Mercedes': 250000,
+      'BMW': 220000,
+      'Lexus': 180000,
+      'Audi': 200000
+    };
+
+    // Model factors
+    const modelFactors: Record<string, number> = {
+      'Camry': 1.0, 'Corolla': 0.7, 'Land Cruiser': 2.8, 'Prado': 2.0, 'RAV4': 1.1,
+      'Elantra': 0.8, 'Sonata': 1.0, 'Tucson': 1.0, 'Santa Fe': 1.4,
+      'Accord': 1.1, 'Civic': 0.85, 'CR-V': 1.2,
+      'Optima': 0.9, 'Sportage': 1.0, 'Sorento': 1.3,
+      'Altima': 0.95, 'Patrol': 2.6, 'X-Trail': 1.1,
+      'Mazda3': 0.85, 'Mazda6': 1.0, 'CX-5': 1.15,
+      'Explorer': 1.5, 'F-150': 1.8,
+      'Tahoe': 2.2, 'Silverado': 1.7,
+      'C-Class': 1.0, 'E-Class': 1.4, 'S-Class': 2.5, 'G-Class': 4.0,
+      '3 Series': 0.9, '5 Series': 1.3, '7 Series': 2.2, 'X5': 1.5,
+      'ES': 1.0, 'LS': 2.0, 'LX': 3.5,
+      'A4': 1.0, 'A6': 1.4, 'Q7': 1.6
+    };
+
+    const basePrice = brandBasePrices[valBrand] || 80000;
+    const modelFactor = modelFactors[valModel] || 1.0;
+
+    // Year depreciation (8% per year from 2026)
+    const yearDiff = 2026 - valYear;
+    const yearFactor = Math.max(0.3, 1 - (yearDiff * 0.08));
+
+    // Condition factor
+    const conditionFactors = {
+      'excellent': 1.0,
+      'good': 0.85,
+      'fair': 0.70
+    };
+    const conditionFactor = conditionFactors[valCondition];
+
+    // Mileage factor (deduct based on mileage)
+    const avgMileagePerYear = 15000;
+    const expectedMileage = Math.max(0, 2026 - valYear) * avgMileagePerYear;
+    const mileageDiff = valMileage - expectedMileage;
+    let mileageFactor = 1.0;
+    if (mileageDiff > 0) {
+      // Deduct 1% for every 10,000 km over expected
+      mileageFactor = Math.max(0.7, 1 - (mileageDiff / 1000000));
+    } else if (mileageDiff < 0) {
+      // Add up to 5% for lower than expected mileage
+      mileageFactor = Math.min(1.05, 1 + (Math.abs(mileageDiff) / 200000));
+    }
+
+    // Calculate base value
+    const baseValue = basePrice * modelFactor * yearFactor * conditionFactor * mileageFactor;
+
+    // Calculate range
+    const marketValue = Math.round(baseValue);
+    const dealerValue = Math.round(baseValue * 0.92); // Dealer pays less
+    const privateSaleValue = Math.round(baseValue * 1.05); // Private sale can be higher
+    const lowRange = Math.round(baseValue * 0.90);
+    const highRange = Math.round(baseValue * 1.10);
+
+    return {
+      marketValue,
+      dealerValue,
+      privateSaleValue,
+      lowRange,
+      highRange
+    };
+  };
+
+  // Get dealers based on condition and refresh count
+  const getDealers = () => {
+    const prices = getMarketPrices();
+    if (!prices) return [];
+
+    // Multiple dealer sets that rotate on refresh
+    const newDealersSets = [
+      [ // Set 1
+        {
+          dealer: isRTL ? 'الوكيل الرسمي' : 'Official Dealer',
+          price: prices.highestPrice,
+          status: 'new',
+          location: isRTL ? 'الرياض' : 'Riyadh',
+          rating: 5,
+          verified: true,
+          phone: '+966500000001'
+        },
+        {
+          dealer: isRTL ? 'معرض الخليج' : 'Gulf Showroom',
+          price: Math.round(prices.avgPrice * 1.05),
+          status: 'new',
+          location: isRTL ? 'جدة' : 'Jeddah',
+          rating: 4.5,
+          verified: true,
+          phone: '+966500000002'
+        },
+        {
+          dealer: isRTL ? 'معرض النور' : 'Al Noor Showroom',
+          price: prices.avgPrice,
+          status: 'new',
+          location: isRTL ? 'الدمام' : 'Dammam',
+          rating: 4,
+          verified: false,
+          phone: '+966500000003'
+        },
+        {
+          dealer: isRTL ? 'معرض الرياض' : 'Riyadh Showroom',
+          price: Math.round(prices.avgPrice * 0.98),
+          status: 'new',
+          location: isRTL ? 'الرياض' : 'Riyadh',
+          rating: 4,
+          verified: true,
+          phone: '+966500000004'
+        },
+        {
+          dealer: isRTL ? 'معرض الجزيرة' : 'Al Jazira Showroom',
+          price: Math.round(prices.avgPrice * 0.95),
+          status: 'new',
+          location: isRTL ? 'الخبر' : 'Khobar',
+          rating: 4.2,
+          verified: true,
+          phone: '+966500000005'
+        },
+      ],
+      [ // Set 2
+        {
+          dealer: isRTL ? 'وكالة تويوتا' : 'Toyota Agency',
+          price: Math.round(prices.avgPrice * 1.02),
+          status: 'new',
+          location: isRTL ? 'جدة' : 'Jeddah',
+          rating: 4.8,
+          verified: true,
+          phone: '+966500000101'
+        },
+        {
+          dealer: isRTL ? 'معرض السلام' : 'Al Salam Showroom',
+          price: Math.round(prices.avgPrice * 0.97),
+          status: 'new',
+          location: isRTL ? 'الرياض' : 'Riyadh',
+          rating: 4.6,
+          verified: true,
+          phone: '+966500000102'
+        },
+        {
+          dealer: isRTL ? 'معرض الأمانة' : 'Al Amana Showroom',
+          price: Math.round(prices.avgPrice * 0.94),
+          status: 'new',
+          location: isRTL ? 'الخبر' : 'Khobar',
+          rating: 4.3,
+          verified: true,
+          phone: '+966500000103'
+        },
+        {
+          dealer: isRTL ? 'معرض الوفاء' : 'Al Wefaq Showroom',
+          price: Math.round(prices.avgPrice * 0.92),
+          status: 'new',
+          location: isRTL ? 'الدمام' : 'Dammam',
+          rating: 4.1,
+          verified: false,
+          phone: '+966500000104'
+        },
+        {
+          dealer: isRTL ? 'معرض النخبة' : 'Elite Showroom',
+          price: Math.round(prices.avgPrice * 0.96),
+          status: 'new',
+          location: isRTL ? 'الرياض' : 'Riyadh',
+          rating: 4.7,
+          verified: true,
+          phone: '+966500000105'
+        },
+      ],
+      [ // Set 3
+        {
+          dealer: isRTL ? 'معرض العاصمة' : 'Capital Showroom',
+          price: Math.round(prices.avgPrice * 0.93),
+          status: 'new',
+          location: isRTL ? 'الرياض' : 'Riyadh',
+          rating: 4.4,
+          verified: true,
+          phone: '+966500000201'
+        },
+        {
+          dealer: isRTL ? 'معرض البحر' : 'Al Bahr Showroom',
+          price: Math.round(prices.avgPrice * 0.99),
+          status: 'new',
+          location: isRTL ? 'جدة' : 'Jeddah',
+          rating: 4.5,
+          verified: true,
+          phone: '+966500000202'
+        },
+        {
+          dealer: isRTL ? 'معرض الصفاء' : 'Al Safa Showroom',
+          price: Math.round(prices.avgPrice * 0.91),
+          status: 'new',
+          location: isRTL ? 'مكة' : 'Makkah',
+          rating: 4.2,
+          verified: false,
+          phone: '+966500000203'
+        },
+        {
+          dealer: isRTL ? 'معرض الرواد' : 'Pioneers Showroom',
+          price: Math.round(prices.avgPrice * 0.95),
+          status: 'new',
+          location: isRTL ? 'الطائف' : 'Taif',
+          rating: 4.0,
+          verified: true,
+          phone: '+966500000204'
+        },
+        {
+          dealer: isRTL ? 'معرض المدينة' : 'City Showroom',
+          price: Math.round(prices.avgPrice * 0.97),
+          status: 'new',
+          location: isRTL ? 'المدينة' : 'Madinah',
+          rating: 4.6,
+          verified: true,
+          phone: '+966500000205'
+        },
+      ],
+    ];
+
+    const usedDealersSets = [
+      [ // Set 1
+        {
+          dealer: isRTL ? 'معرض السيارات المستعملة' : 'Used Cars Showroom',
+          price: Math.round(prices.avgPrice * 0.85),
+          status: 'used',
+          location: isRTL ? 'الرياض' : 'Riyadh',
+          rating: 4.2,
+          verified: true,
+          km: Math.round((2026 - parseInt(mpYear)) * 15000),
+          phone: '+966500000010'
+        },
+        {
+          dealer: isRTL ? 'سوق السيارات' : 'Cars Market',
+          price: Math.round(prices.avgPrice * 0.8),
+          status: 'used',
+          location: isRTL ? 'جدة' : 'Jeddah',
+          rating: 3.8,
+          verified: false,
+          km: Math.round((2026 - parseInt(mpYear)) * 20000),
+          phone: '+966500000011'
+        },
+        {
+          dealer: isRTL ? 'معرض النور للمستعمل' : 'Al Noor Used Cars',
+          price: Math.round(prices.avgPrice * 0.9),
+          status: 'used',
+          location: isRTL ? 'الدمام' : 'Dammam',
+          rating: 4.5,
+          verified: true,
+          km: Math.round((2026 - parseInt(mpYear)) * 12000),
+          phone: '+966500000012'
+        },
+        {
+          dealer: isRTL ? 'حراج السيارات' : 'Cars Auction',
+          price: `${(prices.lowestPrice * 0.9 / 1000).toFixed(0)}K - ${(prices.avgPrice * 0.95 / 1000).toFixed(0)}K`,
+          status: 'used',
+          location: isRTL ? 'متعدد' : 'Various',
+          rating: 3.5,
+          verified: false,
+          km: isRTL ? 'متفاوت' : 'Varies',
+          phone: '+966500000013'
+        },
+      ],
+      [ // Set 2
+        {
+          dealer: isRTL ? 'معرض الفاخر للمستعمل' : 'Fakher Used Cars',
+          price: Math.round(prices.avgPrice * 0.88),
+          status: 'used',
+          location: isRTL ? 'الرياض' : 'Riyadh',
+          rating: 4.4,
+          verified: true,
+          km: Math.round((2026 - parseInt(mpYear)) * 10000),
+          phone: '+966500000110'
+        },
+        {
+          dealer: isRTL ? 'معرض الإمتياز' : 'Excellence Showroom',
+          price: Math.round(prices.avgPrice * 0.82),
+          status: 'used',
+          location: isRTL ? 'جدة' : 'Jeddah',
+          rating: 4.0,
+          verified: true,
+          km: Math.round((2026 - parseInt(mpYear)) * 18000),
+          phone: '+966500000111'
+        },
+        {
+          dealer: isRTL ? 'سوق الحراج' : 'Auction Market',
+          price: Math.round(prices.avgPrice * 0.78),
+          status: 'used',
+          location: isRTL ? 'الخبر' : 'Khobar',
+          rating: 3.6,
+          verified: false,
+          km: Math.round((2026 - parseInt(mpYear)) * 25000),
+          phone: '+966500000112'
+        },
+        {
+          dealer: isRTL ? 'معرض الدار' : 'Dar Showroom',
+          price: Math.round(prices.avgPrice * 0.86),
+          status: 'used',
+          location: isRTL ? 'الدمام' : 'Dammam',
+          rating: 4.3,
+          verified: true,
+          km: Math.round((2026 - parseInt(mpYear)) * 14000),
+          phone: '+966500000113'
+        },
+      ],
+      [ // Set 3
+        {
+          dealer: isRTL ? 'معرض الذهب للمستعمل' : 'Gold Used Cars',
+          price: Math.round(prices.avgPrice * 0.84),
+          status: 'used',
+          location: isRTL ? 'مكة' : 'Makkah',
+          rating: 4.1,
+          verified: true,
+          km: Math.round((2026 - parseInt(mpYear)) * 16000),
+          phone: '+966500000210'
+        },
+        {
+          dealer: isRTL ? 'معرض الريان' : 'Rayan Showroom',
+          price: Math.round(prices.avgPrice * 0.81),
+          status: 'used',
+          location: isRTL ? 'الطائف' : 'Taif',
+          rating: 3.9,
+          verified: false,
+          km: Math.round((2026 - parseInt(mpYear)) * 22000),
+          phone: '+966500000211'
+        },
+        {
+          dealer: isRTL ? 'معرض الأصالة' : 'Asala Showroom',
+          price: Math.round(prices.avgPrice * 0.87),
+          status: 'used',
+          location: isRTL ? 'المدينة' : 'Madinah',
+          rating: 4.5,
+          verified: true,
+          km: Math.round((2026 - parseInt(mpYear)) * 11000),
+          phone: '+966500000212'
+        },
+        {
+          dealer: isRTL ? 'معرض النجمة' : 'Star Showroom',
+          price: Math.round(prices.avgPrice * 0.79),
+          status: 'used',
+          location: isRTL ? 'جازان' : 'Jazan',
+          rating: 3.7,
+          verified: false,
+          km: Math.round((2026 - parseInt(mpYear)) * 28000),
+          phone: '+966500000213'
+        },
+      ],
+    ];
+
+    if (mpCondition === 'new') {
+      return newDealersSets[dealerRefreshCount % newDealersSets.length];
+    } else {
+      return usedDealersSets[dealerRefreshCount % usedDealersSets.length];
+    }
   };
 
   // Saudi Banks Data
@@ -990,10 +1416,6 @@ export default function CarLinkPage() {
   const [dashboardOpen, setDashboardOpen] = useState(false);
   const [adminLoginOpen, setAdminLoginOpen] = useState(false);
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
-  const [adminPin, setAdminPin] = useState('');
-  const [adminPinError, setAdminPinError] = useState(false);
-  const [pendingAdminAction, setPendingAdminAction] = useState<string | null>(null);
-  const ADMIN_PIN = '0011003300';
   const [adminEmail, setAdminEmail] = useState('');
   const [confirmationCode, setConfirmationCode] = useState('');
   const [enteredCode, setEnteredCode] = useState('');
@@ -1106,7 +1528,25 @@ export default function CarLinkPage() {
       descriptionAr: 'تقييم قيمة سيارتك في السوق',
       descriptionEn: 'Evaluate your car market value',
       icon: DollarSign,
+      color: 'bg-purple-500',
+    },
+    {
+      id: 'offers',
+      titleAr: 'العروض',
+      titleEn: 'Offers',
+      descriptionAr: 'عروض السيارات والعناية بالسيارات',
+      descriptionEn: 'Cars and car care offers',
+      icon: Sparkles,
       color: 'bg-amber-500',
+    },
+    {
+      id: 'maintenance',
+      titleAr: 'الصيانة',
+      titleEn: 'Maintenance',
+      descriptionAr: 'جدول صيانة سيارتك ونصائح العناية',
+      descriptionEn: 'Your car maintenance schedule and care tips',
+      icon: Cog,
+      color: 'bg-orange-500',
     },
     {
       id: 'extended-warranty',
@@ -2137,6 +2577,8 @@ export default function CarLinkPage() {
 
     // Build car info string if car is available
     let carInfoStr = '';
+    let dealerInfoStr = '';
+    
     if (carToUse) {
       const carBrand = isRTL ? (carToUse.brand || carToUse.brandEn) : (carToUse.brandEn || carToUse.brand);
       const carModel = isRTL ? (carToUse.model || carToUse.modelEn) : (carToUse.modelEn || carToUse.model);
@@ -2151,6 +2593,19 @@ export default function CarLinkPage() {
       if (carPayment) {
         carInfoStr += `\n${isRTL ? '**القسط الشهري المتوقع:**' : '**Expected Monthly Payment:**'} ${carPayment}`;
       }
+      
+      // Add dealer/showroom info if available
+      if (carToUse.dealer) {
+        dealerInfoStr = `\n\n${isRTL ? '**المعرض/الوكيل:**' : '**Dealer/Showroom:**'} ${carToUse.dealer}`;
+        if (carToUse.dealerLocation) {
+          dealerInfoStr += `\n${isRTL ? '**الموقع:**' : '**Location:**'} ${carToUse.dealerLocation}`;
+        }
+        if (carToUse.condition === 'used' && carToUse.km) {
+          dealerInfoStr += `\n${isRTL ? '**الحالة:**' : '**Condition:**'} ${isRTL ? 'مستعملة' : 'Used'}`;
+        } else {
+          dealerInfoStr += `\n${isRTL ? '**الحالة:**' : '**Condition:**'} ${isRTL ? 'جديدة' : 'New'}`;
+        }
+      }
     }
 
     // Welcome message based on what's pre-selected
@@ -2159,16 +2614,16 @@ export default function CarLinkPage() {
 
     if (bank && !hasProgram) {
       // Bank selected but no program - user needs to select program first
-      introContent = `${welcomeHeader}${carInfoStr}\n\n${isRTL ? '**البنك:**' : '**Bank:**'} ${isRTL ? bank.bankName : bank.bankNameEn}\n\n${isRTL ? 'يرجى اختيار برنامج التمويل المناسب لك' : 'Please select the financing program that suits you'}`;
+      introContent = `${welcomeHeader}${carInfoStr}${dealerInfoStr}\n\n${isRTL ? '**البنك:**' : '**Bank:**'} ${isRTL ? bank.bankName : bank.bankNameEn}\n\n${isRTL ? 'يرجى اختيار برنامج التمويل المناسب لك' : 'Please select the financing program that suits you'}`;
     } else if (bank && hasProgram) {
       // Both bank and program selected
-      introContent = `${welcomeHeader}${carInfoStr}\n\n${isRTL ? '**برنامج التمويل:**' : '**Financing Program:**'} ${programType}\n${isRTL ? '**البنك:**' : '**Bank:**'} ${isRTL ? bank.bankName : bank.bankNameEn}\n\n${isRTL ? 'لنبدأ ببعض الأسئلة لتحديد الخيار الأنسب لك' : 'Let\'s start with some questions to find the best option for you'}`;
+      introContent = `${welcomeHeader}${carInfoStr}${dealerInfoStr}\n\n${isRTL ? '**برنامج التمويل:**' : '**Financing Program:**'} ${programType}\n${isRTL ? '**البنك:**' : '**Bank:**'} ${isRTL ? bank.bankName : bank.bankNameEn}\n\n${isRTL ? 'لنبدأ ببعض الأسئلة لتحديد الخيار الأنسب لك' : 'Let\'s start with some questions to find the best option for you'}`;
     } else if (hasProgram) {
       // Only program selected (no bank)
-      introContent = `${welcomeHeader}${carInfoStr}\n\n${isRTL ? '**برنامج التمويل:**' : '**Financing Program:**'} ${programType}\n\n${isRTL ? 'لنبدأ ببعض الأسئلة لتحديد الخيار الأنسب لك' : 'Let\'s start with some questions to find the best option for you'}`;
+      introContent = `${welcomeHeader}${carInfoStr}${dealerInfoStr}\n\n${isRTL ? '**برنامج التمويل:**' : '**Financing Program:**'} ${programType}\n\n${isRTL ? 'لنبدأ ببعض الأسئلة لتحديد الخيار الأنسب لك' : 'Let\'s start with some questions to find the best option for you'}`;
     } else {
       // No program or bank - just car or general request
-      introContent = `${welcomeHeader}${carInfoStr}\n\n${isRTL ? 'لنبدأ ببعض الأسئلة لتحديد الخيار الأنسب لك' : 'Let\'s start with some questions to find the best option for you'}`;
+      introContent = `${welcomeHeader}${carInfoStr}${dealerInfoStr}\n\n${isRTL ? 'لنبدأ ببعض الأسئلة لتحديد الخيار الأنسب لك' : 'Let\'s start with some questions to find the best option for you'}`;
     }
     
     setApplicationMessages([
@@ -7473,8 +7928,8 @@ export default function CarLinkPage() {
                         value={mpYear} 
                         onChange={(e) => setMpYear(e.target.value)}
                       >
-                        <option value="">{isRTL ? 'اختر' : 'Select'}</option>
-                        {[2025, 2024, 2023, 2022, 2021, 2020].map(y => (
+                        <option value="">{isRTL ? 'اختر السنة' : 'Select Year'}</option>
+                        {[2026, 2025, 2024, 2023, 2022, 2021, 2020].map(y => (
                           <option key={y} value={y}>{y}</option>
                         ))}
                       </select>
@@ -7512,7 +7967,7 @@ export default function CarLinkPage() {
                 </div>
 
                 {/* عرض الأسعار */}
-                {mpBrand ? (
+                {mpBrand && mpModel ? (
                   <motion.div 
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -7521,49 +7976,90 @@ export default function CarLinkPage() {
                     {/* ملخص الأسعار */}
                     <div className="p-5 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 rounded-2xl border border-emerald-500/30">
                       <div className="flex items-center justify-between mb-4">
-                        <h5 className="font-bold">{isRTL ? `أسعار ${mpBrand} ${mpModel || ''}` : `${mpBrand} ${mpModel || ''} Prices`}</h5>
+                        <h5 className="font-bold">{isRTL ? `أسعار ${mpBrand} ${mpModel} ${mpYear}` : `${mpBrand} ${mpModel} ${mpYear} Prices`}</h5>
                         <Badge className="bg-emerald-500 text-white flex items-center gap-1">
                           <RefreshCw className="w-3 h-3" />
                           {isRTL ? 'محدث اليوم' : 'Updated Today'}
                         </Badge>
                       </div>
                       
-                      <div className="grid grid-cols-3 gap-4">
-                        <div className="text-center p-3 bg-white/50 dark:bg-black/10 rounded-xl">
-                          <p className="text-xs text-muted-foreground">{isRTL ? '📉 أقل سعر' : '📉 Lowest'}</p>
-                          <p className="text-2xl font-bold text-green-600">75,000</p>
-                          <p className="text-xs text-muted-foreground">{isRTL ? 'ريال' : 'SAR'}</p>
-                        </div>
-                        <div className="text-center p-3 bg-white/50 dark:bg-black/10 rounded-xl border-2 border-emerald-500">
-                          <p className="text-xs text-muted-foreground">{isRTL ? '📊 متوسط السعر' : '📊 Average'}</p>
-                          <p className="text-2xl font-bold text-emerald-600">87,500</p>
-                          <p className="text-xs text-muted-foreground">{isRTL ? 'ريال' : 'SAR'}</p>
-                        </div>
-                        <div className="text-center p-3 bg-white/50 dark:bg-black/10 rounded-xl">
-                          <p className="text-xs text-muted-foreground">{isRTL ? '📈 أعلى سعر' : '📈 Highest'}</p>
-                          <p className="text-2xl font-bold text-orange-600">95,000</p>
-                          <p className="text-xs text-muted-foreground">{isRTL ? 'ريال' : 'SAR'}</p>
-                        </div>
+                      {(() => {
+                        const prices = getMarketPrices();
+                        if (!prices) return null;
+                        return (
+                          <div className="grid grid-cols-3 gap-4">
+                            <div className="text-center p-3 bg-white/50 dark:bg-black/10 rounded-xl">
+                              <p className="text-xs text-muted-foreground">{isRTL ? '📉 أقل سعر' : '📉 Lowest'}</p>
+                              <p className="text-2xl font-bold text-green-600">{prices.lowestPrice.toLocaleString()}</p>
+                              <p className="text-xs text-muted-foreground">{isRTL ? 'ريال' : 'SAR'}</p>
+                            </div>
+                            <div className="text-center p-3 bg-white/50 dark:bg-black/10 rounded-xl border-2 border-emerald-500">
+                              <p className="text-xs text-muted-foreground">{isRTL ? '📊 متوسط السعر' : '📊 Average'}</p>
+                              <p className="text-2xl font-bold text-emerald-600">{prices.avgPrice.toLocaleString()}</p>
+                              <p className="text-xs text-muted-foreground">{isRTL ? 'ريال' : 'SAR'}</p>
+                            </div>
+                            <div className="text-center p-3 bg-white/50 dark:bg-black/10 rounded-xl">
+                              <p className="text-xs text-muted-foreground">{isRTL ? '📈 أعلى سعر' : '📈 Highest'}</p>
+                              <p className="text-2xl font-bold text-orange-600">{prices.highestPrice.toLocaleString()}</p>
+                              <p className="text-xs text-muted-foreground">{isRTL ? 'ريال' : 'SAR'}</p>
+                            </div>
+                          </div>
+                        );
+                      })()}
+                      
+                      {/* Year and Condition Info */}
+                      <div className="flex items-center gap-3 mt-4 pt-4 border-t border-emerald-500/20">
+                        <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600 border-emerald-500/30">
+                          <Calendar className="w-3 h-3 mr-1" />
+                          {mpYear}
+                        </Badge>
+                        <Badge variant="outline" className={mpCondition === 'new' ? 'bg-green-500/10 text-green-600 border-green-500/30' : 'bg-amber-500/10 text-amber-600 border-amber-500/30'}>
+                          {mpCondition === 'new' ? (isRTL ? 'جديدة' : 'New') : (isRTL ? 'مستعملة' : 'Used')}
+                        </Badge>
                       </div>
                     </div>
 
                     {/* قائمة المعارض والأسعار */}
                     <div className="space-y-2">
-                      <h5 className="font-semibold text-sm text-muted-foreground">{isRTL ? '🏪 المعارض والوكالات' : '🏪 Showrooms & Dealers'}</h5>
+                      <div className="flex items-center justify-between">
+                        <h5 className="font-semibold text-sm text-muted-foreground">{isRTL ? '🏪 المعارض والوكالات - اضغط للطلب' : '🏪 Showrooms & Dealers - Click to Order'}</h5>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setDealerRefreshCount(prev => prev + 1);
+                            toast({ title: isRTL ? '🔄 تم تحديث قائمة المعارض والوكلاء' : '🔄 Showrooms list updated' });
+                          }}
+                          className="flex items-center gap-1 text-blue-500 hover:text-blue-600 hover:bg-blue-500/10"
+                        >
+                          <RefreshCw className="w-4 h-4" />
+                          {isRTL ? 'تحديث' : 'Refresh'}
+                        </Button>
+                      </div>
                       
-                      {[
-                        { dealer: isRTL ? 'الوكيل الرسمي' : 'Official Dealer', price: '95,000', status: 'new', location: isRTL ? 'الرياض' : 'Riyadh', rating: 5, verified: true },
-                        { dealer: isRTL ? 'معرض الخليج' : 'Gulf Showroom', price: '92,000', status: 'new', location: isRTL ? 'جدة' : 'Jeddah', rating: 4.5, verified: true },
-                        { dealer: isRTL ? 'معرض النور' : 'Al Noor Showroom', price: '89,000', status: 'new', location: isRTL ? 'الدمام' : 'Dammam', rating: 4, verified: false },
-                        { dealer: isRTL ? 'معرض الرياض' : 'Riyadh Showroom', price: '88,500', status: 'new', location: isRTL ? 'الرياض' : 'Riyadh', rating: 4, verified: true },
-                        { dealer: isRTL ? 'سوق السيارات المستعملة' : 'Used Car Market', price: '75,000 - 85,000', status: 'used', location: isRTL ? 'متعدد' : 'Various', rating: 3.5, verified: false },
-                      ].map((item, i) => (
+                      {getDealers().map((item, i) => (
                         <motion.div
-                          key={i}
+                          key={`${i}-${dealerRefreshCount}`}
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: i * 0.1 }}
-                          className="p-4 bg-muted/30 rounded-xl hover:bg-muted/50 transition-all cursor-pointer border border-transparent hover:border-emerald-500/30"
+                          onClick={() => {
+                            const carData = {
+                              id: `market-price-${mpBrand}-${mpModel}-${i}`,
+                              brand: mpBrand,
+                              brandEn: mpBrand,
+                              model: mpModel,
+                              modelEn: mpModel,
+                              year: parseInt(mpYear),
+                              price: typeof item.price === 'number' ? item.price : getMarketPrices()?.avgPrice || 0,
+                              monthlyPayment: Math.round((typeof item.price === 'number' ? item.price : getMarketPrices()?.avgPrice || 80000) / 48),
+                              dealer: item.dealer,
+                              dealerLocation: item.location,
+                              condition: mpCondition,
+                            };
+                            openFinancingChatbot('', null, carData);
+                          }}
+                          className="p-4 bg-muted/30 rounded-xl hover:bg-emerald-500/10 transition-all cursor-pointer border border-transparent hover:border-emerald-500/50 hover:shadow-lg group"
                         >
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
@@ -7571,7 +8067,7 @@ export default function CarLinkPage() {
                                 {item.verified ? <CheckCircle2 className="w-5 h-5 text-emerald-500" /> : <Building2 className="w-5 h-5 text-muted-foreground" />}
                               </div>
                               <div>
-                                <p className="font-semibold">{item.dealer}</p>
+                                <p className="font-semibold group-hover:text-emerald-600 transition-colors">{item.dealer}</p>
                                 <div className="flex items-center gap-2 mt-1">
                                   <Badge variant={item.status === 'new' ? 'default' : 'secondary'} className="text-xs">
                                     {item.status === 'new' ? (isRTL ? 'جديدة' : 'New') : (isRTL ? 'مستعملة' : 'Used')}
@@ -7584,25 +8080,44 @@ export default function CarLinkPage() {
                                     <Star className="w-3 h-3 text-amber-500" />
                                     {item.rating}
                                   </span>
+                                  {'km' in item && (
+                                    <span className="text-xs text-muted-foreground flex items-center gap-1">
+                                      <Gauge className="w-3 h-3" />
+                                      {typeof item.km === 'number' ? item.km.toLocaleString() : item.km} {isRTL ? 'كم' : 'km'}
+                                    </span>
+                                  )}
                                 </div>
                               </div>
                             </div>
                             <div className="text-right">
-                              <p className="text-xl font-bold text-emerald-600">{item.price}</p>
+                              <p className="text-xl font-bold text-emerald-600">
+                                {typeof item.price === 'number' ? item.price.toLocaleString() : item.price}
+                              </p>
                               <p className="text-xs text-muted-foreground">{isRTL ? 'ريال' : 'SAR'}</p>
+                              <p className="text-xs text-emerald-500 mt-1 flex items-center justify-end gap-1">
+                                <Send className="w-3 h-3" />
+                                {isRTL ? 'اطلب الآن' : 'Order Now'}
+                              </p>
                             </div>
                           </div>
                         </motion.div>
                       ))}
                     </div>
 
-                    {/* زر التنبيه */}
+                    {/* زر تقديم عرض سعر جديد */}
                     <Button
                       className="w-full h-12 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl"
-                      onClick={() => toast({ title: isRTL ? '🔔 تم تفعيل التنبيه! سنخبرك عند تغير الأسعار' : '🔔 Alert activated! We\'ll notify you when prices change' })}
+                      onClick={() => {
+                        setMpBrand('');
+                        setMpModel('');
+                        setMpYear('2026');
+                        setMpCondition('new');
+                        setDealerRefreshCount(0);
+                        toast({ title: isRTL ? '🔄 اختر ماركة وموديل جديد' : '🔄 Select a new brand and model' });
+                      }}
                     >
-                      <Bell className={`w-5 h-5 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                      {isRTL ? 'تنبيه عند تغير الأسعار' : 'Price Change Alert'}
+                      <RefreshCw className={`w-5 h-5 text-blue-400 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                      {isRTL ? 'تقديم عرض سعر جديد' : 'Request New Price Quote'}
                     </Button>
                   </motion.div>
                 ) : (
@@ -7614,7 +8129,7 @@ export default function CarLinkPage() {
                     >
                       <TrendingUp className="w-10 h-10 text-emerald-500" />
                     </motion.div>
-                    <p className="text-muted-foreground">{isRTL ? 'اختر الماركة لعرض أسعار السوق' : 'Select a brand to view market prices'}</p>
+                    <p className="text-muted-foreground">{isRTL ? 'اختر الماركة والموديل لعرض أسعار السوق' : 'Select brand and model to view market prices'}</p>
                   </div>
                 )}
               </div>
@@ -8015,6 +8530,147 @@ export default function CarLinkPage() {
                           : 'Prices shown are estimates and subject to terms and conditions. We recommend contacting the dealer directly for the final offer.'}
                       </p>
                     </div>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {/* ========== خدمة العروض - تصميم جديد ========== */}
+            {selectedService === 'offers' && (
+              <div className="space-y-4">
+                {/* ترحيب */}
+                <motion.div 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="relative overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-amber-500/20 to-orange-500/20 rounded-2xl blur-xl" />
+                  <div className="relative p-5 bg-gradient-to-r from-amber-500/10 to-orange-500/10 rounded-2xl border border-amber-500/30">
+                    <div className="flex items-center gap-4">
+                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-lg">
+                        <Sparkles className="w-7 h-7 text-white" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-lg">{isRTL ? 'عروض حصرية' : 'Exclusive Offers'}</h4>
+                        <p className="text-sm text-muted-foreground">{isRTL ? 'استفد من أحدث العروض والخصومات' : 'Take advantage of latest offers'}</p>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* قائمة العروض */}
+                <div className="grid gap-3">
+                  {[
+                    {
+                      id: 1,
+                      title: isRTL ? 'خصم 15% على صيانة السيارة' : '15% Off Car Maintenance',
+                      description: isRTL ? 'خصم على جميع خدمات الصيانة في المراكز المعتمدة' : 'Discount on all maintenance services',
+                      discount: '15%',
+                      validUntil: isRTL ? 'ينتهي 30 ديسمبر 2024' : 'Until Dec 30, 2024',
+                      code: 'MAINT15',
+                      gradient: 'from-blue-500 to-cyan-500',
+                      icon: Cog
+                    },
+                    {
+                      id: 2,
+                      title: isRTL ? 'عرض خاص على تأمين السيارة' : 'Special Insurance Offer',
+                      description: isRTL ? 'وفر حتى 20% على تأمين سيارتك الجديدة' : 'Save up to 20% on new car insurance',
+                      discount: '20%',
+                      validUntil: isRTL ? 'ينتهي 15 يناير 2025' : 'Until Jan 15, 2025',
+                      code: 'INSURE20',
+                      gradient: 'from-green-500 to-emerald-500',
+                      icon: Shield
+                    },
+                    {
+                      id: 3,
+                      title: isRTL ? 'غسيل وتنظيف مجاني' : 'Free Car Wash',
+                      description: isRTL ? 'احصل على غسيل وتنظيف داخلي مجاني' : 'Get free interior and exterior wash',
+                      discount: isRTL ? 'مجاني' : 'Free',
+                      validUntil: isRTL ? 'ينتهي 31 ديسمبر 2024' : 'Until Dec 31, 2024',
+                      code: 'WASH2024',
+                      gradient: 'from-purple-500 to-pink-500',
+                      icon: Sparkles
+                    },
+                    {
+                      id: 4,
+                      title: isRTL ? 'فحص مجاني للسيارة' : 'Free Car Inspection',
+                      description: isRTL ? 'فحص شامل لسيارتك بالكامل' : 'Complete comprehensive car inspection',
+                      discount: isRTL ? 'مجاني' : 'Free',
+                      validUntil: isRTL ? 'ينتهي 15 فبراير 2025' : 'Until Feb 15, 2025',
+                      code: 'CHECK25',
+                      gradient: 'from-amber-500 to-orange-500',
+                      icon: Car
+                    }
+                  ].map((offer, i) => {
+                    const IconComp = offer.icon;
+                    return (
+                      <motion.div
+                        key={offer.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.1 }}
+                        className="relative overflow-hidden"
+                      >
+                        <div className={`absolute inset-0 bg-gradient-to-r ${offer.gradient} opacity-5 rounded-2xl`} />
+                        <Card className="border-0 bg-background/50 backdrop-blur-sm hover:shadow-lg transition-all cursor-pointer">
+                          <div className={`h-1 bg-gradient-to-r ${offer.gradient}`} />
+                          <CardContent className="p-4">
+                            <div className="flex items-start gap-4">
+                              <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${offer.gradient} flex items-center justify-center shadow-lg flex-shrink-0`}>
+                                <IconComp className="w-6 h-6 text-white" />
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex items-start justify-between mb-2">
+                                  <h3 className="font-bold">{offer.title}</h3>
+                                  <Badge className={`bg-gradient-to-r ${offer.gradient} text-white`}>{offer.discount}</Badge>
+                                </div>
+                                <p className="text-sm text-muted-foreground mb-3">{offer.description}</p>
+                                <div className="flex items-center justify-between">
+                                  <span className="text-xs text-muted-foreground flex items-center gap-1">
+                                    <Clock className="w-3 h-3" />
+                                    {offer.validUntil}
+                                  </span>
+                                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      className="text-xs rounded-lg"
+                                      onClick={() => {
+                                        navigator.clipboard.writeText(offer.code);
+                                        toast({ title: isRTL ? '📋 تم نسخ الكود!' : '📋 Code Copied!', description: offer.code });
+                                      }}
+                                    >
+                                      <Ticket className={`w-3 h-3 ${isRTL ? 'ml-1' : 'mr-1'}`} />
+                                      {offer.code}
+                                    </Button>
+                                  </motion.div>
+                                </div>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+
+                {/* قسم إدخال كود الخصم */}
+                <div className="p-5 bg-gradient-to-r from-amber-500/5 to-orange-500/5 rounded-2xl border border-amber-500/20">
+                  <div className="text-center mb-3">
+                    <Ticket className="w-10 h-10 mx-auto text-amber-500 mb-2" />
+                    <p className="font-semibold">{isRTL ? 'هل لديك كود خصم؟' : 'Have a discount code?'}</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Input 
+                      placeholder={isRTL ? 'أدخل الكود هنا' : 'Enter code here'} 
+                      className="text-center h-12 rounded-xl" 
+                    />
+                    <Button 
+                      className="h-12 px-6 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl"
+                      onClick={() => toast({ title: isRTL ? '✅ تم تطبيق الكود بنجاح!' : '✅ Code applied successfully!' })}
+                    >
+                      {isRTL ? 'تطبيق' : 'Apply'}
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -8946,9 +9602,102 @@ export default function CarLinkPage() {
               </div>
             )}
             
+            {selectedService === 'maintenance' && (
+              <div className="space-y-4">
+                <div className={`p-4 bg-gradient-to-r from-orange-500/10 to-amber-500/10 rounded-xl border border-orange-500/30 ${isRTL ? 'text-right' : 'text-left'}`}>
+                  <h4 className="font-bold text-lg mb-1">{isRTL ? 'جدول الصيانة' : 'Maintenance Schedule'}</h4>
+                  <p className="text-sm text-muted-foreground">{isRTL ? 'جدول صيانة سيارتك وتذكيرات الخدمة' : 'Your car maintenance schedule and service reminders'}</p>
+                </div>
+
+                {/* Current Mileage Input */}
+                <div className="p-4 bg-muted/30 rounded-xl">
+                  <Label className="font-semibold">{isRTL ? 'الممشى الحالي (كم)' : 'Current Mileage (km)'}</Label>
+                  <div className="flex items-center gap-2 mt-2">
+                    <Input
+                      type="number"
+                      placeholder={isRTL ? "مثال: 45000" : "e.g., 45000"}
+                      className="text-lg font-bold h-12"
+                      value={carMileage || ''}
+                      onChange={(e) => setCarMileage(parseInt(e.target.value) || 0)}
+                    />
+                    <span className="text-sm text-muted-foreground whitespace-nowrap">{isRTL ? 'كم' : 'km'}</span>
+                  </div>
+                </div>
+
+                {/* Maintenance Schedule */}
+                <div className="space-y-3">
+                  {[
+                    { km: 5000, title: isRTL ? 'الصيانة الأولى' : 'First Service', items: isRTL ? ['تغيير الزيت', 'فحص السوائل', 'فحص الإطارات'] : ['Oil Change', 'Fluid Check', 'Tire Inspection'] },
+                    { km: 10000, title: isRTL ? 'الصيانة الثانية' : 'Second Service', items: isRTL ? ['تغيير الزيت', 'تغيير فلتر الهواء', 'فحص الفرامل'] : ['Oil Change', 'Air Filter', 'Brake Check'] },
+                    { km: 20000, title: isRTL ? 'الصيانة الكبرى' : 'Major Service', items: isRTL ? ['جميع الخدمات السابقة', 'تغيير سائل الفرامل', 'فحص التعليق'] : ['All Previous Services', 'Brake Fluid', 'Suspension Check'] },
+                    { km: 40000, title: isRTL ? 'الصيانة الشاملة' : 'Full Service', items: isRTL ? ['صيانة شاملة', 'تغيير جميع السوائل', 'فحص الأمان'] : ['Full Maintenance', 'All Fluids Change', 'Safety Check'] },
+                  ].map((service, i) => {
+                    const isPast = carMileage >= service.km;
+                    const isNext = carMileage < service.km && (i === 0 || carMileage >= [5000, 10000, 20000, 40000][i - 1]);
+                    const remaining = service.km - carMileage;
+
+                    return (
+                      <Card key={i} className={`${isNext ? 'border-orange-500 border-2 bg-orange-500/5' : ''} ${isPast ? 'opacity-60' : ''}`}>
+                        <CardContent className="p-4">
+                          <div className="flex items-center gap-4">
+                            <div className={`w-12 h-12 rounded-full flex items-center justify-center ${isPast ? 'bg-green-500/20' : isNext ? 'bg-orange-500/20' : 'bg-muted'}`}>
+                              {isPast ? (
+                                <CheckCircle2 className="w-6 h-6 text-green-500" />
+                              ) : isNext ? (
+                                <Clock className="w-6 h-6 text-orange-500" />
+                              ) : (
+                                <span className="font-bold text-muted-foreground">{service.km / 1000}K</span>
+                              )}
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex justify-between items-start">
+                                <div>
+                                  <h4 className="font-semibold">{service.title}</h4>
+                                  <p className="text-xs text-muted-foreground">{service.km.toLocaleString()} {isRTL ? 'كم' : 'km'}</p>
+                                </div>
+                                {isNext && (
+                                  <Badge className="bg-orange-500 text-white">
+                                    {isRTL ? `${remaining.toLocaleString()} كم متبقي` : `${remaining.toLocaleString()} km left`}
+                                  </Badge>
+                                )}
+                                {isPast && (
+                                  <Badge variant="outline" className="text-green-500 border-green-500">
+                                    {isRTL ? 'تم' : 'Done'}
+                                  </Badge>
+                                )}
+                              </div>
+                              <div className="flex flex-wrap gap-1 mt-2">
+                                {service.items.map((item, j) => (
+                                  <span key={j} className="text-xs bg-muted px-2 py-1 rounded-full">{item}</span>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+
+                {/* Schedule Service Button */}
+                <Button
+                  className="w-full sky-gradient text-white h-12"
+                  onClick={() => {
+                    toast({
+                      title: isRTL ? 'تم حجز موعد الصيانة' : 'Maintenance Appointment Scheduled',
+                      description: isRTL ? 'سيتم التواصل معك لتأكيد الموعد' : 'You will be contacted to confirm the appointment'
+                    });
+                  }}
+                >
+                  <Calendar className={`w-5 h-5 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                  {isRTL ? 'حجز موعد صيانة' : 'Schedule Maintenance'}
+                </Button>
+              </div>
+            )}
+            
             {selectedService === 'valuation' && (
               <div className="space-y-4">
-                <div className={`p-4 bg-gradient-to-r from-amber-500/10 to-yellow-500/10 rounded-xl border border-amber-500/30 ${isRTL ? 'text-right' : 'text-left'}`}>
+                <div className={`p-4 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl border border-purple-500/30 ${isRTL ? 'text-right' : 'text-left'}`}>
                   <h4 className="font-bold text-lg mb-1">{isRTL ? 'تقييم السيارة' : 'Car Valuation'}</h4>
                   <p className="text-sm text-muted-foreground">{isRTL ? 'احصل على تقييم تقديري لسيارتك في السوق' : 'Get an estimated valuation for your car in the market'}</p>
                 </div>
@@ -8960,33 +9709,52 @@ export default function CarLinkPage() {
                       <div className="grid grid-cols-2 gap-3">
                         <div>
                           <Label className="font-semibold">{isRTL ? 'الماركة' : 'Brand'}</Label>
-                          <select className="w-full h-10 rounded-md border bg-background px-3" value={valBrand} onChange={(e) => setValBrand(e.target.value)}>
-                            <option value="">{isRTL ? 'اختر' : 'Select'}</option>
-                            <option value="toyota">Toyota</option>
-                            <option value="hyundai">Hyundai</option>
-                            <option value="honda">Honda</option>
-                            <option value="nissan">Nissan</option>
-                            <option value="kia">Kia</option>
-                            <option value="mazda">Mazda</option>
+                          <select
+                            className="w-full h-10 rounded-md border bg-background px-3"
+                            value={valBrand}
+                            onChange={(e) => {
+                              setValBrand(e.target.value);
+                              setValModel(''); // Reset model when brand changes
+                            }}
+                          >
+                            <option value="">{isRTL ? 'اختر الماركة' : 'Select Brand'}</option>
+                            {Object.keys(carModelsByBrand).map(brand => (
+                              <option key={brand} value={brand}>{brand}</option>
+                            ))}
                           </select>
                         </div>
                         <div>
                           <Label className="font-semibold">{isRTL ? 'الموديل' : 'Model'}</Label>
-                          <Input placeholder={isRTL ? 'مثال: كامري' : 'e.g., Camry'} value={valModel} onChange={(e) => setValModel(e.target.value)} />
+                          <select
+                            className="w-full h-10 rounded-md border bg-background px-3 disabled:opacity-50"
+                            value={valModel}
+                            onChange={(e) => setValModel(e.target.value)}
+                            disabled={!valBrand}
+                          >
+                            <option value="">{isRTL ? 'اختر الموديل' : 'Select Model'}</option>
+                            {valBrand && carModelsByBrand[valBrand]?.map(model => (
+                              <option key={model} value={model}>{model}</option>
+                            ))}
+                          </select>
                         </div>
                       </div>
                       <div className="grid grid-cols-3 gap-3">
                         <div>
                           <Label className="font-semibold">{isRTL ? 'السنة' : 'Year'}</Label>
                           <select className="w-full h-10 rounded-md border bg-background px-3" value={valYear} onChange={(e) => setValYear(parseInt(e.target.value))}>
-                            {[2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015].map(y => (
+                            {[2026, 2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016].map(y => (
                               <option key={y} value={y}>{y}</option>
                             ))}
                           </select>
                         </div>
                         <div>
-                          <Label className="font-semibold">{isRTL ? 'الممشى' : 'Mileage'}</Label>
-                          <Input type="number" placeholder={isRTL ? 'كم' : 'km'} value={valMileage} onChange={(e) => setValMileage(parseInt(e.target.value))} />
+                          <Label className="font-semibold">{isRTL ? 'الممشى (كم)' : 'Mileage (km)'}</Label>
+                          <Input
+                            type="number"
+                            placeholder="0"
+                            value={valMileage || ''}
+                            onChange={(e) => setValMileage(parseInt(e.target.value) || 0)}
+                          />
                         </div>
                         <div>
                           <Label className="font-semibold">{isRTL ? 'الحالة' : 'Condition'}</Label>
@@ -9011,162 +9779,151 @@ export default function CarLinkPage() {
                 ) : (
                   /* Valuation Results */
                   <div className="space-y-4">
-                    {/* Estimated Value Card */}
-                    <div className="p-6 bg-gradient-to-r from-amber-500/10 to-yellow-500/10 rounded-xl border border-amber-500/30 text-center">
-                      <p className="text-sm text-muted-foreground mb-2">{isRTL ? 'القيمة التقديرية' : 'Estimated Value'}</p>
-                      <p className="text-4xl font-bold text-amber-600">85,000 - 95,000</p>
-                      <p className="text-lg text-muted-foreground">{isRTL ? 'ريال سعودي' : 'SAR'}</p>
-                    </div>
+                    {(() => {
+                      const valuation = calculateValuation();
+                      if (!valuation) return null;
+                      return (
+                        <>
+                          {/* Estimated Value Card */}
+                          <div className="p-6 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl border border-purple-500/30 text-center">
+                            <p className="text-sm text-muted-foreground mb-2">{isRTL ? 'القيمة التقديرية' : 'Estimated Value'}</p>
+                            <p className="text-4xl font-bold text-purple-600">
+                              {valuation.lowRange.toLocaleString()} - {valuation.highRange.toLocaleString()}
+                            </p>
+                            <p className="text-lg text-muted-foreground">{isRTL ? 'ريال سعودي' : 'SAR'}</p>
+                          </div>
 
-                    {/* Value Breakdown */}
-                    <div className="space-y-2">
-                      <h5 className="font-semibold">{isRTL ? 'تفاصيل التقييم' : 'Valuation Details'}</h5>
-                      {[
-                        { label: isRTL ? 'القيمة السوقية' : 'Market Value', value: '90,000', color: 'text-blue-600' },
-                        { label: isRTL ? 'قيمة الوكيل' : 'Dealer Value', value: '85,000', color: 'text-green-600' },
-                        { label: isRTL ? 'قيمة البيع المباشر' : 'Private Sale', value: '92,000', color: 'text-amber-600' },
-                      ].map((item, i) => (
-                        <div key={i} className={`p-3 bg-muted/50 rounded-lg flex justify-between items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
-                          <span className="text-sm text-muted-foreground">{item.label}</span>
-                          <span className={`font-bold ${item.color}`}>{item.value} {isRTL ? 'ريال' : 'SAR'}</span>
-                        </div>
-                      ))}
-                    </div>
+                          {/* Value Breakdown */}
+                          <div className="space-y-2">
+                            <h5 className="font-semibold">{isRTL ? 'تفاصيل التقييم' : 'Valuation Details'}</h5>
+                            <div className={`p-3 bg-muted/50 rounded-lg flex justify-between items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                              <span className="text-sm text-muted-foreground">{isRTL ? 'القيمة السوقية' : 'Market Value'}</span>
+                              <span className="font-bold text-blue-600">{valuation.marketValue.toLocaleString()} {isRTL ? 'ريال' : 'SAR'}</span>
+                            </div>
+                            <div className={`p-3 bg-muted/50 rounded-lg flex justify-between items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                              <span className="text-sm text-muted-foreground">{isRTL ? 'قيمة الوكيل' : 'Dealer Value'}</span>
+                              <span className="font-bold text-green-600">{valuation.dealerValue.toLocaleString()} {isRTL ? 'ريال' : 'SAR'}</span>
+                            </div>
+                            <div className={`p-3 bg-muted/50 rounded-lg flex justify-between items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                              <span className="text-sm text-muted-foreground">{isRTL ? 'قيمة البيع المباشر' : 'Private Sale'}</span>
+                              <span className="font-bold text-purple-600">{valuation.privateSaleValue.toLocaleString()} {isRTL ? 'ريال' : 'SAR'}</span>
+                            </div>
+                          </div>
 
-                    {/* Factors */}
-                    <div className={`p-4 bg-blue-500/10 rounded-xl border border-blue-500/20 ${isRTL ? 'text-right' : 'text-left'}`}>
-                      <h5 className="font-semibold text-sm mb-2">{isRTL ? 'العوامل المؤثرة' : 'Value Factors'}</h5>
-                      <div className="space-y-2 text-sm">
-                        <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                          <CheckCircle2 className="w-4 h-4 text-green-500" />
-                          <span>{isRTL ? `الماركة: ${valBrand}` : `Brand: ${valBrand}`}</span>
-                        </div>
-                        <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                          <CheckCircle2 className="w-4 h-4 text-green-500" />
-                          <span>{isRTL ? `سنة الصنع: ${valYear}` : `Year: ${valYear}`}</span>
-                        </div>
-                        <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                          {valMileage < 50000 ? (
-                            <CheckCircle2 className="w-4 h-4 text-green-500" />
-                          ) : valMileage < 100000 ? (
-                            <AlertCircle className="w-4 h-4 text-amber-500" />
-                          ) : (
-                            <AlertCircle className="w-4 h-4 text-red-500" />
-                          )}
-                          <span>{isRTL ? `الممشى: ${valMileage?.toLocaleString()} كم` : `Mileage: ${valMileage?.toLocaleString()} km`}</span>
-                        </div>
-                        <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                          <CheckCircle2 className="w-4 h-4 text-green-500" />
-                          <span>{isRTL ? `الحالة: ${valCondition === 'excellent' ? 'ممتازة' : valCondition === 'good' ? 'جيدة' : 'مقبولة'}` : `Condition: ${valCondition}`}</span>
-                        </div>
-                      </div>
-                    </div>
+                          {/* Factors */}
+                          <div className={`p-4 bg-blue-500/10 rounded-xl border border-blue-500/20 ${isRTL ? 'text-right' : 'text-left'}`}>
+                            <h5 className="font-semibold text-sm mb-2">{isRTL ? 'العوامل المؤثرة' : 'Value Factors'}</h5>
+                            <div className="space-y-2 text-sm">
+                              <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                                <span>{isRTL ? `الماركة: ${valBrand}` : `Brand: ${valBrand}`}</span>
+                              </div>
+                              <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                                <span>{isRTL ? `الموديل: ${valModel}` : `Model: ${valModel}`}</span>
+                              </div>
+                              <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                                <span>{isRTL ? `سنة الصنع: ${valYear}` : `Year: ${valYear}`}</span>
+                              </div>
+                              <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                                {valMileage < 50000 ? (
+                                  <CheckCircle2 className="w-4 h-4 text-green-500" />
+                                ) : valMileage < 100000 ? (
+                                  <AlertCircle className="w-4 h-4 text-amber-500" />
+                                ) : (
+                                  <AlertCircle className="w-4 h-4 text-red-500" />
+                                )}
+                                <span>{isRTL ? `الممشى: ${valMileage?.toLocaleString()} كم` : `Mileage: ${valMileage?.toLocaleString()} km`}</span>
+                              </div>
+                              <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                                <span>{isRTL ? `الحالة: ${valCondition === 'excellent' ? 'ممتازة' : valCondition === 'good' ? 'جيدة' : 'مقبولة'}` : `Condition: ${valCondition}`}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      );
+                    })()}
 
                     {/* Action Buttons */}
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        className="flex-1"
-                        onClick={() => setShowValuation(false)}
-                      >
-                        {isRTL ? 'تقييم جديد' : 'New Valuation'}
-                      </Button>
-                      <Button
-                        className="flex-1 sky-gradient text-white"
-                        onClick={() => {
-                          toast({
-                            title: isRTL ? 'تم طلب التقييم الرسمي' : 'Official Valuation Requested',
-                            description: isRTL ? 'سيتم التواصل معك خلال 24 ساعة' : 'You will be contacted within 24 hours'
-                          });
-                        }}
-                      >
-                        {isRTL ? 'طلب تقييم رسمي' : 'Request Official Valuation'}
-                      </Button>
-                    </div>
+                    <Button
+                      className="w-full sky-gradient text-white h-12"
+                      onClick={() => {
+                        setShowValuation(false);
+                        setValBrand('');
+                        setValModel('');
+                        setValYear(2026);
+                        setValMileage(50000);
+                        setValCondition('good');
+                      }}
+                    >
+                      <RefreshCw className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                      {isRTL ? 'تقييم جديد' : 'New Valuation'}
+                    </Button>
                   </div>
                 )}
               </div>
             )}
             
             {selectedService === 'settings' && (
-              <div className="space-y-3">
-                {/* المظهر */}
-                <div
-                  className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
-                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                >
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-md ${theme === 'dark' ? 'bg-slate-600' : 'bg-amber-500'}`}>
-                    {theme === 'dark' ? (
-                      <Moon className="w-5 h-5 text-white" />
-                    ) : (
-                      <Sun className="w-5 h-5 text-white" />
-                    )}
-                  </div>
-                  <div className="flex-1">
-                    <span className="font-medium">{isRTL ? (theme === 'dark' ? 'الوضع الليلي' : 'الوضع النهاري') : (theme === 'dark' ? 'Dark Mode' : 'Light Mode')}</span>
-                    <p className="text-xs text-muted-foreground">{isRTL ? 'انقر للتبديل' : 'Tap to switch'}</p>
-                  </div>
-                  <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
+              <div className="space-y-4">
+                {/* Admin & Management Section */}
+                <div className={`p-4 bg-muted/30 rounded-xl ${isRTL ? 'text-right' : 'text-left'}`}>
+                  <h4 className="font-semibold mb-2">{isRTL ? 'الإدارة والتحكم' : 'Admin & Management'}</h4>
                 </div>
-
-                {/* اللغة */}
-                <div
-                  className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
-                  onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}
-                >
-                  <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center shadow-md">
-                    <Globe className="w-5 h-5 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <span className="font-medium">{isRTL ? 'اللغة' : 'Language'}</span>
-                    <p className="text-xs text-muted-foreground">{language === 'ar' ? 'العربية' : 'English'}</p>
-                  </div>
-                  <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
+                <div className="grid grid-cols-2 gap-3">
+                  <Card className="cursor-pointer hover:shadow-lg transition-all" onClick={() => { setServiceDetailOpen(false); setDashboardOpen(true); }}>
+                    <CardContent className="p-4 text-center">
+                      <div className="w-10 h-10 rounded-xl bg-slate-500 flex items-center justify-center mx-auto mb-2">
+                        <Building2 className="w-5 h-5 text-white" />
+                      </div>
+                      <p className="font-semibold text-sm">{isRTL ? 'لوحة التحكم' : 'Dashboard'}</p>
+                    </CardContent>
+                  </Card>
+                  <Card className="cursor-pointer hover:shadow-lg transition-all" onClick={() => { setServiceDetailOpen(false); setSelectedService('add-announcement'); setServiceDetailOpen(true); }}>
+                    <CardContent className="p-4 text-center">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mx-auto mb-2">
+                        <Bell className="w-5 h-5 text-white" />
+                      </div>
+                      <p className="font-semibold text-sm">{isRTL ? 'إضافة إعلان' : 'Add Announcement'}</p>
+                    </CardContent>
+                  </Card>
+                  <Card className="cursor-pointer hover:shadow-lg transition-all" onClick={() => { setServiceDetailOpen(false); setSelectedService('add-offer'); setServiceDetailOpen(true); }}>
+                    <CardContent className="p-4 text-center">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center mx-auto mb-2">
+                        <Sparkles className="w-5 h-5 text-white" />
+                      </div>
+                      <p className="font-semibold text-sm">{isRTL ? 'إضافة عرض خاص' : 'Add Special Offer'}</p>
+                    </CardContent>
+                  </Card>
+                  <Card className="cursor-pointer hover:shadow-lg transition-all" onClick={() => { setServiceDetailOpen(false); setSelectedService('add-agent'); setServiceDetailOpen(true); }}>
+                    <CardContent className="p-4 text-center">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center mx-auto mb-2">
+                        <Building2 className="w-5 h-5 text-white" />
+                      </div>
+                      <p className="font-semibold text-sm">{isRTL ? 'إضافة مزود خدمات' : 'Add Provider'}</p>
+                    </CardContent>
+                  </Card>
                 </div>
-
-                {/* لوحة التحكم */}
-                <div
-                  className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
-                  onClick={() => { setServiceDetailOpen(false); setDashboardOpen(true); }}
-                >
-                  <div className="w-10 h-10 rounded-xl bg-slate-500 flex items-center justify-center shadow-md">
-                    <Building2 className="w-5 h-5 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <span className="font-medium">{isRTL ? 'لوحة التحكم' : 'Dashboard'}</span>
-                    <p className="text-xs text-muted-foreground">{isRTL ? 'إدارة النظام والإعلانات والعروض' : 'System, ads & offers management'}</p>
-                  </div>
-                  <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
+                
+                {/* Privacy Section */}
+                <div className={`p-4 bg-muted/30 rounded-xl ${isRTL ? 'text-right' : 'text-left'}`}>
+                  <h4 className="font-semibold mb-2">{isRTL ? 'الخصوصية والبيانات' : 'Privacy & Data'}</h4>
                 </div>
-
-                {/* سياسة الخصوصية */}
-                <div
-                  className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
-                  onClick={() => { setServiceDetailOpen(false); setShowPrivacyPolicy(true); }}
-                >
-                  <div className="w-10 h-10 rounded-xl bg-teal-500 flex items-center justify-center shadow-md">
-                    <Shield className="w-5 h-5 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <span className="font-medium">{isRTL ? 'سياسة الخصوصية' : 'Privacy Policy'}</span>
-                    <p className="text-xs text-muted-foreground">{isRTL ? 'حماية البيانات' : 'Data protection'}</p>
-                  </div>
-                  <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
-                </div>
-
-                {/* شروط الاستخدام */}
-                <div
-                  className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
-                  onClick={() => { setServiceDetailOpen(false); setShowTermsOfService(true); }}
-                >
-                  <div className="w-10 h-10 rounded-xl bg-rose-500 flex items-center justify-center shadow-md">
-                    <FileText className="w-5 h-5 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <span className="font-medium">{isRTL ? 'شروط الاستخدام' : 'Terms of Service'}</span>
-                    <p className="text-xs text-muted-foreground">{isRTL ? 'قواعد الاستخدام' : 'Usage rules'}</p>
-                  </div>
-                  <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
+                <div className="grid grid-cols-2 gap-3">
+                  <Card className="cursor-pointer hover:shadow-lg transition-all" onClick={() => { setServiceDetailOpen(false); setShowPrivacyPolicy(true); }}>
+                    <CardContent className="p-4 text-center">
+                      <Shield className="w-8 h-8 mx-auto mb-2 text-teal-500" />
+                      <p className="font-semibold text-sm">{isRTL ? 'سياسة الخصوصية' : 'Privacy Policy'}</p>
+                    </CardContent>
+                  </Card>
+                  <Card className="cursor-pointer hover:shadow-lg transition-all" onClick={() => { setServiceDetailOpen(false); setShowTermsOfService(true); }}>
+                    <CardContent className="p-4 text-center">
+                      <FileText className="w-8 h-8 mx-auto mb-2 text-blue-500" />
+                      <p className="font-semibold text-sm">{isRTL ? 'شروط الاستخدام' : 'Terms of Service'}</p>
+                    </CardContent>
+                  </Card>
                 </div>
               </div>
             )}
@@ -9408,7 +10165,7 @@ export default function CarLinkPage() {
 
       {/* Service Provider Dashboard Dialog */}
       <Dialog open={dashboardOpen} onOpenChange={setDashboardOpen}>
-        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse justify-start' : ''}`}>
               <Building2 className="w-5 h-5" />
@@ -9416,160 +10173,134 @@ export default function CarLinkPage() {
             </DialogTitle>
           </DialogHeader>
           
-          <div className="space-y-3">
-            {/* إضافة إعلان */}
-            <div
-              className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
-              onClick={() => {
-                if (isAdminLoggedIn) {
-                  setDashboardOpen(false);
-                  setSelectedService('add-announcement');
-                  setServiceDetailOpen(true);
-                } else {
-                  setPendingAdminAction('add-announcement');
-                  setDashboardOpen(false);
-                  setAdminLoginOpen(true);
-                }
-              }}
-            >
-              <div className="w-10 h-10 rounded-xl bg-cyan-500 flex items-center justify-center shadow-md">
-                <Bell className="w-5 h-5 text-white" />
+          <div className="space-y-4">
+            {/* Admin Welcome */}
+            <div className={`p-4 bg-green-500/10 rounded-xl border border-green-500/30 ${isRTL ? 'text-right' : 'text-left'}`}>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
+                    <CheckCircle2 className="w-5 h-5 text-green-500" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-green-600">{isRTL ? 'مرحباً بك في لوحة التحكم' : 'Welcome to Dashboard'}</p>
+                    <p className="text-xs text-muted-foreground">{isRTL ? 'تم تسجيل الدخول بنجاح' : 'Logged in successfully'}</p>
+                  </div>
+                </div>
               </div>
-              <div className="flex-1">
-                <span className="font-medium">{isRTL ? 'إضافة إعلان' : 'Add Announcement'}</span>
-                <p className="text-xs text-muted-foreground">{isRTL ? 'نشر إعلان جديد' : 'Publish new ad'}</p>
-              </div>
-              <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
             </div>
 
-            {/* إضافة عرض خاص */}
-            <div
-              className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
-              onClick={() => {
-                if (isAdminLoggedIn) {
-                  setDashboardOpen(false);
-                  setSelectedService('add-offer');
-                  setServiceDetailOpen(true);
-                } else {
-                  setPendingAdminAction('add-offer');
-                  setDashboardOpen(false);
-                  setAdminLoginOpen(true);
-                }
-              }}
-            >
-              <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center shadow-md">
-                <Sparkles className="w-5 h-5 text-white" />
-              </div>
-              <div className="flex-1">
-                <span className="font-medium">{isRTL ? 'إضافة عرض خاص' : 'Add Special Offer'}</span>
-                <p className="text-xs text-muted-foreground">{isRTL ? 'عروض وخصومات' : 'Offers & discounts'}</p>
-              </div>
-              <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
+            {/* Dashboard Features */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Add Announcement */}
+              <Card className="cursor-pointer hover:shadow-lg transition-all border-2 border-transparent hover:border-primary/30">
+                <CardContent className="p-6 text-center">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mx-auto mb-4 shadow-lg">
+                    <Bell className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="font-bold text-lg mb-2">{isRTL ? 'إضافة إعلان' : 'Add Announcement'}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {isRTL ? 'إضافة إعلان جديد للمستخدمين' : 'Add new announcement for users'}
+                  </p>
+                  <Button className="mt-4 sky-gradient text-white w-full" size="sm">
+                    <Plus className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                    {isRTL ? 'إضافة' : 'Add'}
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Add Special Offer */}
+              <Card className="cursor-pointer hover:shadow-lg transition-all border-2 border-transparent hover:border-primary/30">
+                <CardContent className="p-6 text-center">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center mx-auto mb-4 shadow-lg">
+                    <Sparkles className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="font-bold text-lg mb-2">{isRTL ? 'إضافة عرض خاص' : 'Add Special Offer'}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {isRTL ? 'إضافة عرض خاص جديد' : 'Add new special offer'}
+                  </p>
+                  <Button className="mt-4 sky-gradient text-white w-full" size="sm">
+                    <Plus className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                    {isRTL ? 'إضافة' : 'Add'}
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Add Service Provider */}
+              <Card className="cursor-pointer hover:shadow-lg transition-all border-2 border-transparent hover:border-primary/30">
+                <CardContent className="p-6 text-center">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center mx-auto mb-4 shadow-lg">
+                    <Building2 className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="font-bold text-lg mb-2">{isRTL ? 'إضافة مزود خدمات' : 'Add Service Provider'}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {isRTL ? 'إضافة مزود خدمات جديد' : 'Add new service provider'}
+                  </p>
+                  <Button className="mt-4 sky-gradient text-white w-full" size="sm">
+                    <Plus className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                    {isRTL ? 'إضافة' : 'Add'}
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
 
-            {/* إضافة مزود خدمات */}
-            <div
-              className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
-              onClick={() => {
-                if (isAdminLoggedIn) {
-                  setDashboardOpen(false);
-                  setSelectedService('add-agent');
-                  setServiceDetailOpen(true);
-                } else {
-                  setPendingAdminAction('add-agent');
-                  setDashboardOpen(false);
-                  setAdminLoginOpen(true);
-                }
-              }}
-            >
-              <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center shadow-md">
-                <Building2 className="w-5 h-5 text-white" />
-              </div>
-              <div className="flex-1">
-                <span className="font-medium">{isRTL ? 'إضافة مزود خدمات' : 'Add Provider'}</span>
-                <p className="text-xs text-muted-foreground">{isRTL ? 'تسجيل مزود جديد' : 'Register new provider'}</p>
-              </div>
-              <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+            {/* Quick Stats */}
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base">{isRTL ? 'إحصائيات سريعة' : 'Quick Stats'}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="p-3 bg-blue-500/10 rounded-xl text-center">
+                    <p className="text-2xl font-bold text-blue-600">12</p>
+                    <p className="text-xs text-muted-foreground">{isRTL ? 'الإعلانات' : 'Announcements'}</p>
+                  </div>
+                  <div className="p-3 bg-amber-500/10 rounded-xl text-center">
+                    <p className="text-2xl font-bold text-amber-600">8</p>
+                    <p className="text-xs text-muted-foreground">{isRTL ? 'العروض' : 'Offers'}</p>
+                  </div>
+                  <div className="p-3 bg-green-500/10 rounded-xl text-center">
+                    <p className="text-2xl font-bold text-green-600">24</p>
+                    <p className="text-xs text-muted-foreground">{isRTL ? 'مزودي الخدمات' : 'Providers'}</p>
+                  </div>
+                  <div className="p-3 bg-purple-500/10 rounded-xl text-center">
+                    <p className="text-2xl font-bold text-purple-600">156</p>
+                    <p className="text-xs text-muted-foreground">{isRTL ? 'المستخدمين' : 'Users'}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-      {/* Admin PIN Login Dialog */}
-      <Dialog open={adminLoginOpen} onOpenChange={setAdminLoginOpen}>
-        <DialogContent className="max-w-sm">
-          <DialogHeader>
-            <DialogTitle className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse justify-start' : ''}`}>
-              <Shield className="w-5 h-5" />
-              {isRTL ? 'تسجيل الدخول' : 'Login'}
-            </DialogTitle>
-          </DialogHeader>
-          
-          <div className="space-y-4 pt-4">
-            <div className="text-center">
-              <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
-                <Lock className="w-8 h-8 text-muted-foreground" />
-              </div>
-              <p className="text-sm text-muted-foreground">
-                {isRTL ? 'أدخل رقم الدخول للمتابعة' : 'Enter PIN to continue'}
-              </p>
-            </div>
-            
-            <div>
-              <Input
-                type="password"
-                placeholder={isRTL ? 'أدخل الرقم' : 'Enter PIN'}
-                value={adminPin}
-                onChange={(e) => {
-                  setAdminPin(e.target.value);
-                  setAdminPinError(false);
-                }}
-                className={`text-center text-lg tracking-widest ${adminPinError ? 'border-red-500' : ''}`}
-                dir="ltr"
-              />
-              {adminPinError && (
-                <p className="text-red-500 text-xs mt-2 text-center">
-                  {isRTL ? 'الرقم غير صحيح' : 'Incorrect PIN'}
-                </p>
-              )}
-            </div>
-            
-            <div className="flex gap-3">
-              <Button
-                variant="outline"
-                className="flex-1"
-                onClick={() => {
-                  setAdminLoginOpen(false);
-                  setAdminPin('');
-                  setAdminPinError(false);
-                  setPendingAdminAction(null);
-                }}
-              >
-                {isRTL ? 'إلغاء' : 'Cancel'}
-              </Button>
-              <Button
-                className="flex-1"
-                onClick={() => {
-                  if (adminPin === ADMIN_PIN) {
-                    setIsAdminLoggedIn(true);
-                    setAdminLoginOpen(false);
-                    setAdminPin('');
-                    setAdminPinError(false);
-                    
-                    // Execute pending action
-                    if (pendingAdminAction) {
-                      setSelectedService(pendingAdminAction);
-                      setServiceDetailOpen(true);
-                      setPendingAdminAction(null);
-                    }
-                  } else {
-                    setAdminPinError(true);
-                  }
-                }}
-              >
-                {isRTL ? 'دخول' : 'Login'}
-              </Button>
-            </div>
+            {/* Recent Activity */}
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base">{isRTL ? 'النشاط الأخير' : 'Recent Activity'}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <div className={`p-3 bg-muted/50 rounded-lg flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                      <Bell className="w-4 h-4 text-blue-500" />
+                      <span className="text-sm">{isRTL ? 'تم إضافة إعلان جديد' : 'New announcement added'}</span>
+                    </div>
+                    <span className="text-xs text-muted-foreground">{isRTL ? 'منذ 5 دقائق' : '5 min ago'}</span>
+                  </div>
+                  <div className={`p-3 bg-muted/50 rounded-lg flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                      <Sparkles className="w-4 h-4 text-amber-500" />
+                      <span className="text-sm">{isRTL ? 'تم إضافة عرض خاص' : 'Special offer added'}</span>
+                    </div>
+                    <span className="text-xs text-muted-foreground">{isRTL ? 'منذ ساعة' : '1 hour ago'}</span>
+                  </div>
+                  <div className={`p-3 bg-muted/50 rounded-lg flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                      <Building2 className="w-4 h-4 text-green-500" />
+                      <span className="text-sm">{isRTL ? 'تم تسجيل وكيل جديد' : 'New agent registered'}</span>
+                    </div>
+                    <span className="text-xs text-muted-foreground">{isRTL ? 'منذ 3 ساعات' : '3 hours ago'}</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </DialogContent>
       </Dialog>

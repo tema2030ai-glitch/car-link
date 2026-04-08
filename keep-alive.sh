@@ -1,9 +1,10 @@
 #!/bin/bash
 cd /home/z/my-project
-
-# Kill any existing processes
-pkill -f "next dev" 2>/dev/null
-sleep 2
-
-# Start the server with explicit output
-exec node node_modules/.bin/next dev -p 3000
+while true; do
+    if ! pgrep -f "next-server" > /dev/null; then
+        echo "Server not running, starting at $(date)" >> /tmp/keep-alive.log
+        bun run dev >> /tmp/keep-alive.log 2>&1 &
+        sleep 5
+    fi
+    sleep 3
+done
