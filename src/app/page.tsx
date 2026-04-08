@@ -1084,7 +1084,7 @@ export default function CarLinkPage() {
       descriptionAr: 'أفضل عروض السيارات الجديدة والمستعملة',
       descriptionEn: 'Best new and used car offers',
       icon: Car,
-      color: 'bg-rose-500',
+      color: 'bg-cyan-500',
     },
     {
       id: 'market-prices',
@@ -7641,7 +7641,7 @@ export default function CarLinkPage() {
                 <motion.div
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-rose-500 via-pink-500 to-red-500 shadow-xl"
+                  className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 shadow-xl"
                 >
                   <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
                   <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2" />
@@ -7679,10 +7679,10 @@ export default function CarLinkPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 }}
                 >
-                  <Card className="relative overflow-hidden border-2 border-rose-500 bg-gradient-to-r from-rose-500/5 to-pink-500/5">
-                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-rose-500 via-pink-500 to-red-500" />
+                  <Card className="relative overflow-hidden border-2 border-cyan-500 bg-gradient-to-r from-cyan-500/5 to-teal-500/5">
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500" />
                     <div className={`absolute top-3 ${isRTL ? 'left-3' : 'right-3'}`}>
-                      <Badge className="bg-gradient-to-r from-rose-500 to-pink-500 text-white border-0 shadow-lg">
+                      <Badge className="bg-gradient-to-r from-cyan-500 to-teal-500 text-white border-0 shadow-lg">
                         <Star className="w-3 h-3 mr-1" />
                         {isRTL ? 'عرض مميز' : 'Featured'}
                       </Badge>
@@ -7690,11 +7690,11 @@ export default function CarLinkPage() {
                     
                     <CardHeader className="pb-2">
                       <div className={`flex items-center gap-4 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
-                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center shadow-lg">
+                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500 to-teal-500 flex items-center justify-center shadow-lg">
                           <span className="text-3xl">🚗</span>
                         </div>
                         <div>
-                          <CardTitle className="text-xl text-rose-600">
+                          <CardTitle className="text-xl text-cyan-600">
                             {isRTL ? 'تويوتا كامري 2025' : 'Toyota Camry 2025'}
                           </CardTitle>
                           <CardDescription className="text-sm">
@@ -7707,8 +7707,8 @@ export default function CarLinkPage() {
                     <CardContent className="space-y-4">
                       {/* Key Stats */}
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                        <div className="p-3 bg-rose-500/10 rounded-xl text-center">
-                          <div className="text-2xl font-bold text-rose-600">99,900</div>
+                        <div className="p-3 bg-cyan-500/10 rounded-xl text-center">
+                          <div className="text-2xl font-bold text-cyan-600">99,900</div>
                           <div className="text-xs text-muted-foreground">{isRTL ? 'السعر (ريال)' : 'Price (SAR)'}</div>
                         </div>
                         <div className="p-3 bg-green-500/10 rounded-xl text-center">
@@ -7727,7 +7727,7 @@ export default function CarLinkPage() {
 
                       {/* Features */}
                       <div className="flex flex-wrap gap-2">
-                        <Badge variant="outline" className="bg-rose-500/10 text-rose-600 border-rose-500/30">
+                        <Badge variant="outline" className="bg-cyan-500/10 text-cyan-600 border-cyan-500/30">
                           <CheckCircle2 className="w-3 h-3 mr-1" />
                           {isRTL ? 'عرض محدود' : 'Limited Offer'}
                         </Badge>
@@ -7747,7 +7747,7 @@ export default function CarLinkPage() {
 
                       {/* Action */}
                       <Button 
-                        className="w-full h-12 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white text-base font-bold shadow-lg"
+                        className="w-full h-12 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white text-base font-bold shadow-lg"
                         onClick={() => toast({ title: isRTL ? 'تم تسجيل طلبك!' : 'Request Submitted!', description: isRTL ? 'سيتواصل معك فريق المبيعات' : 'Sales team will contact you' })}
                       >
                         <Send className={`w-5 h-5 ${isRTL ? 'ml-2' : 'mr-2'}`} />
@@ -7836,7 +7836,7 @@ export default function CarLinkPage() {
                       oldPrice: 78000,
                       discount: '17%',
                       features: [isRTL ? 'أقل دفعة' : 'Lowest Down', isRTL ? 'موافقة فورية' : 'Instant Approval'],
-                      color: 'from-red-500 to-rose-500',
+                      color: 'from-cyan-500 to-teal-500',
                       emoji: '🚙'
                     },
                     {
@@ -7867,9 +7867,9 @@ export default function CarLinkPage() {
                               <div className={isRTL ? 'text-right' : 'text-left'}>
                                 <h5 className="font-bold">{car.brand} {car.year}</h5>
                                 <div className={`flex items-center gap-2 text-xs ${isRTL ? 'flex-row-reverse' : ''}`}>
-                                  <span className="text-rose-600 font-bold">{car.price.toLocaleString()} {isRTL ? 'ريال' : 'SAR'}</span>
+                                  <span className="text-cyan-600 font-bold">{car.price.toLocaleString()} {isRTL ? 'ريال' : 'SAR'}</span>
                                   <span className="text-muted-foreground line-through">{car.oldPrice.toLocaleString()}</span>
-                                  <Badge className="bg-rose-500 text-white text-[10px] px-1.5">-{car.discount}</Badge>
+                                  <Badge className="bg-cyan-500 text-white text-[10px] px-1.5">-{car.discount}</Badge>
                                 </div>
                               </div>
                             </div>
@@ -7877,7 +7877,7 @@ export default function CarLinkPage() {
                             <Button 
                               variant="outline" 
                               size="sm"
-                              className="hover:bg-rose-500/5 hover:border-rose-500/50"
+                              className="hover:bg-cyan-500/5 hover:border-cyan-500/50"
                               onClick={() => toast({ title: isRTL ? 'تم إضافة الطلب' : 'Request Added', description: car.brand })}
                             >
                               {isRTL ? 'التفاصيل' : 'Details'}
@@ -7969,9 +7969,9 @@ export default function CarLinkPage() {
                 </div>
 
                 {/* CTA Note */}
-                <div className={`p-4 bg-rose-500/10 rounded-xl border border-rose-500/20 ${isRTL ? 'text-right' : 'text-left'}`}>
+                <div className={`p-4 bg-cyan-500/10 rounded-xl border border-cyan-500/20 ${isRTL ? 'text-right' : 'text-left'}`}>
                   <div className={`flex items-start gap-3 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
-                    <Info className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
+                    <Info className="w-5 h-5 text-cyan-500 flex-shrink-0 mt-0.5" />
                     <div>
                       <h5 className="font-semibold text-sm">{isRTL ? 'ملاحظة مهمة' : 'Important Note'}</h5>
                       <p className="text-xs text-muted-foreground mt-1">
