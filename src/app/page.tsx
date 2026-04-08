@@ -9085,253 +9085,63 @@ export default function CarLinkPage() {
             )}
             
             {selectedService === 'settings' && (
-              <div className="space-y-6">
-                {/* Header */}
-                <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800 via-slate-700 to-slate-900 p-6 ${isRTL ? 'text-right' : 'text-left'}`}>
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent"></div>
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
-                  <div className="relative">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-slate-200 to-slate-400 flex items-center justify-center">
-                        <Settings className="w-6 h-6 text-slate-800" />
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-bold text-white">{isRTL ? 'الإعدادات والضبط' : 'Settings'}</h3>
-                        <p className="text-sm text-slate-300">{isRTL ? 'تخصيص تجربتك' : 'Customize your experience'}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Appearance Section */}
-                <div className="space-y-3">
-                  <div className={`flex items-center gap-2 px-1 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                    <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
-                      <Palette className="w-3.5 h-3.5 text-white" />
-                    </div>
-                    <h4 className="font-semibold text-sm">{isRTL ? 'المظهر' : 'Appearance'}</h4>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    {/* Theme Toggle */}
-                    <Card className="group cursor-pointer hover:shadow-xl hover:scale-[1.02] transition-all duration-300 overflow-hidden border-0 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
-                      <CardContent className="p-4 text-center relative">
-                        <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <motion.div
-                          className="w-14 h-14 rounded-2xl mx-auto mb-3 flex items-center justify-center relative"
-                          whileHover={{ scale: 1.1, rotate: 15 }}
-                          transition={{ type: "spring", stiffness: 300 }}
-                        >
-                          <div className={`absolute inset-0 rounded-2xl ${theme === 'dark' ? 'bg-gradient-to-br from-indigo-500 to-violet-600' : 'bg-gradient-to-br from-amber-400 to-orange-500'}`}></div>
-                          {theme === 'dark' ? (
-                            <Moon className="w-7 h-7 text-white relative z-10" />
-                          ) : (
-                            <Sun className="w-7 h-7 text-white relative z-10" />
-                          )}
-                        </motion.div>
-                        <p className="font-bold text-sm">{isRTL ? (theme === 'dark' ? 'الوضع الليلي' : 'الوضع النهاري') : (theme === 'dark' ? 'Dark Mode' : 'Light Mode')}</p>
-                        <p className="text-xs text-muted-foreground mt-1">{isRTL ? 'انقر للتبديل' : 'Tap to switch'}</p>
-                      </CardContent>
-                    </Card>
-                    {/* Language */}
-                    <Card className="group cursor-pointer hover:shadow-xl hover:scale-[1.02] transition-all duration-300 overflow-hidden border-0 bg-gradient-to-br from-emerald-50 to-teal-100 dark:from-emerald-900/30 dark:to-teal-900/30" onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}>
-                      <CardContent className="p-4 text-center relative">
-                        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-teal-500/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <motion.div
-                          className="w-14 h-14 rounded-2xl mx-auto mb-3 flex items-center justify-center bg-gradient-to-br from-emerald-500 to-teal-600"
-                          whileHover={{ scale: 1.1, rotate: -10 }}
-                          transition={{ type: "spring", stiffness: 300 }}
-                        >
-                          <Globe className="w-7 h-7 text-white" />
-                        </motion.div>
-                        <p className="font-bold text-sm">{isRTL ? 'اللغة' : 'Language'}</p>
-                        <p className="text-xs text-muted-foreground mt-1">{language === 'ar' ? 'العربية' : 'English'}</p>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
-
-                {/* Notifications Section */}
-                <div className="space-y-3">
-                  <div className={`flex items-center gap-2 px-1 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                    <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center">
-                      <Bell className="w-3.5 h-3.5 text-white" />
-                    </div>
-                    <h4 className="font-semibold text-sm">{isRTL ? 'الإشعارات' : 'Notifications'}</h4>
-                  </div>
-                  <Card className="overflow-hidden border-0 shadow-md">
-                    <CardContent className="p-0">
-                      <div className={`flex items-center justify-between p-4 hover:bg-muted/50 transition-colors cursor-pointer ${isRTL ? 'flex-row-reverse' : ''}`}>
-                        <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-100 to-pink-100 dark:from-rose-900/30 dark:to-pink-900/30 flex items-center justify-center">
-                            <Bell className="w-5 h-5 text-rose-600" />
-                          </div>
-                          <div className={isRTL ? 'text-right' : 'text-left'}>
-                            <p className="font-semibold text-sm">{isRTL ? 'إشعارات العروض' : 'Offer Notifications'}</p>
-                            <p className="text-xs text-muted-foreground">{isRTL ? 'استلم تنبيهات العروض الجديدة' : 'Get alerts for new offers'}</p>
-                          </div>
-                        </div>
-                        <div className="w-12 h-7 rounded-full bg-gradient-to-r from-emerald-500 to-green-500 p-1 cursor-pointer">
-                          <div className="w-5 h-5 rounded-full bg-white shadow-md transform translate-x-5 transition-transform"></div>
-                        </div>
-                      </div>
-                      <Separator />
-                      <div className={`flex items-center justify-between p-4 hover:bg-muted/50 transition-colors cursor-pointer ${isRTL ? 'flex-row-reverse' : ''}`}>
-                        <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-100 to-cyan-100 dark:from-blue-900/30 dark:to-cyan-900/30 flex items-center justify-center">
-                            <TrendingUp className="w-5 h-5 text-blue-600" />
-                          </div>
-                          <div className={isRTL ? 'text-right' : 'text-left'}>
-                            <p className="font-semibold text-sm">{isRTL ? 'تنبيهات الأسعار' : 'Price Alerts'}</p>
-                            <p className="text-xs text-muted-foreground">{isRTL ? 'تغييرات أسعار السيارات' : 'Car price changes'}</p>
-                          </div>
-                        </div>
-                        <div className="w-12 h-7 rounded-full bg-gradient-to-r from-emerald-500 to-green-500 p-1 cursor-pointer">
-                          <div className="w-5 h-5 rounded-full bg-white shadow-md transform translate-x-5 transition-transform"></div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-
+              <div className="space-y-4">
                 {/* Admin & Management Section */}
-                <div className="space-y-3">
-                  <div className={`flex items-center gap-2 px-1 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                    <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-slate-500 to-gray-600 flex items-center justify-center">
-                      <Building2 className="w-3.5 h-3.5 text-white" />
-                    </div>
-                    <h4 className="font-semibold text-sm">{isRTL ? 'الإدارة والتحكم' : 'Admin & Management'}</h4>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                      <Card className="cursor-pointer hover:shadow-xl transition-all duration-300 overflow-hidden border-0 group" onClick={() => { setServiceDetailOpen(false); setDashboardOpen(true); }}>
-                        <CardContent className="p-0 relative">
-                          <div className="absolute inset-0 bg-gradient-to-br from-slate-600 to-slate-800"></div>
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-                          <div className="relative p-4 text-center">
-                            <motion.div
-                              className="w-14 h-14 rounded-2xl mx-auto mb-3 flex items-center justify-center bg-white/20 backdrop-blur-sm"
-                              whileHover={{ rotate: 10 }}
-                            >
-                              <LayoutGrid className="w-7 h-7 text-white" />
-                            </motion.div>
-                            <p className="font-bold text-sm text-white">{isRTL ? 'لوحة التحكم' : 'Dashboard'}</p>
-                            <p className="text-xs text-white/70 mt-1">{isRTL ? 'إدارة النظام' : 'System management'}</p>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                      <Card className="cursor-pointer hover:shadow-xl transition-all duration-300 overflow-hidden border-0 group" onClick={() => { setServiceDetailOpen(false); setSelectedService('add-announcement'); setServiceDetailOpen(true); }}>
-                        <CardContent className="p-0 relative">
-                          <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-cyan-600"></div>
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-                          <div className="relative p-4 text-center">
-                            <motion.div
-                              className="w-14 h-14 rounded-2xl mx-auto mb-3 flex items-center justify-center bg-white/20 backdrop-blur-sm"
-                              whileHover={{ rotate: -10 }}
-                            >
-                              <Bell className="w-7 h-7 text-white" />
-                            </motion.div>
-                            <p className="font-bold text-sm text-white">{isRTL ? 'إضافة إعلان' : 'Add Announcement'}</p>
-                            <p className="text-xs text-white/70 mt-1">{isRTL ? 'نشر إعلان جديد' : 'Publish new ad'}</p>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                      <Card className="cursor-pointer hover:shadow-xl transition-all duration-300 overflow-hidden border-0 group" onClick={() => { setServiceDetailOpen(false); setSelectedService('add-offer'); setServiceDetailOpen(true); }}>
-                        <CardContent className="p-0 relative">
-                          <div className="absolute inset-0 bg-gradient-to-br from-amber-500 to-orange-600"></div>
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-                          <div className="relative p-4 text-center">
-                            <motion.div
-                              className="w-14 h-14 rounded-2xl mx-auto mb-3 flex items-center justify-center bg-white/20 backdrop-blur-sm"
-                              whileHover={{ rotate: 10 }}
-                            >
-                              <Sparkles className="w-7 h-7 text-white" />
-                            </motion.div>
-                            <p className="font-bold text-sm text-white">{isRTL ? 'عرض خاص' : 'Special Offer'}</p>
-                            <p className="text-xs text-white/70 mt-1">{isRTL ? 'إضافة عرض جديد' : 'Add new offer'}</p>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                      <Card className="cursor-pointer hover:shadow-xl transition-all duration-300 overflow-hidden border-0 group" onClick={() => { setServiceDetailOpen(false); setSelectedService('add-agent'); setServiceDetailOpen(true); }}>
-                        <CardContent className="p-0 relative">
-                          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-green-600"></div>
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-                          <div className="relative p-4 text-center">
-                            <motion.div
-                              className="w-14 h-14 rounded-2xl mx-auto mb-3 flex items-center justify-center bg-white/20 backdrop-blur-sm"
-                              whileHover={{ rotate: -10 }}
-                            >
-                              <Building2 className="w-7 h-7 text-white" />
-                            </motion.div>
-                            <p className="font-bold text-sm text-white">{isRTL ? 'مزود خدمات' : 'Add Provider'}</p>
-                            <p className="text-xs text-white/70 mt-1">{isRTL ? 'تسجيل مزود جديد' : 'Register new provider'}</p>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-                  </div>
+                <div className={`p-4 bg-muted/30 rounded-xl ${isRTL ? 'text-right' : 'text-left'}`}>
+                  <h4 className="font-semibold mb-2">{isRTL ? 'الإدارة والتحكم' : 'Admin & Management'}</h4>
                 </div>
-
-                {/* Privacy & Legal Section */}
-                <div className="space-y-3">
-                  <div className={`flex items-center gap-2 px-1 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                    <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center">
-                      <Shield className="w-3.5 h-3.5 text-white" />
-                    </div>
-                    <h4 className="font-semibold text-sm">{isRTL ? 'الخصوصية والقانون' : 'Privacy & Legal'}</h4>
-                  </div>
-                  <Card className="overflow-hidden border-0 shadow-md">
-                    <CardContent className="p-0">
-                      <motion.div
-                        className={`flex items-center justify-between p-4 hover:bg-gradient-to-r hover:from-teal-50 hover:to-cyan-50 dark:hover:from-teal-900/20 dark:hover:to-cyan-900/20 transition-colors cursor-pointer ${isRTL ? 'flex-row-reverse' : ''}`}
-                        whileHover={{ x: isRTL ? -5 : 5 }}
-                        onClick={() => { setServiceDetailOpen(false); setShowPrivacyPolicy(true); }}
-                      >
-                        <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center">
-                            <Shield className="w-5 h-5 text-white" />
-                          </div>
-                          <div className={isRTL ? 'text-right' : 'text-left'}>
-                            <p className="font-semibold text-sm">{isRTL ? 'سياسة الخصوصية' : 'Privacy Policy'}</p>
-                            <p className="text-xs text-muted-foreground">{isRTL ? 'كيف نحمي بياناتك' : 'How we protect your data'}</p>
-                          </div>
-                        </div>
-                        <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
-                      </motion.div>
-                      <Separator />
-                      <motion.div
-                        className={`flex items-center justify-between p-4 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 dark:hover:from-blue-900/20 dark:hover:to-indigo-900/20 transition-colors cursor-pointer ${isRTL ? 'flex-row-reverse' : ''}`}
-                        whileHover={{ x: isRTL ? -5 : 5 }}
-                        onClick={() => { setServiceDetailOpen(false); setShowTermsOfService(true); }}
-                      >
-                        <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
-                            <FileText className="w-5 h-5 text-white" />
-                          </div>
-                          <div className={isRTL ? 'text-right' : 'text-left'}>
-                            <p className="font-semibold text-sm">{isRTL ? 'شروط الاستخدام' : 'Terms of Service'}</p>
-                            <p className="text-xs text-muted-foreground">{isRTL ? 'قواعد وشروط الاستخدام' : 'Rules and usage terms'}</p>
-                          </div>
-                        </div>
-                        <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
-                      </motion.div>
+                <div className="grid grid-cols-2 gap-3">
+                  <Card className="cursor-pointer hover:shadow-lg transition-all" onClick={() => { setServiceDetailOpen(false); setDashboardOpen(true); }}>
+                    <CardContent className="p-4 text-center">
+                      <div className="w-10 h-10 rounded-xl bg-slate-500 flex items-center justify-center mx-auto mb-2">
+                        <Building2 className="w-5 h-5 text-white" />
+                      </div>
+                      <p className="font-semibold text-sm">{isRTL ? 'لوحة التحكم' : 'Dashboard'}</p>
+                    </CardContent>
+                  </Card>
+                  <Card className="cursor-pointer hover:shadow-lg transition-all" onClick={() => { setServiceDetailOpen(false); setSelectedService('add-announcement'); setServiceDetailOpen(true); }}>
+                    <CardContent className="p-4 text-center">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mx-auto mb-2">
+                        <Bell className="w-5 h-5 text-white" />
+                      </div>
+                      <p className="font-semibold text-sm">{isRTL ? 'إضافة إعلان' : 'Add Announcement'}</p>
+                    </CardContent>
+                  </Card>
+                  <Card className="cursor-pointer hover:shadow-lg transition-all" onClick={() => { setServiceDetailOpen(false); setSelectedService('add-offer'); setServiceDetailOpen(true); }}>
+                    <CardContent className="p-4 text-center">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center mx-auto mb-2">
+                        <Sparkles className="w-5 h-5 text-white" />
+                      </div>
+                      <p className="font-semibold text-sm">{isRTL ? 'إضافة عرض خاص' : 'Add Special Offer'}</p>
+                    </CardContent>
+                  </Card>
+                  <Card className="cursor-pointer hover:shadow-lg transition-all" onClick={() => { setServiceDetailOpen(false); setSelectedService('add-agent'); setServiceDetailOpen(true); }}>
+                    <CardContent className="p-4 text-center">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center mx-auto mb-2">
+                        <Building2 className="w-5 h-5 text-white" />
+                      </div>
+                      <p className="font-semibold text-sm">{isRTL ? 'إضافة مزود خدمات' : 'Add Provider'}</p>
                     </CardContent>
                   </Card>
                 </div>
-
-                {/* App Info */}
-                <div className="text-center py-4">
-                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-muted/50">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                    <p className="text-xs text-muted-foreground">
-                      {isRTL ? 'الإصدار 1.0.0' : 'Version 1.0.0'}
-                    </p>
-                  </div>
+                
+                {/* Privacy Section */}
+                <div className={`p-4 bg-muted/30 rounded-xl ${isRTL ? 'text-right' : 'text-left'}`}>
+                  <h4 className="font-semibold mb-2">{isRTL ? 'الخصوصية والبيانات' : 'Privacy & Data'}</h4>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <Card className="cursor-pointer hover:shadow-lg transition-all" onClick={() => { setServiceDetailOpen(false); setShowPrivacyPolicy(true); }}>
+                    <CardContent className="p-4 text-center">
+                      <Shield className="w-8 h-8 mx-auto mb-2 text-teal-500" />
+                      <p className="font-semibold text-sm">{isRTL ? 'سياسة الخصوصية' : 'Privacy Policy'}</p>
+                    </CardContent>
+                  </Card>
+                  <Card className="cursor-pointer hover:shadow-lg transition-all" onClick={() => { setServiceDetailOpen(false); setShowTermsOfService(true); }}>
+                    <CardContent className="p-4 text-center">
+                      <FileText className="w-8 h-8 mx-auto mb-2 text-blue-500" />
+                      <p className="font-semibold text-sm">{isRTL ? 'شروط الاستخدام' : 'Terms of Service'}</p>
+                    </CardContent>
+                  </Card>
                 </div>
               </div>
             )}
