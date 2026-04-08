@@ -9085,133 +9085,129 @@ export default function CarLinkPage() {
             )}
             
             {selectedService === 'settings' && (
-              <div className="space-y-4">
-                {/* Appearance Section */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div
-                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl bg-muted/30 hover:bg-muted/50"
-                    onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                  >
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg ${theme === 'dark' ? 'bg-gradient-to-br from-indigo-500 to-violet-600' : 'bg-gradient-to-br from-amber-400 to-orange-500'}`}>
-                      {theme === 'dark' ? (
-                        <Moon className="w-6 h-6 text-white" />
-                      ) : (
-                        <Sun className="w-6 h-6 text-white" />
-                      )}
-                    </div>
-                    <span className="text-sm text-center font-medium leading-tight">
-                      {isRTL ? (theme === 'dark' ? 'الوضع الليلي' : 'الوضع النهاري') : (theme === 'dark' ? 'Dark Mode' : 'Light Mode')}
-                    </span>
-                    <span className="text-xs text-muted-foreground text-center mt-1">
-                      {isRTL ? 'انقر للتبديل' : 'Tap to switch'}
-                    </span>
+              <div className="space-y-3">
+                {/* المظهر */}
+                <div
+                  className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                >
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-md ${theme === 'dark' ? 'bg-slate-600' : 'bg-amber-500'}`}>
+                    {theme === 'dark' ? (
+                      <Moon className="w-5 h-5 text-white" />
+                    ) : (
+                      <Sun className="w-5 h-5 text-white" />
+                    )}
                   </div>
-                  <div
-                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl bg-muted/30 hover:bg-muted/50"
-                    onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}
-                  >
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
-                      <Globe className="w-6 h-6 text-white" />
-                    </div>
-                    <span className="text-sm text-center font-medium leading-tight">
-                      {isRTL ? 'اللغة' : 'Language'}
-                    </span>
-                    <span className="text-xs text-muted-foreground text-center mt-1">
-                      {language === 'ar' ? 'العربية' : 'English'}
-                    </span>
+                  <div className="flex-1">
+                    <span className="font-medium">{isRTL ? (theme === 'dark' ? 'الوضع الليلي' : 'الوضع النهاري') : (theme === 'dark' ? 'Dark Mode' : 'Light Mode')}</span>
+                    <p className="text-xs text-muted-foreground">{isRTL ? 'انقر للتبديل' : 'Tap to switch'}</p>
                   </div>
+                  <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
                 </div>
-                
-                {/* Admin & Management Section */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div
-                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl bg-muted/30 hover:bg-muted/50"
-                    onClick={() => { setServiceDetailOpen(false); setDashboardOpen(true); }}
-                  >
-                    <div className="w-12 h-12 rounded-xl bg-slate-500 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
-                      <Building2 className="w-6 h-6 text-white" />
-                    </div>
-                    <span className="text-sm text-center font-medium leading-tight">
-                      {isRTL ? 'لوحة التحكم' : 'Dashboard'}
-                    </span>
-                    <span className="text-xs text-muted-foreground text-center mt-1">
-                      {isRTL ? 'إدارة النظام' : 'System management'}
-                    </span>
+
+                {/* اللغة */}
+                <div
+                  className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
+                  onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}
+                >
+                  <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center shadow-md">
+                    <Globe className="w-5 h-5 text-white" />
                   </div>
-                  <div
-                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl bg-muted/30 hover:bg-muted/50"
-                    onClick={() => { setServiceDetailOpen(false); setSelectedService('add-announcement'); setServiceDetailOpen(true); }}
-                  >
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
-                      <Bell className="w-6 h-6 text-white" />
-                    </div>
-                    <span className="text-sm text-center font-medium leading-tight">
-                      {isRTL ? 'إضافة إعلان' : 'Add Announcement'}
-                    </span>
-                    <span className="text-xs text-muted-foreground text-center mt-1">
-                      {isRTL ? 'نشر إعلان جديد' : 'Publish new ad'}
-                    </span>
+                  <div className="flex-1">
+                    <span className="font-medium">{isRTL ? 'اللغة' : 'Language'}</span>
+                    <p className="text-xs text-muted-foreground">{language === 'ar' ? 'العربية' : 'English'}</p>
                   </div>
-                  <div
-                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl bg-muted/30 hover:bg-muted/50"
-                    onClick={() => { setServiceDetailOpen(false); setSelectedService('add-offer'); setServiceDetailOpen(true); }}
-                  >
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
-                      <Sparkles className="w-6 h-6 text-white" />
-                    </div>
-                    <span className="text-sm text-center font-medium leading-tight">
-                      {isRTL ? 'إضافة عرض خاص' : 'Add Special Offer'}
-                    </span>
-                    <span className="text-xs text-muted-foreground text-center mt-1">
-                      {isRTL ? 'عروض وخصومات' : 'Offers & discounts'}
-                    </span>
-                  </div>
-                  <div
-                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl bg-muted/30 hover:bg-muted/50"
-                    onClick={() => { setServiceDetailOpen(false); setSelectedService('add-agent'); setServiceDetailOpen(true); }}
-                  >
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
-                      <Building2 className="w-6 h-6 text-white" />
-                    </div>
-                    <span className="text-sm text-center font-medium leading-tight">
-                      {isRTL ? 'إضافة مزود خدمات' : 'Add Provider'}
-                    </span>
-                    <span className="text-xs text-muted-foreground text-center mt-1">
-                      {isRTL ? 'تسجيل مزود جديد' : 'Register new provider'}
-                    </span>
-                  </div>
+                  <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
                 </div>
-                
-                {/* Privacy Section */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div
-                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl bg-muted/30 hover:bg-muted/50"
-                    onClick={() => { setServiceDetailOpen(false); setShowPrivacyPolicy(true); }}
-                  >
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
-                      <Shield className="w-6 h-6 text-white" />
-                    </div>
-                    <span className="text-sm text-center font-medium leading-tight">
-                      {isRTL ? 'سياسة الخصوصية' : 'Privacy Policy'}
-                    </span>
-                    <span className="text-xs text-muted-foreground text-center mt-1">
-                      {isRTL ? 'حماية البيانات' : 'Data protection'}
-                    </span>
+
+                {/* لوحة التحكم */}
+                <div
+                  className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
+                  onClick={() => { setServiceDetailOpen(false); setDashboardOpen(true); }}
+                >
+                  <div className="w-10 h-10 rounded-xl bg-slate-500 flex items-center justify-center shadow-md">
+                    <Building2 className="w-5 h-5 text-white" />
                   </div>
-                  <div
-                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl bg-muted/30 hover:bg-muted/50"
-                    onClick={() => { setServiceDetailOpen(false); setShowTermsOfService(true); }}
-                  >
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
-                      <FileText className="w-6 h-6 text-white" />
-                    </div>
-                    <span className="text-sm text-center font-medium leading-tight">
-                      {isRTL ? 'شروط الاستخدام' : 'Terms of Service'}
-                    </span>
-                    <span className="text-xs text-muted-foreground text-center mt-1">
-                      {isRTL ? 'قواعد الاستخدام' : 'Usage rules'}
-                    </span>
+                  <div className="flex-1">
+                    <span className="font-medium">{isRTL ? 'لوحة التحكم' : 'Dashboard'}</span>
+                    <p className="text-xs text-muted-foreground">{isRTL ? 'إدارة النظام' : 'System management'}</p>
                   </div>
+                  <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
+                </div>
+
+                {/* إضافة إعلان */}
+                <div
+                  className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
+                  onClick={() => { setServiceDetailOpen(false); setSelectedService('add-announcement'); setServiceDetailOpen(true); }}
+                >
+                  <div className="w-10 h-10 rounded-xl bg-cyan-500 flex items-center justify-center shadow-md">
+                    <Bell className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <span className="font-medium">{isRTL ? 'إضافة إعلان' : 'Add Announcement'}</span>
+                    <p className="text-xs text-muted-foreground">{isRTL ? 'نشر إعلان جديد' : 'Publish new ad'}</p>
+                  </div>
+                  <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
+                </div>
+
+                {/* إضافة عرض خاص */}
+                <div
+                  className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
+                  onClick={() => { setServiceDetailOpen(false); setSelectedService('add-offer'); setServiceDetailOpen(true); }}
+                >
+                  <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center shadow-md">
+                    <Sparkles className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <span className="font-medium">{isRTL ? 'إضافة عرض خاص' : 'Add Special Offer'}</span>
+                    <p className="text-xs text-muted-foreground">{isRTL ? 'عروض وخصومات' : 'Offers & discounts'}</p>
+                  </div>
+                  <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
+                </div>
+
+                {/* إضافة مزود خدمات */}
+                <div
+                  className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
+                  onClick={() => { setServiceDetailOpen(false); setSelectedService('add-agent'); setServiceDetailOpen(true); }}
+                >
+                  <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center shadow-md">
+                    <Building2 className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <span className="font-medium">{isRTL ? 'إضافة مزود خدمات' : 'Add Provider'}</span>
+                    <p className="text-xs text-muted-foreground">{isRTL ? 'تسجيل مزود جديد' : 'Register new provider'}</p>
+                  </div>
+                  <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
+                </div>
+
+                {/* سياسة الخصوصية */}
+                <div
+                  className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
+                  onClick={() => { setServiceDetailOpen(false); setShowPrivacyPolicy(true); }}
+                >
+                  <div className="w-10 h-10 rounded-xl bg-teal-500 flex items-center justify-center shadow-md">
+                    <Shield className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <span className="font-medium">{isRTL ? 'سياسة الخصوصية' : 'Privacy Policy'}</span>
+                    <p className="text-xs text-muted-foreground">{isRTL ? 'حماية البيانات' : 'Data protection'}</p>
+                  </div>
+                  <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
+                </div>
+
+                {/* شروط الاستخدام */}
+                <div
+                  className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
+                  onClick={() => { setServiceDetailOpen(false); setShowTermsOfService(true); }}
+                >
+                  <div className="w-10 h-10 rounded-xl bg-rose-500 flex items-center justify-center shadow-md">
+                    <FileText className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <span className="font-medium">{isRTL ? 'شروط الاستخدام' : 'Terms of Service'}</span>
+                    <p className="text-xs text-muted-foreground">{isRTL ? 'قواعد الاستخدام' : 'Usage rules'}</p>
+                  </div>
+                  <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
                 </div>
               </div>
             )}
