@@ -1087,6 +1087,15 @@ export default function CarLinkPage() {
       color: 'bg-emerald-500',
     },
     {
+      id: 'car-offers',
+      titleAr: 'عروض السيارات',
+      titleEn: 'Car Offers',
+      descriptionAr: 'أفضل عروض السيارات الجديدة والمستعملة',
+      descriptionEn: 'Best new and used car offers',
+      icon: Car,
+      color: 'bg-rose-500',
+    },
+    {
       id: 'offers',
       titleAr: 'العروض',
       titleEn: 'Offers',
@@ -7622,6 +7631,357 @@ export default function CarLinkPage() {
                     <p className="text-muted-foreground">{isRTL ? 'اختر الماركة لعرض أسعار السوق' : 'Select a brand to view market prices'}</p>
                   </div>
                 )}
+              </div>
+            )}
+            
+            {/* ========== خدمة عروض السيارات ========== */}
+            {selectedService === 'car-offers' && (
+              <div className="space-y-6">
+                {/* Premium Header */}
+                <motion.div
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-rose-500 via-pink-500 to-red-500 shadow-xl"
+                >
+                  <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+                  <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2" />
+                  
+                  <div className={`relative p-6 ${isRTL ? 'text-right direction-rtl' : 'text-left'}`}>
+                    <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+                      <div className={`flex items-center gap-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                        <motion.div 
+                          className="w-14 h-14 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg"
+                          animate={{ scale: [1, 1.05, 1] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        >
+                          <Car className="w-7 h-7 text-white drop-shadow-lg" />
+                        </motion.div>
+                        <div>
+                          <h3 className="text-xl font-black text-white drop-shadow-sm">
+                            {isRTL ? 'عروض السيارات الحصرية' : 'Exclusive Car Offers'}
+                          </h3>
+                          <p className="text-sm text-white/80 mt-0.5">
+                            {isRTL ? 'أفضل العروض على السيارات الجديدة والمستعملة' : 'Best offers on new and used cars'}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-sm border border-white/30">
+                        <Sparkles className="w-4 h-4 text-amber-300" />
+                        <span className="text-sm font-bold text-white">{isRTL ? '15 عرض' : '15 Offers'}</span>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Featured Car - Toyota Camry */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 }}
+                >
+                  <Card className="relative overflow-hidden border-2 border-rose-500 bg-gradient-to-r from-rose-500/5 to-pink-500/5">
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-rose-500 via-pink-500 to-red-500" />
+                    <div className={`absolute top-3 ${isRTL ? 'left-3' : 'right-3'}`}>
+                      <Badge className="bg-gradient-to-r from-rose-500 to-pink-500 text-white border-0 shadow-lg">
+                        <Star className="w-3 h-3 mr-1" />
+                        {isRTL ? 'عرض مميز' : 'Featured'}
+                      </Badge>
+                    </div>
+                    
+                    <CardHeader className="pb-2">
+                      <div className={`flex items-center gap-4 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
+                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center shadow-lg">
+                          <span className="text-3xl">🚗</span>
+                        </div>
+                        <div>
+                          <CardTitle className="text-xl text-rose-600">
+                            {isRTL ? 'تويوتا كامري 2025' : 'Toyota Camry 2025'}
+                          </CardTitle>
+                          <CardDescription className="text-sm">
+                            {isRTL ? 'عرض حصري من وكالة تويوتا السعودية' : 'Exclusive offer from Toyota Saudi Arabia'}
+                          </CardDescription>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    
+                    <CardContent className="space-y-4">
+                      {/* Key Stats */}
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div className="p-3 bg-rose-500/10 rounded-xl text-center">
+                          <div className="text-2xl font-bold text-rose-600">99,900</div>
+                          <div className="text-xs text-muted-foreground">{isRTL ? 'السعر (ريال)' : 'Price (SAR)'}</div>
+                        </div>
+                        <div className="p-3 bg-green-500/10 rounded-xl text-center">
+                          <div className="text-2xl font-bold text-green-600">15,000</div>
+                          <div className="text-xs text-muted-foreground">{isRTL ? 'خصم مباشر' : 'Direct Discount'}</div>
+                        </div>
+                        <div className="p-3 bg-blue-500/10 rounded-xl text-center">
+                          <div className="text-2xl font-bold text-blue-600">0%</div>
+                          <div className="text-xs text-muted-foreground">{isRTL ? 'فائدة التمويل' : 'Finance Rate'}</div>
+                        </div>
+                        <div className="p-3 bg-amber-500/10 rounded-xl text-center">
+                          <div className="text-2xl font-bold text-amber-600">5 سنوات</div>
+                          <div className="text-xs text-muted-foreground">{isRTL ? 'الضمان' : 'Warranty'}</div>
+                        </div>
+                      </div>
+
+                      {/* Features */}
+                      <div className="flex flex-wrap gap-2">
+                        <Badge variant="outline" className="bg-rose-500/10 text-rose-600 border-rose-500/30">
+                          <CheckCircle2 className="w-3 h-3 mr-1" />
+                          {isRTL ? 'عرض محدود' : 'Limited Offer'}
+                        </Badge>
+                        <Badge variant="outline" className="bg-blue-500/10 text-blue-600 border-blue-500/30">
+                          <Zap className="w-3 h-3 mr-1" />
+                          {isRTL ? 'توصيل مجاني' : 'Free Delivery'}
+                        </Badge>
+                        <Badge variant="outline" className="bg-purple-500/10 text-purple-600 border-purple-500/30">
+                          <Shield className="w-3 h-3 mr-1" />
+                          {isRTL ? 'ضمان شامل' : 'Full Warranty'}
+                        </Badge>
+                        <Badge variant="outline" className="bg-amber-500/10 text-amber-600 border-amber-500/30">
+                          <Calendar className="w-3 h-3 mr-1" />
+                          {isRTL ? 'صيانة مجانية' : 'Free Service'}
+                        </Badge>
+                      </div>
+
+                      {/* Action */}
+                      <Button 
+                        className="w-full h-12 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white text-base font-bold shadow-lg"
+                        onClick={() => toast({ title: isRTL ? 'تم تسجيل طلبك!' : 'Request Submitted!', description: isRTL ? 'سيتواصل معك فريق المبيعات' : 'Sales team will contact you' })}
+                      >
+                        <Send className={`w-5 h-5 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                        {isRTL ? 'احصل على العرض الآن' : 'Get This Offer Now'}
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+
+                {/* Category Tabs */}
+                <div className="flex gap-2 overflow-x-auto pb-2">
+                  {[
+                    { id: 'all', label: isRTL ? 'الكل' : 'All' },
+                    { id: 'new', label: isRTL ? 'جديدة' : 'New' },
+                    { id: 'used', label: isRTL ? 'مستعملة' : 'Used' },
+                    { id: 'suv', label: 'SUV' },
+                    { id: 'sedan', label: isRTL ? 'سيدان' : 'Sedan' },
+                  ].map(cat => (
+                    <Button
+                      key={cat.id}
+                      variant="outline"
+                      size="sm"
+                      className="rounded-full whitespace-nowrap"
+                    >
+                      {cat.label}
+                    </Button>
+                  ))}
+                </div>
+
+                {/* Other Car Offers */}
+                <div className="space-y-3">
+                  <h4 className={`font-bold text-lg ${isRTL ? 'text-right' : 'text-left'}`}>
+                    {isRTL ? 'عروض سيارات أخرى' : 'Other Car Offers'}
+                  </h4>
+                  
+                  {[
+                    {
+                      id: 1,
+                      brand: isRTL ? 'هيونداي النترا' : 'Hyundai Elantra',
+                      year: 2025,
+                      price: 72000,
+                      oldPrice: 85000,
+                      discount: '15%',
+                      features: [isRTL ? 'تمويل 0%' : '0% Finance', isRTL ? 'ضمان 5 سنوات' : '5 Year Warranty'],
+                      color: 'from-blue-500 to-cyan-500',
+                      emoji: '🚙'
+                    },
+                    {
+                      id: 2,
+                      brand: isRTL ? 'هوندا أكورد' : 'Honda Accord',
+                      year: 2025,
+                      price: 115000,
+                      oldPrice: 130000,
+                      discount: '12%',
+                      features: [isRTL ? 'صيانة مجانية' : 'Free Service', isRTL ? 'توصيل مجاني' : 'Free Delivery'],
+                      color: 'from-purple-500 to-violet-500',
+                      emoji: '🚗'
+                    },
+                    {
+                      id: 3,
+                      brand: isRTL ? 'تويوتا لاندكروزر' : 'Toyota Land Cruiser',
+                      year: 2025,
+                      price: 285000,
+                      oldPrice: 320000,
+                      discount: '11%',
+                      features: [isRTL ? 'عرض حصري' : 'Exclusive', isRTL ? 'هدايا مجانية' : 'Free Gifts'],
+                      color: 'from-emerald-500 to-teal-500',
+                      emoji: '🚙'
+                    },
+                    {
+                      id: 4,
+                      brand: isRTL ? 'نيسان باترول' : 'Nissan Patrol',
+                      year: 2025,
+                      price: 265000,
+                      oldPrice: 295000,
+                      discount: '10%',
+                      features: [isRTL ? 'تمويل ميسر' : 'Easy Finance', isRTL ? 'ضمان ممتد' : 'Extended Warranty'],
+                      color: 'from-orange-500 to-amber-500',
+                      emoji: '🚗'
+                    },
+                    {
+                      id: 5,
+                      brand: isRTL ? 'كيا سيراتو' : 'Kia Cerato',
+                      year: 2025,
+                      price: 65000,
+                      oldPrice: 78000,
+                      discount: '17%',
+                      features: [isRTL ? 'أقل دفعة' : 'Lowest Down', isRTL ? 'موافقة فورية' : 'Instant Approval'],
+                      color: 'from-red-500 to-rose-500',
+                      emoji: '🚙'
+                    },
+                    {
+                      id: 6,
+                      brand: isRTL ? 'مازدا 6' : 'Mazda 6',
+                      year: 2025,
+                      price: 98000,
+                      oldPrice: 115000,
+                      discount: '15%',
+                      features: [isRTL ? 'تصميم رياضي' : 'Sport Design', isRTL ? 'أداء متميز' : 'Great Performance'],
+                      color: 'from-slate-500 to-gray-500',
+                      emoji: '🚗'
+                    },
+                  ].map((car, i) => (
+                    <motion.div
+                      key={car.id}
+                      initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.2 + i * 0.05 }}
+                    >
+                      <Card className="hover:shadow-lg transition-all duration-300 hover:border-primary/30">
+                        <CardContent className="p-4">
+                          <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+                            <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                              <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${car.color} flex items-center justify-center text-2xl`}>
+                                {car.emoji}
+                              </div>
+                              <div className={isRTL ? 'text-right' : 'text-left'}>
+                                <h5 className="font-bold">{car.brand} {car.year}</h5>
+                                <div className={`flex items-center gap-2 text-xs ${isRTL ? 'flex-row-reverse' : ''}`}>
+                                  <span className="text-rose-600 font-bold">{car.price.toLocaleString()} {isRTL ? 'ريال' : 'SAR'}</span>
+                                  <span className="text-muted-foreground line-through">{car.oldPrice.toLocaleString()}</span>
+                                  <Badge className="bg-rose-500 text-white text-[10px] px-1.5">-{car.discount}</Badge>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              className="hover:bg-rose-500/5 hover:border-rose-500/50"
+                              onClick={() => toast({ title: isRTL ? 'تم إضافة الطلب' : 'Request Added', description: car.brand })}
+                            >
+                              {isRTL ? 'التفاصيل' : 'Details'}
+                              <ArrowRight className={`w-4 h-4 ${isRTL ? 'mr-1 rotate-180' : 'ml-1'}`} />
+                            </Button>
+                          </div>
+                          
+                          {/* Features */}
+                          <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t">
+                            {car.features.map((feature, j) => (
+                              <Badge key={j} variant="outline" className="text-xs bg-muted/30">
+                                {feature}
+                              </Badge>
+                            ))}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Used Cars Section */}
+                <div className="space-y-3 pt-4">
+                  <h4 className={`font-bold text-lg flex items-center gap-2 ${isRTL ? 'text-right flex-row-reverse' : 'text-left'}`}>
+                    <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 text-white">{isRTL ? 'مستعملة' : 'Used'}</Badge>
+                    {isRTL ? 'سيارات مستعملة موثوقة' : 'Certified Used Cars'}
+                  </h4>
+                  
+                  {[
+                    {
+                      id: 1,
+                      brand: isRTL ? 'تويوتا كامري' : 'Toyota Camry',
+                      year: 2022,
+                      price: 75000,
+                      km: 35000,
+                      condition: isRTL ? 'ممتازة' : 'Excellent',
+                      emoji: '🚗'
+                    },
+                    {
+                      id: 2,
+                      brand: isRTL ? 'هيونداي توسان' : 'Hyundai Tucson',
+                      year: 2023,
+                      price: 82000,
+                      km: 18000,
+                      condition: isRTL ? 'ممتازة' : 'Excellent',
+                      emoji: '🚙'
+                    },
+                    {
+                      id: 3,
+                      brand: isRTL ? 'هوندا CR-V' : 'Honda CR-V',
+                      year: 2021,
+                      price: 95000,
+                      km: 45000,
+                      condition: isRTL ? 'جيدة جداً' : 'Very Good',
+                      emoji: '🚗'
+                    },
+                  ].map((car, i) => (
+                    <motion.div
+                      key={car.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3 + i * 0.05 }}
+                    >
+                      <Card className="hover:shadow-lg transition-all duration-300 bg-gradient-to-r from-amber-500/5 to-orange-500/5 border-amber-500/20">
+                        <CardContent className="p-4">
+                          <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+                            <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-2xl">
+                                {car.emoji}
+                              </div>
+                              <div className={isRTL ? 'text-right' : 'text-left'}>
+                                <h5 className="font-bold">{car.brand} {car.year}</h5>
+                                <div className={`flex items-center gap-2 text-xs text-muted-foreground ${isRTL ? 'flex-row-reverse' : ''}`}>
+                                  <span>{car.km.toLocaleString()} {isRTL ? 'كم' : 'km'}</span>
+                                  <span>•</span>
+                                  <Badge variant="outline" className="text-[10px] text-amber-600 border-amber-500/30">{car.condition}</Badge>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="text-center">
+                              <div className="text-lg font-bold text-amber-600">{car.price.toLocaleString()}</div>
+                              <div className="text-[10px] text-muted-foreground">{isRTL ? 'ريال' : 'SAR'}</div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* CTA Note */}
+                <div className={`p-4 bg-rose-500/10 rounded-xl border border-rose-500/20 ${isRTL ? 'text-right' : 'text-left'}`}>
+                  <div className={`flex items-start gap-3 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
+                    <Info className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h5 className="font-semibold text-sm">{isRTL ? 'ملاحظة مهمة' : 'Important Note'}</h5>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {isRTL 
+                          ? 'الأسعار المعروضة تقديرية وتخضع للشروط والأحكام. يُنصح بالتواصل مع الوكيل مباشرة للحصول على العرض النهائي.'
+                          : 'Prices shown are estimates and subject to terms and conditions. We recommend contacting the dealer directly for the final offer.'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
             
