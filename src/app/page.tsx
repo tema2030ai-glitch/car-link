@@ -50,7 +50,7 @@ import {
 // Icons
 import {
   Link, Upload, Image as ImageIcon, Sparkles, Calculator, MessageCircle,
-  TrendingUp, Sun, Moon, Zap, Fuel, Gauge, Cog, Shield, Wifi,
+  TrendingUp, Sun, Moon, Zap, Fuel, Gauge, Cog, Shield, Wifi, Lock,
   ChevronLeft, ChevronRight, Loader2, CheckCircle2, AlertCircle, DollarSign,
   Calendar, RefreshCw, X, Plus, Send, Bot, User, Globe, Languages, Camera, QrCode,
   Ruler, Users, Box, Award, Car, Palette, CircleDot, DoorOpen, Package, GaugeIcon, LayoutGrid,
@@ -990,6 +990,10 @@ export default function CarLinkPage() {
   const [dashboardOpen, setDashboardOpen] = useState(false);
   const [adminLoginOpen, setAdminLoginOpen] = useState(false);
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+  const [adminPin, setAdminPin] = useState('');
+  const [adminPinError, setAdminPinError] = useState(false);
+  const [pendingAdminAction, setPendingAdminAction] = useState<string | null>(null);
+  const ADMIN_PIN = '0011003300';
   const [adminEmail, setAdminEmail] = useState('');
   const [confirmationCode, setConfirmationCode] = useState('');
   const [enteredCode, setEnteredCode] = useState('');
@@ -9416,7 +9420,17 @@ export default function CarLinkPage() {
             {/* إضافة إعلان */}
             <div
               className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
-              onClick={() => { setDashboardOpen(false); setSelectedService('add-announcement'); setServiceDetailOpen(true); }}
+              onClick={() => {
+                if (isAdminLoggedIn) {
+                  setDashboardOpen(false);
+                  setSelectedService('add-announcement');
+                  setServiceDetailOpen(true);
+                } else {
+                  setPendingAdminAction('add-announcement');
+                  setDashboardOpen(false);
+                  setAdminLoginOpen(true);
+                }
+              }}
             >
               <div className="w-10 h-10 rounded-xl bg-cyan-500 flex items-center justify-center shadow-md">
                 <Bell className="w-5 h-5 text-white" />
@@ -9431,7 +9445,17 @@ export default function CarLinkPage() {
             {/* إضافة عرض خاص */}
             <div
               className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
-              onClick={() => { setDashboardOpen(false); setSelectedService('add-offer'); setServiceDetailOpen(true); }}
+              onClick={() => {
+                if (isAdminLoggedIn) {
+                  setDashboardOpen(false);
+                  setSelectedService('add-offer');
+                  setServiceDetailOpen(true);
+                } else {
+                  setPendingAdminAction('add-offer');
+                  setDashboardOpen(false);
+                  setAdminLoginOpen(true);
+                }
+              }}
             >
               <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center shadow-md">
                 <Sparkles className="w-5 h-5 text-white" />
@@ -9446,7 +9470,17 @@ export default function CarLinkPage() {
             {/* إضافة مزود خدمات */}
             <div
               className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
-              onClick={() => { setDashboardOpen(false); setSelectedService('add-agent'); setServiceDetailOpen(true); }}
+              onClick={() => {
+                if (isAdminLoggedIn) {
+                  setDashboardOpen(false);
+                  setSelectedService('add-agent');
+                  setServiceDetailOpen(true);
+                } else {
+                  setPendingAdminAction('add-agent');
+                  setDashboardOpen(false);
+                  setAdminLoginOpen(true);
+                }
+              }}
             >
               <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center shadow-md">
                 <Building2 className="w-5 h-5 text-white" />
@@ -9456,6 +9490,85 @@ export default function CarLinkPage() {
                 <p className="text-xs text-muted-foreground">{isRTL ? 'تسجيل مزود جديد' : 'Register new provider'}</p>
               </div>
               <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Admin PIN Login Dialog */}
+      <Dialog open={adminLoginOpen} onOpenChange={setAdminLoginOpen}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse justify-start' : ''}`}>
+              <Shield className="w-5 h-5" />
+              {isRTL ? 'تسجيل الدخول' : 'Login'}
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-4 pt-4">
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+                <Lock className="w-8 h-8 text-muted-foreground" />
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {isRTL ? 'أدخل رقم الدخول للمتابعة' : 'Enter PIN to continue'}
+              </p>
+            </div>
+            
+            <div>
+              <Input
+                type="password"
+                placeholder={isRTL ? 'أدخل الرقم' : 'Enter PIN'}
+                value={adminPin}
+                onChange={(e) => {
+                  setAdminPin(e.target.value);
+                  setAdminPinError(false);
+                }}
+                className={`text-center text-lg tracking-widest ${adminPinError ? 'border-red-500' : ''}`}
+                dir="ltr"
+              />
+              {adminPinError && (
+                <p className="text-red-500 text-xs mt-2 text-center">
+                  {isRTL ? 'الرقم غير صحيح' : 'Incorrect PIN'}
+                </p>
+              )}
+            </div>
+            
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => {
+                  setAdminLoginOpen(false);
+                  setAdminPin('');
+                  setAdminPinError(false);
+                  setPendingAdminAction(null);
+                }}
+              >
+                {isRTL ? 'إلغاء' : 'Cancel'}
+              </Button>
+              <Button
+                className="flex-1"
+                onClick={() => {
+                  if (adminPin === ADMIN_PIN) {
+                    setIsAdminLoggedIn(true);
+                    setAdminLoginOpen(false);
+                    setAdminPin('');
+                    setAdminPinError(false);
+                    
+                    // Execute pending action
+                    if (pendingAdminAction) {
+                      setSelectedService(pendingAdminAction);
+                      setServiceDetailOpen(true);
+                      setPendingAdminAction(null);
+                    }
+                  } else {
+                    setAdminPinError(true);
+                  }
+                }}
+              >
+                {isRTL ? 'دخول' : 'Login'}
+              </Button>
             </div>
           </div>
         </DialogContent>
