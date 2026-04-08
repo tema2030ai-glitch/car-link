@@ -9090,58 +9090,98 @@ export default function CarLinkPage() {
                 <div className={`p-4 bg-muted/30 rounded-xl ${isRTL ? 'text-right' : 'text-left'}`}>
                   <h4 className="font-semibold mb-2">{isRTL ? 'الإدارة والتحكم' : 'Admin & Management'}</h4>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <Card className="cursor-pointer hover:shadow-lg transition-all" onClick={() => { setServiceDetailOpen(false); setDashboardOpen(true); }}>
-                    <CardContent className="p-4 text-center">
-                      <div className="w-10 h-10 rounded-xl bg-slate-500 flex items-center justify-center mx-auto mb-2">
-                        <Building2 className="w-5 h-5 text-white" />
-                      </div>
-                      <p className="font-semibold text-sm">{isRTL ? 'لوحة التحكم' : 'Dashboard'}</p>
-                    </CardContent>
-                  </Card>
-                  <Card className="cursor-pointer hover:shadow-lg transition-all" onClick={() => { setServiceDetailOpen(false); setSelectedService('add-announcement'); setServiceDetailOpen(true); }}>
-                    <CardContent className="p-4 text-center">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mx-auto mb-2">
-                        <Bell className="w-5 h-5 text-white" />
-                      </div>
-                      <p className="font-semibold text-sm">{isRTL ? 'إضافة إعلان' : 'Add Announcement'}</p>
-                    </CardContent>
-                  </Card>
-                  <Card className="cursor-pointer hover:shadow-lg transition-all" onClick={() => { setServiceDetailOpen(false); setSelectedService('add-offer'); setServiceDetailOpen(true); }}>
-                    <CardContent className="p-4 text-center">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center mx-auto mb-2">
-                        <Sparkles className="w-5 h-5 text-white" />
-                      </div>
-                      <p className="font-semibold text-sm">{isRTL ? 'إضافة عرض خاص' : 'Add Special Offer'}</p>
-                    </CardContent>
-                  </Card>
-                  <Card className="cursor-pointer hover:shadow-lg transition-all" onClick={() => { setServiceDetailOpen(false); setSelectedService('add-agent'); setServiceDetailOpen(true); }}>
-                    <CardContent className="p-4 text-center">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center mx-auto mb-2">
-                        <Building2 className="w-5 h-5 text-white" />
-                      </div>
-                      <p className="font-semibold text-sm">{isRTL ? 'إضافة مزود خدمات' : 'Add Provider'}</p>
-                    </CardContent>
-                  </Card>
+                <div className="grid grid-cols-2 gap-4">
+                  <div
+                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl hover:bg-muted/50"
+                    onClick={() => { setServiceDetailOpen(false); setDashboardOpen(true); }}
+                  >
+                    <div className="w-12 h-12 rounded-xl bg-slate-500 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
+                      <Building2 className="w-6 h-6 text-white" />
+                    </div>
+                    <span className="text-sm text-center font-medium leading-tight">
+                      {isRTL ? 'لوحة التحكم' : 'Dashboard'}
+                    </span>
+                    <span className="text-xs text-muted-foreground text-center mt-1">
+                      {isRTL ? 'إدارة النظام' : 'System management'}
+                    </span>
+                  </div>
+                  <div
+                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl hover:bg-muted/50"
+                    onClick={() => { setServiceDetailOpen(false); setSelectedService('add-announcement'); setServiceDetailOpen(true); }}
+                  >
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
+                      <Bell className="w-6 h-6 text-white" />
+                    </div>
+                    <span className="text-sm text-center font-medium leading-tight">
+                      {isRTL ? 'إضافة إعلان' : 'Add Announcement'}
+                    </span>
+                    <span className="text-xs text-muted-foreground text-center mt-1">
+                      {isRTL ? 'نشر إعلان جديد' : 'Publish new ad'}
+                    </span>
+                  </div>
+                  <div
+                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl hover:bg-muted/50"
+                    onClick={() => { setServiceDetailOpen(false); setSelectedService('add-offer'); setServiceDetailOpen(true); }}
+                  >
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
+                      <Sparkles className="w-6 h-6 text-white" />
+                    </div>
+                    <span className="text-sm text-center font-medium leading-tight">
+                      {isRTL ? 'إضافة عرض خاص' : 'Add Special Offer'}
+                    </span>
+                    <span className="text-xs text-muted-foreground text-center mt-1">
+                      {isRTL ? 'عروض وخصومات' : 'Offers & discounts'}
+                    </span>
+                  </div>
+                  <div
+                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl hover:bg-muted/50"
+                    onClick={() => { setServiceDetailOpen(false); setSelectedService('add-agent'); setServiceDetailOpen(true); }}
+                  >
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
+                      <Building2 className="w-6 h-6 text-white" />
+                    </div>
+                    <span className="text-sm text-center font-medium leading-tight">
+                      {isRTL ? 'إضافة مزود خدمات' : 'Add Provider'}
+                    </span>
+                    <span className="text-xs text-muted-foreground text-center mt-1">
+                      {isRTL ? 'تسجيل مزود جديد' : 'Register new provider'}
+                    </span>
+                  </div>
                 </div>
                 
                 {/* Privacy Section */}
                 <div className={`p-4 bg-muted/30 rounded-xl ${isRTL ? 'text-right' : 'text-left'}`}>
                   <h4 className="font-semibold mb-2">{isRTL ? 'الخصوصية والبيانات' : 'Privacy & Data'}</h4>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <Card className="cursor-pointer hover:shadow-lg transition-all" onClick={() => { setServiceDetailOpen(false); setShowPrivacyPolicy(true); }}>
-                    <CardContent className="p-4 text-center">
-                      <Shield className="w-8 h-8 mx-auto mb-2 text-teal-500" />
-                      <p className="font-semibold text-sm">{isRTL ? 'سياسة الخصوصية' : 'Privacy Policy'}</p>
-                    </CardContent>
-                  </Card>
-                  <Card className="cursor-pointer hover:shadow-lg transition-all" onClick={() => { setServiceDetailOpen(false); setShowTermsOfService(true); }}>
-                    <CardContent className="p-4 text-center">
-                      <FileText className="w-8 h-8 mx-auto mb-2 text-blue-500" />
-                      <p className="font-semibold text-sm">{isRTL ? 'شروط الاستخدام' : 'Terms of Service'}</p>
-                    </CardContent>
-                  </Card>
+                <div className="grid grid-cols-2 gap-4">
+                  <div
+                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl hover:bg-muted/50"
+                    onClick={() => { setServiceDetailOpen(false); setShowPrivacyPolicy(true); }}
+                  >
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
+                      <Shield className="w-6 h-6 text-white" />
+                    </div>
+                    <span className="text-sm text-center font-medium leading-tight">
+                      {isRTL ? 'سياسة الخصوصية' : 'Privacy Policy'}
+                    </span>
+                    <span className="text-xs text-muted-foreground text-center mt-1">
+                      {isRTL ? 'حماية البيانات' : 'Data protection'}
+                    </span>
+                  </div>
+                  <div
+                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl hover:bg-muted/50"
+                    onClick={() => { setServiceDetailOpen(false); setShowTermsOfService(true); }}
+                  >
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
+                      <FileText className="w-6 h-6 text-white" />
+                    </div>
+                    <span className="text-sm text-center font-medium leading-tight">
+                      {isRTL ? 'شروط الاستخدام' : 'Terms of Service'}
+                    </span>
+                    <span className="text-xs text-muted-foreground text-center mt-1">
+                      {isRTL ? 'قواعد الاستخدام' : 'Usage rules'}
+                    </span>
+                  </div>
                 </div>
               </div>
             )}
