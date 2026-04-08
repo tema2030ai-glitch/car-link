@@ -1,8 +1,10 @@
 #!/bin/bash
 cd /home/z/my-project
 while true; do
-    echo "Starting server at $(date)" >> /home/z/my-project/server-watchdog.log
-    bun run dev 2>&1 | tee /home/z/my-project/dev.log
-    echo "Server stopped at $(date)" >> /home/z/my-project/server-watchdog.log
-    sleep 2
+    if ! pgrep -f "next-server" > /dev/null; then
+        echo "[$(date)] Starting Next.js server..." >> /tmp/server-monitor.log
+        node node_modules/.bin/next dev -p 3000 &
+        sleep 10
+    fi
+    sleep 5
 done
