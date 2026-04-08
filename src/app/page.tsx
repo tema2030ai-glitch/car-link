@@ -7748,7 +7748,13 @@ export default function CarLinkPage() {
                       {/* Action */}
                       <Button 
                         className="w-full h-12 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white text-base font-bold shadow-lg"
-                        onClick={() => toast({ title: isRTL ? 'تم تسجيل طلبك!' : 'Request Submitted!', description: isRTL ? 'سيتواصل معك فريق المبيعات' : 'Sales team will contact you' })}
+                        onClick={() => {
+                          const carQuestion = isRTL 
+                            ? `أريد الاستفسار عن سيارة تويوتا كامري 2025 - السعر: 99,900 ريال مع خصم 15,000 ريال. هل هذا عرض جيد؟ وما هي مواصفاتها؟`
+                            : `I want to inquire about Toyota Camry 2025 - Price: 99,900 SAR with 15,000 SAR discount. Is this a good deal? What are its specifications?`;
+                          addChatMessage({ role: 'user', content: carQuestion, timestamp: new Date().toISOString() });
+                          setSelectedService('advisor');
+                        }}
                       >
                         <Send className={`w-5 h-5 ${isRTL ? 'ml-2' : 'mr-2'}`} />
                         {isRTL ? 'احصل على العرض الآن' : 'Get This Offer Now'}
@@ -7857,7 +7863,16 @@ export default function CarLinkPage() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.2 + i * 0.05 }}
                     >
-                      <Card className="hover:shadow-lg transition-all duration-300 hover:border-primary/30">
+                      <Card 
+                        className="hover:shadow-lg transition-all duration-300 hover:border-primary/30 cursor-pointer"
+                        onClick={() => {
+                          const carQuestion = isRTL 
+                            ? `أريد الاستفسار عن سيارة ${car.brand} ${car.year} - السعر: ${car.price.toLocaleString()} ريال مع خصم ${car.discount}. هل هذا عرض جيد؟ وما هي مواصفاتها؟`
+                            : `I want to inquire about ${car.brand} ${car.year} - Price: ${car.price.toLocaleString()} SAR with ${car.discount} discount. Is this a good deal? What are its specifications?`;
+                          addChatMessage({ role: 'user', content: carQuestion, timestamp: new Date().toISOString() });
+                          setSelectedService('advisor');
+                        }}
+                      >
                         <CardContent className="p-4">
                           <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
                             <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
@@ -7878,7 +7893,6 @@ export default function CarLinkPage() {
                               variant="outline" 
                               size="sm"
                               className="hover:bg-cyan-500/5 hover:border-cyan-500/50"
-                              onClick={() => toast({ title: isRTL ? 'تم إضافة الطلب' : 'Request Added', description: car.brand })}
                             >
                               {isRTL ? 'التفاصيل' : 'Details'}
                               <ArrowRight className={`w-4 h-4 ${isRTL ? 'mr-1 rotate-180' : 'ml-1'}`} />
@@ -7941,7 +7955,16 @@ export default function CarLinkPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.3 + i * 0.05 }}
                     >
-                      <Card className="hover:shadow-lg transition-all duration-300 bg-gradient-to-r from-amber-500/5 to-orange-500/5 border-amber-500/20">
+                      <Card 
+                        className="hover:shadow-lg transition-all duration-300 bg-gradient-to-r from-amber-500/5 to-orange-500/5 border-amber-500/20 cursor-pointer"
+                        onClick={() => {
+                          const carQuestion = isRTL 
+                            ? `أريد الاستفسار عن سيارة ${car.brand} ${car.year} مستعملة - السعر: ${car.price.toLocaleString()} ريال، ${car.km.toLocaleString()} كم، الحالة: ${car.condition}. هل السعر مناسب؟`
+                            : `I want to inquire about used ${car.brand} ${car.year} - Price: ${car.price.toLocaleString()} SAR, ${car.km.toLocaleString()} km, Condition: ${car.condition}. Is the price fair?`;
+                          addChatMessage({ role: 'user', content: carQuestion, timestamp: new Date().toISOString() });
+                          setSelectedService('advisor');
+                        }}
+                      >
                         <CardContent className="p-4">
                           <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
                             <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
