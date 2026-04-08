@@ -7749,33 +7749,19 @@ export default function CarLinkPage() {
                       <Button 
                         className="w-full h-12 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white text-base font-bold shadow-lg"
                         onClick={() => {
-                          // Create a vehicle object for Toyota Camry
-                          const vehicleData: Vehicle = {
+                          // Create a car object for Toyota Camry
+                          const carData = {
                             id: 'toyota-camry-2025-featured',
-                            make: 'Toyota',
+                            brand: 'Toyota',
+                            brandEn: 'Toyota',
                             model: 'Camry',
+                            modelEn: 'Camry',
                             year: 2025,
                             price: 99900,
-                            mileage: 0,
-                            condition: 'new',
-                            features: [isRTL ? 'عرض محدود' : 'Limited Offer', isRTL ? 'توصيل مجاني' : 'Free Delivery', isRTL ? 'ضمان شامل' : 'Full Warranty', isRTL ? 'صيانة مجانية' : 'Free Service'],
-                            images: [],
-                            specifications: {
-                              engine: '2.5L 4-Cylinder',
-                              transmission: isRTL ? 'أوتوماتيك 8 سرعات' : '8-Speed Automatic',
-                              fuelType: isRTL ? 'بنزين' : 'Petrol',
-                              horsepower: '206 hp',
-                            }
+                            monthlyPayment: 1800,
                           };
                           
-                          const carQuestion = isRTL 
-                            ? `أريد الاستفسار عن سيارة تويوتا كامري 2025 - السعر: 99,900 ريال مع خصم 15,000 ريال. هل هذا عرض جيد؟ وما هي مواصفاتها؟`
-                            : `I want to inquire about Toyota Camry 2025 - Price: 99,900 SAR with 15,000 SAR discount. Is this a good deal? What are its specifications?`;
-                          
-                          setCurrentVehicle(vehicleData);
-                          setViewState('results');
-                          setActiveTab('advisor');
-                          addChatMessage({ role: 'user', content: carQuestion, timestamp: new Date().toISOString() });
+                          openFinancingChatbot('', null, carData);
                         }}
                       >
                         <Send className={`w-5 h-5 ${isRTL ? 'ml-2' : 'mr-2'}`} />
@@ -7888,33 +7874,19 @@ export default function CarLinkPage() {
                       <Card 
                         className="hover:shadow-lg transition-all duration-300 hover:border-primary/30 cursor-pointer"
                         onClick={() => {
-                          // Create a vehicle object for this car
-                          const vehicleData: Vehicle = {
+                          // Create a car object for this offer
+                          const carData = {
                             id: `car-offer-${car.id}`,
-                            make: car.brand.split(' ')[0],
-                            model: car.brand.split(' ').slice(1).join(' ') || car.brand,
+                            brand: car.brand,
+                            brandEn: car.brand,
+                            model: car.year.toString(),
+                            modelEn: car.year.toString(),
                             year: car.year,
                             price: car.price,
-                            mileage: 0,
-                            condition: 'new',
-                            features: car.features,
-                            images: [],
-                            specifications: {
-                              engine: '2.5L',
-                              transmission: isRTL ? 'أوتوماتيك' : 'Automatic',
-                              fuelType: isRTL ? 'بنزين' : 'Petrol',
-                              horsepower: '180 hp',
-                            }
+                            monthlyPayment: Math.round(car.price / 48),
                           };
                           
-                          const carQuestion = isRTL 
-                            ? `أريد الاستفسار عن سيارة ${car.brand} ${car.year} - السعر: ${car.price.toLocaleString()} ريال مع خصم ${car.discount}. هل هذا عرض جيد؟ وما هي مواصفاتها؟`
-                            : `I want to inquire about ${car.brand} ${car.year} - Price: ${car.price.toLocaleString()} SAR with ${car.discount} discount. Is this a good deal? What are its specifications?`;
-                          
-                          setCurrentVehicle(vehicleData);
-                          setViewState('results');
-                          setActiveTab('advisor');
-                          addChatMessage({ role: 'user', content: carQuestion, timestamp: new Date().toISOString() });
+                          openFinancingChatbot('', null, carData);
                         }}
                       >
                         <CardContent className="p-4">
@@ -8002,33 +7974,21 @@ export default function CarLinkPage() {
                       <Card 
                         className="hover:shadow-lg transition-all duration-300 bg-gradient-to-r from-amber-500/5 to-orange-500/5 border-amber-500/20 cursor-pointer"
                         onClick={() => {
-                          // Create a vehicle object for this used car
-                          const vehicleData: Vehicle = {
+                          // Create a car object for this used car
+                          const carData = {
                             id: `used-car-${car.id}`,
-                            make: car.brand.split(' ')[0],
-                            model: car.brand.split(' ').slice(1).join(' ') || car.brand,
+                            brand: car.brand,
+                            brandEn: car.brand,
+                            model: car.year.toString(),
+                            modelEn: car.year.toString(),
                             year: car.year,
                             price: car.price,
-                            mileage: car.km,
-                            condition: 'used',
-                            features: [car.condition],
-                            images: [],
-                            specifications: {
-                              engine: '2.0L',
-                              transmission: isRTL ? 'أوتوماتيك' : 'Automatic',
-                              fuelType: isRTL ? 'بنزين' : 'Petrol',
-                              horsepower: '150 hp',
-                            }
+                            monthlyPayment: Math.round(car.price / 48),
+                            km: car.km,
+                            condition: car.condition,
                           };
                           
-                          const carQuestion = isRTL 
-                            ? `أريد الاستفسار عن سيارة ${car.brand} ${car.year} مستعملة - السعر: ${car.price.toLocaleString()} ريال، ${car.km.toLocaleString()} كم، الحالة: ${car.condition}. هل السعر مناسب؟`
-                            : `I want to inquire about used ${car.brand} ${car.year} - Price: ${car.price.toLocaleString()} SAR, ${car.km.toLocaleString()} km, Condition: ${car.condition}. Is the price fair?`;
-                          
-                          setCurrentVehicle(vehicleData);
-                          setViewState('results');
-                          setActiveTab('advisor');
-                          addChatMessage({ role: 'user', content: carQuestion, timestamp: new Date().toISOString() });
+                          openFinancingChatbot('', null, carData);
                         }}
                       >
                         <CardContent className="p-4">
