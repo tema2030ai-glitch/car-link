@@ -9130,52 +9130,7 @@ export default function CarLinkPage() {
                   </div>
                   <div className="flex-1">
                     <span className="font-medium">{isRTL ? 'لوحة التحكم' : 'Dashboard'}</span>
-                    <p className="text-xs text-muted-foreground">{isRTL ? 'إدارة النظام' : 'System management'}</p>
-                  </div>
-                  <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
-                </div>
-
-                {/* إضافة إعلان */}
-                <div
-                  className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
-                  onClick={() => { setServiceDetailOpen(false); setSelectedService('add-announcement'); setServiceDetailOpen(true); }}
-                >
-                  <div className="w-10 h-10 rounded-xl bg-cyan-500 flex items-center justify-center shadow-md">
-                    <Bell className="w-5 h-5 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <span className="font-medium">{isRTL ? 'إضافة إعلان' : 'Add Announcement'}</span>
-                    <p className="text-xs text-muted-foreground">{isRTL ? 'نشر إعلان جديد' : 'Publish new ad'}</p>
-                  </div>
-                  <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
-                </div>
-
-                {/* إضافة عرض خاص */}
-                <div
-                  className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
-                  onClick={() => { setServiceDetailOpen(false); setSelectedService('add-offer'); setServiceDetailOpen(true); }}
-                >
-                  <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center shadow-md">
-                    <Sparkles className="w-5 h-5 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <span className="font-medium">{isRTL ? 'إضافة عرض خاص' : 'Add Special Offer'}</span>
-                    <p className="text-xs text-muted-foreground">{isRTL ? 'عروض وخصومات' : 'Offers & discounts'}</p>
-                  </div>
-                  <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
-                </div>
-
-                {/* إضافة مزود خدمات */}
-                <div
-                  className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
-                  onClick={() => { setServiceDetailOpen(false); setSelectedService('add-agent'); setServiceDetailOpen(true); }}
-                >
-                  <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center shadow-md">
-                    <Building2 className="w-5 h-5 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <span className="font-medium">{isRTL ? 'إضافة مزود خدمات' : 'Add Provider'}</span>
-                    <p className="text-xs text-muted-foreground">{isRTL ? 'تسجيل مزود جديد' : 'Register new provider'}</p>
+                    <p className="text-xs text-muted-foreground">{isRTL ? 'إدارة النظام والإعلانات والعروض' : 'System, ads & offers management'}</p>
                   </div>
                   <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
                 </div>
@@ -9449,7 +9404,7 @@ export default function CarLinkPage() {
 
       {/* Service Provider Dashboard Dialog */}
       <Dialog open={dashboardOpen} onOpenChange={setDashboardOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse justify-start' : ''}`}>
               <Building2 className="w-5 h-5" />
@@ -9457,134 +9412,51 @@ export default function CarLinkPage() {
             </DialogTitle>
           </DialogHeader>
           
-          <div className="space-y-4">
-            {/* Admin Welcome */}
-            <div className={`p-4 bg-green-500/10 rounded-xl border border-green-500/30 ${isRTL ? 'text-right' : 'text-left'}`}>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
-                    <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-green-600">{isRTL ? 'مرحباً بك في لوحة التحكم' : 'Welcome to Dashboard'}</p>
-                    <p className="text-xs text-muted-foreground">{isRTL ? 'تم تسجيل الدخول بنجاح' : 'Logged in successfully'}</p>
-                  </div>
-                </div>
+          <div className="space-y-3">
+            {/* إضافة إعلان */}
+            <div
+              className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
+              onClick={() => { setDashboardOpen(false); setSelectedService('add-announcement'); setServiceDetailOpen(true); }}
+            >
+              <div className="w-10 h-10 rounded-xl bg-cyan-500 flex items-center justify-center shadow-md">
+                <Bell className="w-5 h-5 text-white" />
               </div>
+              <div className="flex-1">
+                <span className="font-medium">{isRTL ? 'إضافة إعلان' : 'Add Announcement'}</span>
+                <p className="text-xs text-muted-foreground">{isRTL ? 'نشر إعلان جديد' : 'Publish new ad'}</p>
+              </div>
+              <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
             </div>
 
-            {/* Dashboard Features */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Add Announcement */}
-              <Card className="cursor-pointer hover:shadow-lg transition-all border-2 border-transparent hover:border-primary/30">
-                <CardContent className="p-6 text-center">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mx-auto mb-4 shadow-lg">
-                    <Bell className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="font-bold text-lg mb-2">{isRTL ? 'إضافة إعلان' : 'Add Announcement'}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {isRTL ? 'إضافة إعلان جديد للمستخدمين' : 'Add new announcement for users'}
-                  </p>
-                  <Button className="mt-4 sky-gradient text-white w-full" size="sm">
-                    <Plus className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                    {isRTL ? 'إضافة' : 'Add'}
-                  </Button>
-                </CardContent>
-              </Card>
-
-              {/* Add Special Offer */}
-              <Card className="cursor-pointer hover:shadow-lg transition-all border-2 border-transparent hover:border-primary/30">
-                <CardContent className="p-6 text-center">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center mx-auto mb-4 shadow-lg">
-                    <Sparkles className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="font-bold text-lg mb-2">{isRTL ? 'إضافة عرض خاص' : 'Add Special Offer'}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {isRTL ? 'إضافة عرض خاص جديد' : 'Add new special offer'}
-                  </p>
-                  <Button className="mt-4 sky-gradient text-white w-full" size="sm">
-                    <Plus className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                    {isRTL ? 'إضافة' : 'Add'}
-                  </Button>
-                </CardContent>
-              </Card>
-
-              {/* Add Service Provider */}
-              <Card className="cursor-pointer hover:shadow-lg transition-all border-2 border-transparent hover:border-primary/30">
-                <CardContent className="p-6 text-center">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center mx-auto mb-4 shadow-lg">
-                    <Building2 className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="font-bold text-lg mb-2">{isRTL ? 'إضافة مزود خدمات' : 'Add Service Provider'}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {isRTL ? 'إضافة مزود خدمات جديد' : 'Add new service provider'}
-                  </p>
-                  <Button className="mt-4 sky-gradient text-white w-full" size="sm">
-                    <Plus className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                    {isRTL ? 'إضافة' : 'Add'}
-                  </Button>
-                </CardContent>
-              </Card>
+            {/* إضافة عرض خاص */}
+            <div
+              className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
+              onClick={() => { setDashboardOpen(false); setSelectedService('add-offer'); setServiceDetailOpen(true); }}
+            >
+              <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center shadow-md">
+                <Sparkles className="w-5 h-5 text-white" />
+              </div>
+              <div className="flex-1">
+                <span className="font-medium">{isRTL ? 'إضافة عرض خاص' : 'Add Special Offer'}</span>
+                <p className="text-xs text-muted-foreground">{isRTL ? 'عروض وخصومات' : 'Offers & discounts'}</p>
+              </div>
+              <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
             </div>
 
-            {/* Quick Stats */}
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base">{isRTL ? 'إحصائيات سريعة' : 'Quick Stats'}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="p-3 bg-blue-500/10 rounded-xl text-center">
-                    <p className="text-2xl font-bold text-blue-600">12</p>
-                    <p className="text-xs text-muted-foreground">{isRTL ? 'الإعلانات' : 'Announcements'}</p>
-                  </div>
-                  <div className="p-3 bg-amber-500/10 rounded-xl text-center">
-                    <p className="text-2xl font-bold text-amber-600">8</p>
-                    <p className="text-xs text-muted-foreground">{isRTL ? 'العروض' : 'Offers'}</p>
-                  </div>
-                  <div className="p-3 bg-green-500/10 rounded-xl text-center">
-                    <p className="text-2xl font-bold text-green-600">24</p>
-                    <p className="text-xs text-muted-foreground">{isRTL ? 'مزودي الخدمات' : 'Providers'}</p>
-                  </div>
-                  <div className="p-3 bg-purple-500/10 rounded-xl text-center">
-                    <p className="text-2xl font-bold text-purple-600">156</p>
-                    <p className="text-xs text-muted-foreground">{isRTL ? 'المستخدمين' : 'Users'}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Recent Activity */}
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base">{isRTL ? 'النشاط الأخير' : 'Recent Activity'}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <div className={`p-3 bg-muted/50 rounded-lg flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
-                    <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                      <Bell className="w-4 h-4 text-blue-500" />
-                      <span className="text-sm">{isRTL ? 'تم إضافة إعلان جديد' : 'New announcement added'}</span>
-                    </div>
-                    <span className="text-xs text-muted-foreground">{isRTL ? 'منذ 5 دقائق' : '5 min ago'}</span>
-                  </div>
-                  <div className={`p-3 bg-muted/50 rounded-lg flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
-                    <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                      <Sparkles className="w-4 h-4 text-amber-500" />
-                      <span className="text-sm">{isRTL ? 'تم إضافة عرض خاص' : 'Special offer added'}</span>
-                    </div>
-                    <span className="text-xs text-muted-foreground">{isRTL ? 'منذ ساعة' : '1 hour ago'}</span>
-                  </div>
-                  <div className={`p-3 bg-muted/50 rounded-lg flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
-                    <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                      <Building2 className="w-4 h-4 text-green-500" />
-                      <span className="text-sm">{isRTL ? 'تم تسجيل وكيل جديد' : 'New agent registered'}</span>
-                    </div>
-                    <span className="text-xs text-muted-foreground">{isRTL ? 'منذ 3 ساعات' : '3 hours ago'}</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            {/* إضافة مزود خدمات */}
+            <div
+              className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
+              onClick={() => { setDashboardOpen(false); setSelectedService('add-agent'); setServiceDetailOpen(true); }}
+            >
+              <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center shadow-md">
+                <Building2 className="w-5 h-5 text-white" />
+              </div>
+              <div className="flex-1">
+                <span className="font-medium">{isRTL ? 'إضافة مزود خدمات' : 'Add Provider'}</span>
+                <p className="text-xs text-muted-foreground">{isRTL ? 'تسجيل مزود جديد' : 'Register new provider'}</p>
+              </div>
+              <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
+            </div>
           </div>
         </DialogContent>
       </Dialog>
