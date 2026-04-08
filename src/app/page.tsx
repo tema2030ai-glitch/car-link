@@ -9086,13 +9086,10 @@ export default function CarLinkPage() {
             
             {selectedService === 'settings' && (
               <div className="space-y-4">
-                {/* Appearance Section - المظهر */}
-                <div className={`p-4 bg-muted/30 rounded-xl ${isRTL ? 'text-right' : 'text-left'}`}>
-                  <h4 className="font-semibold mb-3">{isRTL ? 'المظهر' : 'Appearance'}</h4>
-                </div>
+                {/* Appearance Section */}
                 <div className="grid grid-cols-2 gap-4">
                   <div
-                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl hover:bg-muted/50"
+                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl bg-muted/30 hover:bg-muted/50"
                     onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                   >
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg ${theme === 'dark' ? 'bg-gradient-to-br from-indigo-500 to-violet-600' : 'bg-gradient-to-br from-amber-400 to-orange-500'}`}>
@@ -9110,7 +9107,7 @@ export default function CarLinkPage() {
                     </span>
                   </div>
                   <div
-                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl hover:bg-muted/50"
+                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl bg-muted/30 hover:bg-muted/50"
                     onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}
                   >
                     <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
@@ -9126,12 +9123,9 @@ export default function CarLinkPage() {
                 </div>
                 
                 {/* Admin & Management Section */}
-                <div className={`p-4 bg-muted/30 rounded-xl ${isRTL ? 'text-right' : 'text-left'}`}>
-                  <h4 className="font-semibold mb-3">{isRTL ? 'الإدارة والتحكم' : 'Admin & Management'}</h4>
-                </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div
-                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl hover:bg-muted/50"
+                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl bg-muted/30 hover:bg-muted/50"
                     onClick={() => { setServiceDetailOpen(false); setDashboardOpen(true); }}
                   >
                     <div className="w-12 h-12 rounded-xl bg-slate-500 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
@@ -9145,7 +9139,7 @@ export default function CarLinkPage() {
                     </span>
                   </div>
                   <div
-                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl hover:bg-muted/50"
+                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl bg-muted/30 hover:bg-muted/50"
                     onClick={() => { setServiceDetailOpen(false); setSelectedService('add-announcement'); setServiceDetailOpen(true); }}
                   >
                     <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
@@ -9159,7 +9153,7 @@ export default function CarLinkPage() {
                     </span>
                   </div>
                   <div
-                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl hover:bg-muted/50"
+                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl bg-muted/30 hover:bg-muted/50"
                     onClick={() => { setServiceDetailOpen(false); setSelectedService('add-offer'); setServiceDetailOpen(true); }}
                   >
                     <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
@@ -9173,7 +9167,7 @@ export default function CarLinkPage() {
                     </span>
                   </div>
                   <div
-                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl hover:bg-muted/50"
+                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl bg-muted/30 hover:bg-muted/50"
                     onClick={() => { setServiceDetailOpen(false); setSelectedService('add-agent'); setServiceDetailOpen(true); }}
                   >
                     <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
@@ -9189,12 +9183,9 @@ export default function CarLinkPage() {
                 </div>
                 
                 {/* Privacy Section */}
-                <div className={`p-4 bg-muted/30 rounded-xl ${isRTL ? 'text-right' : 'text-left'}`}>
-                  <h4 className="font-semibold mb-3">{isRTL ? 'الخصوصية والبيانات' : 'Privacy & Data'}</h4>
-                </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div
-                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl hover:bg-muted/50"
+                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl bg-muted/30 hover:bg-muted/50"
                     onClick={() => { setServiceDetailOpen(false); setShowPrivacyPolicy(true); }}
                   >
                     <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
@@ -9208,7 +9199,7 @@ export default function CarLinkPage() {
                     </span>
                   </div>
                   <div
-                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl hover:bg-muted/50"
+                    className="flex flex-col items-center cursor-pointer transition-all duration-200 group p-4 rounded-xl bg-muted/30 hover:bg-muted/50"
                     onClick={() => { setServiceDetailOpen(false); setShowTermsOfService(true); }}
                   >
                     <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
