@@ -7986,6 +7986,91 @@ export default function CarLinkPage() {
                       </motion.div>
                     )}
 
+                    {/* عنوان وموقع توقيع العقد / تسليم السيارة */}
+                    {(orderStatus === 'contract' || orderStatus === 'delivery') && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="p-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-2xl border border-blue-500/30"
+                      >
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
+                            <MapPin className="w-6 h-6 text-white" />
+                          </div>
+                          <div>
+                            <h4 className="font-bold text-blue-700 dark:text-blue-400">
+                              {orderStatus === 'contract' 
+                                ? (isRTL ? 'موقع توقيع العقد' : 'Contract Signing Location')
+                                : (isRTL ? 'موقع استلام السيارة' : 'Car Delivery Location')
+                              }
+                            </h4>
+                            <p className="text-xs text-muted-foreground">
+                              {isRTL ? 'يرجى الحضور في الموعد المحدد' : 'Please arrive at the scheduled time'}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-3">
+                          {/* اسم الفرع */}
+                          <div className="flex items-start gap-3 p-3 bg-white/50 dark:bg-black/20 rounded-xl">
+                            <Building2 className="w-5 h-5 text-blue-500 mt-0.5" />
+                            <div>
+                              <p className="text-sm font-medium">{isRTL ? 'فرع الرياض - طريق الملك فهد' : 'Riyadh Branch - King Fahd Road'}</p>
+                              <p className="text-xs text-muted-foreground">{isRTL ? 'شركة السيارات المتكاملة للتمويل' : 'Integrated Cars Finance Company'}</p>
+                            </div>
+                          </div>
+
+                          {/* العنوان */}
+                          <div className="flex items-start gap-3 p-3 bg-white/50 dark:bg-black/20 rounded-xl">
+                            <MapPin className="w-5 h-5 text-red-500 mt-0.5" />
+                            <div>
+                              <p className="text-sm font-medium">{isRTL ? 'العنوان' : 'Address'}</p>
+                              <p className="text-xs text-muted-foreground">
+                                {isRTL 
+                                  ? 'طريق الملك فهد، حي العليا، الرياض 12211' 
+                                  : 'King Fahd Road, Al Olaya District, Riyadh 12211'
+                                }
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* ساعات العمل */}
+                          <div className="flex items-start gap-3 p-3 bg-white/50 dark:bg-black/20 rounded-xl">
+                            <Clock className="w-5 h-5 text-green-500 mt-0.5" />
+                            <div>
+                              <p className="text-sm font-medium">{isRTL ? 'ساعات العمل' : 'Working Hours'}</p>
+                              <p className="text-xs text-muted-foreground">
+                                {isRTL 
+                                  ? 'الأحد - الخميس: 9:00 ص - 9:00 م' 
+                                  : 'Sun - Thu: 9:00 AM - 9:00 PM'
+                                }
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* رقم الهاتف */}
+                          <div className="flex items-start gap-3 p-3 bg-white/50 dark:bg-black/20 rounded-xl">
+                            <Phone className="w-5 h-5 text-cyan-500 mt-0.5" />
+                            <div>
+                              <p className="text-sm font-medium">{isRTL ? 'رقم التواصل' : 'Contact Number'}</p>
+                              <p className="text-xs text-muted-foreground dir-ltr">+966 11 234 5678</p>
+                            </div>
+                          </div>
+
+                          {/* زر فتح الموقع */}
+                          <Button
+                            className="w-full h-12 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl"
+                            onClick={() => {
+                              window.open('https://maps.google.com/?q=24.7136,46.6753', '_blank');
+                            }}
+                          >
+                            <MapPin className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                            {isRTL ? 'فتح الموقع في الخريطة' : 'Open Location in Maps'}
+                          </Button>
+                        </div>
+                      </motion.div>
+                    )}
+
                     {/* أزرار الإجراءات */}
                     <div className="flex gap-3">
                       <Button
