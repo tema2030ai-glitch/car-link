@@ -52,7 +52,7 @@ import {
   Link, Upload, Image as ImageIcon, Sparkles, Calculator, MessageCircle,
   TrendingUp, Sun, Moon, Zap, Fuel, Gauge, Cog, Shield, Wifi, Lock,
   ChevronLeft, ChevronRight, Loader2, CheckCircle2, AlertCircle, DollarSign,
-  Calendar, RefreshCw, X, Plus, Send, Bot, User, Globe, Languages, Camera, QrCode,
+  Calendar, RefreshCw, X, Plus, PlusCircle, Send, Bot, User, Globe, Languages, Camera, QrCode,
   Ruler, Users, Box, Award, Car, Palette, CircleDot, DoorOpen, Package, GaugeIcon, LayoutGrid,
   FileText, ClipboardList, Building2, LogIn, LogOut, Settings, Bell, Ticket, MapPin, Phone, Clock,
   Star, ArrowRight, Lightbulb, ShoppingCart, GitCompare, ArrowLeftRight, PartyPopper, Search, Copy,
@@ -3330,13 +3330,19 @@ export default function CarLinkPage() {
                   {/* Features - Primary Color Icons without frame - Inside Card */}
                   <div className="flex flex-wrap justify-center gap-6 mt-6 pt-4 border-t">
                     {[
-                      { icon: Gauge, label: t.features.specs },
-                      { icon: TrendingUp, label: isRTL ? 'تحليل الأسعار والسوق' : 'Price & Market Analysis' },
-                      { icon: Calculator, label: isRTL ? 'طلب تمويل' : 'Request Financing' },
-                      { icon: Bot, label: t.features.advisor },
-                      { icon: Zap, label: isRTL ? 'طلب أسرع' : 'Fast Request' },
+                      { icon: ClipboardList, label: isRTL ? 'تتبع الطلب' : 'Order Tracking', service: 'order-tracking' },
+                      { icon: TrendingUp, label: isRTL ? 'أسعار السوق' : 'Market Prices', service: 'market-prices' },
+                      { icon: Landmark, label: isRTL ? 'عروض التمويل' : 'Financing Offers', service: 'bank-offers' },
+                      { icon: Car, label: isRTL ? 'طلب سيارة جديدة' : 'New Car Request', service: 'new-car-request' },
                     ].map((feature) => (
-                      <div key={feature.label} className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
+                      <div 
+                        key={feature.label} 
+                        className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+                        onClick={() => {
+                          setSelectedService(feature.service);
+                          setServiceDetailOpen(true);
+                        }}
+                      >
                         <feature.icon className="w-6 h-6 text-primary" />
                         <span className="text-sm font-medium">{feature.label}</span>
                       </div>
