@@ -51,22 +51,6 @@ const SAUDI_BANK_OFFERS = [
     lastUpdated: '2024-12'
   },
   {
-    id: 'bank_sabb',
-    bankName: 'بنك ساب',
-    bankNameEn: 'SABB Bank',
-    interestRate: 2.99,
-    minDownPayment: 15,
-    maxLoanTerm: 60,
-    maxLoanAmount: 750000,
-    fees: 1250,
-    logo: '🏛️',
-    color: '#1565C0',
-    features: ['خدمة VIP', 'برنامج نقاط شريك', 'تأمين شامل', 'أقساط مريحة'],
-    featuresEn: ['VIP service', 'Partner points program', 'Comprehensive insurance', 'Easy installments'],
-    popular: false,
-    lastUpdated: '2024-12'
-  },
-  {
     id: 'bank_aljazira',
     bankName: 'بنك الجزيرة',
     bankNameEn: 'Bank AlJazira',

@@ -1588,9 +1588,8 @@ export default function CarLinkPage() {
       { id: 'snb', bankName: 'البنك الأهلي السعودي', bankNameEn: 'SNB', interestRate: 4.9, minDownPayment: 15, maxLoanTerm: 72, minSalary: 4000, eligible: true, features: ['أطول فترة سداد', 'برنامج ولاء'], fees: 2000, logo: '🏦' },
       { id: 'riyadbank', bankName: 'بنك الرياض', bankNameEn: 'Riyad Bank', interestRate: 5.0, minDownPayment: 20, maxLoanTerm: 60, minSalary: 4500, eligible: true, features: ['تأمين مجاني', 'خدمة متميزة'], fees: 1800, logo: '🏦' },
       { id: 'arabnational', bankName: 'البنك العربي الوطني', bankNameEn: 'Arab National Bank', interestRate: 5.1, minDownPayment: 20, maxLoanTerm: 60, minSalary: 4000, eligible: true, features: ['مرونة في السداد'], fees: 1200, logo: '🏦' },
-      { id: 'sabb', bankName: 'بنك ساب', bankNameEn: 'SABB', interestRate: 5.25, minDownPayment: 20, maxLoanTerm: 48, minSalary: 5000, eligible: true, features: ['خدمة VIP'], fees: 2500, logo: '🏦' },
       { id: 'alinma', bankName: 'بنك الإنماء', bankNameEn: 'Alinma Bank', interestRate: 4.95, minDownPayment: 15, maxLoanTerm: 60, minSalary: 3500, eligible: true, features: ['تمويل إسلامي', 'موافقة فورية'], fees: 800, logo: '🏦' },
-      { id: 'firstab', bankName: 'البنك الأول', bankNameEn: 'First Abu Dhabi', interestRate: 5.15, minDownPayment: 20, maxLoanTerm: 60, minSalary: 5000, eligible: true, features: ['خدمة مخصصة'], fees: 2200, logo: '🏦' },
+      { id: 'aljazira', bankName: 'بنك الجزيرة', bankNameEn: 'Bank AlJazira', interestRate: 5.05, minDownPayment: 15, maxLoanTerm: 60, minSalary: 4000, eligible: true, features: ['تمويل إسلامي متوافق'], fees: 900, logo: '🏦' },
     ].map(bank => {
       const financingAmount = Math.round(defaultCarPrice * (100 - bank.minDownPayment) / 100);
       const months = bank.maxLoanTerm;
