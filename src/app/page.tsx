@@ -9912,24 +9912,6 @@ export default function CarLinkPage() {
                     <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
                   </div>
 
-                  {/* لوحة التحكم */}
-                  <div
-                    className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
-                    onClick={() => { 
-                      setServiceDetailOpen(false);
-                      setAdminLoginOpen(true);
-                    }}
-                  >
-                    <div className="w-10 h-10 rounded-xl bg-slate-500 flex items-center justify-center shadow-md">
-                      <Building2 className="w-5 h-5 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <span className="font-medium">{isRTL ? 'لوحة التحكم' : 'Dashboard'}</span>
-                      <p className="text-xs text-muted-foreground">{isRTL ? 'إدارة النظام والإعلانات والعروض' : 'System, ads & offers management'}</p>
-                    </div>
-                    <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
-                  </div>
-
                   {/* سياسة الخصوصية */}
                   <div
                     className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
