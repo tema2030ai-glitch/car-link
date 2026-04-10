@@ -7514,7 +7514,10 @@ export default function CarLinkPage() {
             </button>
             
             {/* Title and Icon - Centered */}
-            <div className="flex justify-center mt-4">
+            <div className="flex justify-center items-center gap-2 mt-4">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg">
+                <LayoutGrid className="w-5 h-5 text-white" />
+              </div>
               <SheetTitle className="text-lg font-bold text-center">
                 {isRTL ? 'خدمات إضافية' : 'Additional Services'}
               </SheetTitle>
