@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 // Saudi Banks Financing Data 2024-2025 - Updated rates and offers
 const SAUDI_BANK_OFFERS = [
   {
-    id: 'bank_rajhi',
+    id: 'alrajhi',
     bankName: 'بنك الراجحي',
     bankNameEn: 'Al Rajhi Bank',
     interestRate: 2.49,

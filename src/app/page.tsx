@@ -9579,7 +9579,7 @@ export default function CarLinkPage() {
                       </div>
                       <div className="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-sm border border-white/30">
                         <Sparkles className="w-4 h-4 text-amber-300" />
-                        <span className="text-sm font-bold text-white">{isRTL ? '8 بنوك' : '8 Banks'}</span>
+                        <span className="text-sm font-bold text-white">{isRTL ? '7 بنوك' : '7 Banks'}</span>
                       </div>
                     </div>
                   </div>
