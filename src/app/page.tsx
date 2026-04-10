@@ -1412,6 +1412,15 @@ export default function CarLinkPage() {
   const [foundOrder, setFoundOrder] = useState<any>(null);
   const [ordersList, setOrdersList] = useState<any[]>([]);
 
+  // Document Upload States for Order Tracking
+  const [uploadedDocs, setUploadedDocs] = useState<{
+    idCard: File | null;
+    driverLicense: File | null;
+    salaryCertificate: File | null;
+  }>({ idCard: null, driverLicense: null, salaryCertificate: null });
+  const [docsUploading, setDocsUploading] = useState(false);
+  const [docsSubmitted, setDocsSubmitted] = useState(false);
+
   // Service Provider Dashboard States
   const [dashboardOpen, setDashboardOpen] = useState(false);
   const [adminLoginOpen, setAdminLoginOpen] = useState(false);
@@ -7768,6 +7777,199 @@ export default function CarLinkPage() {
                         })}
                       </div>
                     </div>
+
+                    {/* قسم رفع المستندات - يظهر عند مرحلة استكمال المستندات */}
+                    {orderStatus === 'documents' && !docsSubmitted && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="p-4 bg-gradient-to-r from-amber-500/10 to-orange-500/10 rounded-2xl border border-amber-500/30"
+                      >
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
+                            <FileText className="w-5 h-5 text-amber-600" />
+                          </div>
+                          <div>
+                            <h4 className="font-bold text-amber-700 dark:text-amber-400">
+                              {isRTL ? 'يرجى رفع المستندات المطلوبة' : 'Please Upload Required Documents'}
+                            </h4>
+                            <p className="text-xs text-muted-foreground">
+                              {isRTL ? 'جميع الملفات مطلوبة للمتابعة' : 'All files are required to proceed'}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-3">
+                          {/* صورة الهوية */}
+                          <div className="p-3 bg-white/50 dark:bg-black/20 rounded-xl">
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center gap-2">
+                                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${uploadedDocs.idCard ? 'bg-green-500/20' : 'bg-muted'}`}>
+                                  {uploadedDocs.idCard ? (
+                                    <CheckCircle2 className="w-4 h-4 text-green-600" />
+                                  ) : (
+                                    <FileText className="w-4 h-4 text-muted-foreground" />
+                                  )}
+                                </div>
+                                <div>
+                                  <p className="text-sm font-medium">{isRTL ? 'صورة الهوية الوطنية' : 'National ID Card'}</p>
+                                  <p className="text-xs text-muted-foreground">
+                                    {uploadedDocs.idCard ? uploadedDocs.idCard.name : (isRTL ? 'لم يتم الرفع' : 'Not uploaded')}
+                                  </p>
+                                </div>
+                              </div>
+                              <label className="cursor-pointer">
+                                <input
+                                  type="file"
+                                  accept="image/*,.pdf"
+                                  className="hidden"
+                                  onChange={(e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) {
+                                      setUploadedDocs(prev => ({ ...prev, idCard: file }));
+                                    }
+                                  }}
+                                />
+                                <Button variant="outline" size="sm" className="h-8">
+                                  <Upload className={`w-3 h-3 ${isRTL ? 'ml-1' : 'mr-1'}`} />
+                                  {isRTL ? 'رفع' : 'Upload'}
+                                </Button>
+                              </label>
+                            </div>
+                          </div>
+
+                          {/* صورة رخصة القيادة */}
+                          <div className="p-3 bg-white/50 dark:bg-black/20 rounded-xl">
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center gap-2">
+                                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${uploadedDocs.driverLicense ? 'bg-green-500/20' : 'bg-muted'}`}>
+                                  {uploadedDocs.driverLicense ? (
+                                    <CheckCircle2 className="w-4 h-4 text-green-600" />
+                                  ) : (
+                                    <FileText className="w-4 h-4 text-muted-foreground" />
+                                  )}
+                                </div>
+                                <div>
+                                  <p className="text-sm font-medium">{isRTL ? 'صورة رخصة القيادة' : 'Driver\'s License'}</p>
+                                  <p className="text-xs text-muted-foreground">
+                                    {uploadedDocs.driverLicense ? uploadedDocs.driverLicense.name : (isRTL ? 'لم يتم الرفع' : 'Not uploaded')}
+                                  </p>
+                                </div>
+                              </div>
+                              <label className="cursor-pointer">
+                                <input
+                                  type="file"
+                                  accept="image/*,.pdf"
+                                  className="hidden"
+                                  onChange={(e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) {
+                                      setUploadedDocs(prev => ({ ...prev, driverLicense: file }));
+                                    }
+                                  }}
+                                />
+                                <Button variant="outline" size="sm" className="h-8">
+                                  <Upload className={`w-3 h-3 ${isRTL ? 'ml-1' : 'mr-1'}`} />
+                                  {isRTL ? 'رفع' : 'Upload'}
+                                </Button>
+                              </label>
+                            </div>
+                          </div>
+
+                          {/* تعريف الراتب */}
+                          <div className="p-3 bg-white/50 dark:bg-black/20 rounded-xl">
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center gap-2">
+                                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${uploadedDocs.salaryCertificate ? 'bg-green-500/20' : 'bg-muted'}`}>
+                                  {uploadedDocs.salaryCertificate ? (
+                                    <CheckCircle2 className="w-4 h-4 text-green-600" />
+                                  ) : (
+                                    <FileText className="w-4 h-4 text-muted-foreground" />
+                                  )}
+                                </div>
+                                <div>
+                                  <p className="text-sm font-medium">{isRTL ? 'تعريف الراتب' : 'Salary Certificate'}</p>
+                                  <p className="text-xs text-muted-foreground">
+                                    {uploadedDocs.salaryCertificate ? uploadedDocs.salaryCertificate.name : (isRTL ? 'لم يتم الرفع' : 'Not uploaded')}
+                                  </p>
+                                </div>
+                              </div>
+                              <label className="cursor-pointer">
+                                <input
+                                  type="file"
+                                  accept="image/*,.pdf"
+                                  className="hidden"
+                                  onChange={(e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) {
+                                      setUploadedDocs(prev => ({ ...prev, salaryCertificate: file }));
+                                    }
+                                  }}
+                                />
+                                <Button variant="outline" size="sm" className="h-8">
+                                  <Upload className={`w-3 h-3 ${isRTL ? 'ml-1' : 'mr-1'}`} />
+                                  {isRTL ? 'رفع' : 'Upload'}
+                                </Button>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* زر إرسال المستندات */}
+                        <Button
+                          className="w-full mt-4 h-12 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl"
+                          disabled={!uploadedDocs.idCard || !uploadedDocs.driverLicense || !uploadedDocs.salaryCertificate || docsUploading}
+                          onClick={() => {
+                            setDocsUploading(true);
+                            setTimeout(() => {
+                              setDocsUploading(false);
+                              setDocsSubmitted(true);
+                              toast({
+                                title: isRTL ? '✅ تم إرسال المستندات بنجاح' : '✅ Documents Submitted Successfully',
+                                description: isRTL ? 'سيتم مراجعة المستندات خلال 24 ساعة' : 'Documents will be reviewed within 24 hours'
+                              });
+                              // الانتقال للمرحلة التالية
+                              setTimeout(() => {
+                                setOrderStatus('final_approval');
+                                toast({
+                                  title: isRTL ? '✅ تم تحديث الحالة' : '✅ Status Updated',
+                                  description: isRTL ? 'تم الانتقال إلى: الموافقة النهائية' : 'Moved to: Final Approval'
+                                });
+                              }, 1500);
+                            }, 2000);
+                          }}
+                        >
+                          {docsUploading ? (
+                            <>
+                              <Loader2 className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'} animate-spin`} />
+                              {isRTL ? 'جاري الإرسال...' : 'Submitting...'}
+                            </>
+                          ) : (
+                            <>
+                              <Send className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                              {isRTL ? 'إرسال المستندات' : 'Submit Documents'}
+                            </>
+                          )}
+                        </Button>
+                      </motion.div>
+                    )}
+
+                    {/* رسالة تأكيد إرسال المستندات */}
+                    {orderStatus === 'documents' && docsSubmitted && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="p-4 bg-green-500/10 rounded-2xl border border-green-500/30 text-center"
+                      >
+                        <CheckCircle2 className="w-12 h-12 text-green-500 mx-auto mb-2" />
+                        <h4 className="font-bold text-green-700 dark:text-green-400">
+                          {isRTL ? 'تم إرسال المستندات بنجاح!' : 'Documents Submitted Successfully!'}
+                        </h4>
+                        <p className="text-sm text-muted-foreground">
+                          {isRTL ? 'سيتم مراجعة المستندات والتواصل معك قريباً' : 'Your documents will be reviewed and we\'ll contact you soon'}
+                        </p>
+                      </motion.div>
+                    )}
 
                     {/* أزرار الإجراءات */}
                     <div className="flex gap-3">
