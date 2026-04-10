@@ -50,7 +50,7 @@ import {
 // Icons
 import {
   Link, Upload, Image as ImageIcon, Sparkles, Calculator, MessageCircle,
-  TrendingUp, Sun, Moon, Zap, Fuel, Gauge, Cog, Shield, Wifi,
+  TrendingUp, Sun, Moon, Zap, Fuel, Gauge, Cog, Shield, Wifi, Lock,
   ChevronLeft, ChevronRight, Loader2, CheckCircle2, AlertCircle, DollarSign,
   Calendar, RefreshCw, X, Plus, Send, Bot, User, Globe, Languages, Camera, QrCode,
   Ruler, Users, Box, Award, Car, Palette, CircleDot, DoorOpen, Package, GaugeIcon, LayoutGrid,
@@ -9877,58 +9877,88 @@ export default function CarLinkPage() {
                 <div className={`p-4 bg-muted/30 rounded-xl ${isRTL ? 'text-right' : 'text-left'}`}>
                   <h4 className="font-semibold mb-2">{isRTL ? 'الإدارة والتحكم' : 'Admin & Management'}</h4>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <Card className="cursor-pointer hover:shadow-lg transition-all" onClick={() => { setServiceDetailOpen(false); setDashboardOpen(true); }}>
-                    <CardContent className="p-4 text-center">
-                      <div className="w-10 h-10 rounded-xl bg-slate-500 flex items-center justify-center mx-auto mb-2">
-                        <Building2 className="w-5 h-5 text-white" />
-                      </div>
-                      <p className="font-semibold text-sm">{isRTL ? 'لوحة التحكم' : 'Dashboard'}</p>
-                    </CardContent>
-                  </Card>
-                  <Card className="cursor-pointer hover:shadow-lg transition-all" onClick={() => { setServiceDetailOpen(false); setSelectedService('add-announcement'); setServiceDetailOpen(true); }}>
-                    <CardContent className="p-4 text-center">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mx-auto mb-2">
-                        <Bell className="w-5 h-5 text-white" />
-                      </div>
-                      <p className="font-semibold text-sm">{isRTL ? 'إضافة إعلان' : 'Add Announcement'}</p>
-                    </CardContent>
-                  </Card>
-                  <Card className="cursor-pointer hover:shadow-lg transition-all" onClick={() => { setServiceDetailOpen(false); setSelectedService('add-offer'); setServiceDetailOpen(true); }}>
-                    <CardContent className="p-4 text-center">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center mx-auto mb-2">
-                        <Sparkles className="w-5 h-5 text-white" />
-                      </div>
-                      <p className="font-semibold text-sm">{isRTL ? 'إضافة عرض خاص' : 'Add Special Offer'}</p>
-                    </CardContent>
-                  </Card>
-                  <Card className="cursor-pointer hover:shadow-lg transition-all" onClick={() => { setServiceDetailOpen(false); setSelectedService('add-agent'); setServiceDetailOpen(true); }}>
-                    <CardContent className="p-4 text-center">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center mx-auto mb-2">
-                        <Building2 className="w-5 h-5 text-white" />
-                      </div>
-                      <p className="font-semibold text-sm">{isRTL ? 'إضافة مزود خدمات' : 'Add Provider'}</p>
-                    </CardContent>
-                  </Card>
-                </div>
-                
-                {/* Privacy Section */}
-                <div className={`p-4 bg-muted/30 rounded-xl ${isRTL ? 'text-right' : 'text-left'}`}>
-                  <h4 className="font-semibold mb-2">{isRTL ? 'الخصوصية والبيانات' : 'Privacy & Data'}</h4>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <Card className="cursor-pointer hover:shadow-lg transition-all" onClick={() => { setServiceDetailOpen(false); setShowPrivacyPolicy(true); }}>
-                    <CardContent className="p-4 text-center">
-                      <Shield className="w-8 h-8 mx-auto mb-2 text-teal-500" />
-                      <p className="font-semibold text-sm">{isRTL ? 'سياسة الخصوصية' : 'Privacy Policy'}</p>
-                    </CardContent>
-                  </Card>
-                  <Card className="cursor-pointer hover:shadow-lg transition-all" onClick={() => { setServiceDetailOpen(false); setShowTermsOfService(true); }}>
-                    <CardContent className="p-4 text-center">
-                      <FileText className="w-8 h-8 mx-auto mb-2 text-blue-500" />
-                      <p className="font-semibold text-sm">{isRTL ? 'شروط الاستخدام' : 'Terms of Service'}</p>
-                    </CardContent>
-                  </Card>
+                <div className="space-y-3">
+                  {/* المظهر */}
+                  <div
+                    className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
+                    onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  >
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-md ${theme === 'dark' ? 'bg-slate-600' : 'bg-amber-500'}`}>
+                      {theme === 'dark' ? (
+                        <Moon className="w-5 h-5 text-white" />
+                      ) : (
+                        <Sun className="w-5 h-5 text-white" />
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <span className="font-medium">{isRTL ? (theme === 'dark' ? 'الوضع الليلي' : 'الوضع النهاري') : (theme === 'dark' ? 'Dark Mode' : 'Light Mode')}</span>
+                      <p className="text-xs text-muted-foreground">{isRTL ? 'انقر للتبديل' : 'Tap to switch'}</p>
+                    </div>
+                    <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
+                  </div>
+
+                  {/* اللغة */}
+                  <div
+                    className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
+                    onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center shadow-md">
+                      <Globe className="w-5 h-5 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <span className="font-medium">{isRTL ? 'اللغة' : 'Language'}</span>
+                      <p className="text-xs text-muted-foreground">{language === 'ar' ? 'العربية' : 'English'}</p>
+                    </div>
+                    <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
+                  </div>
+
+                  {/* لوحة التحكم */}
+                  <div
+                    className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
+                    onClick={() => { 
+                      setServiceDetailOpen(false);
+                      setAdminLoginOpen(true);
+                    }}
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-slate-500 flex items-center justify-center shadow-md">
+                      <Building2 className="w-5 h-5 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <span className="font-medium">{isRTL ? 'لوحة التحكم' : 'Dashboard'}</span>
+                      <p className="text-xs text-muted-foreground">{isRTL ? 'إدارة النظام والإعلانات والعروض' : 'System, ads & offers management'}</p>
+                    </div>
+                    <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
+                  </div>
+
+                  {/* سياسة الخصوصية */}
+                  <div
+                    className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
+                    onClick={() => { setServiceDetailOpen(false); setShowPrivacyPolicy(true); }}
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-teal-500 flex items-center justify-center shadow-md">
+                      <Shield className="w-5 h-5 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <span className="font-medium">{isRTL ? 'سياسة الخصوصية' : 'Privacy Policy'}</span>
+                      <p className="text-xs text-muted-foreground">{isRTL ? 'حماية البيانات' : 'Data protection'}</p>
+                    </div>
+                    <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
+                  </div>
+
+                  {/* شروط الاستخدام */}
+                  <div
+                    className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
+                    onClick={() => { setServiceDetailOpen(false); setShowTermsOfService(true); }}
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-rose-500 flex items-center justify-center shadow-md">
+                      <FileText className="w-5 h-5 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <span className="font-medium">{isRTL ? 'شروط الاستخدام' : 'Terms of Service'}</span>
+                      <p className="text-xs text-muted-foreground">{isRTL ? 'قواعد الاستخدام' : 'Usage rules'}</p>
+                    </div>
+                    <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
+                  </div>
                 </div>
               </div>
             )}
@@ -10169,8 +10199,11 @@ export default function CarLinkPage() {
       </Dialog>
 
       {/* Service Provider Dashboard Dialog */}
-      <Dialog open={dashboardOpen} onOpenChange={setDashboardOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <Dialog open={dashboardOpen} onOpenChange={(open) => {
+        setDashboardOpen(open);
+        if (!open) setIsAdminLoggedIn(false);
+      }}>
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse justify-start' : ''}`}>
               <Building2 className="w-5 h-5" />
@@ -10178,134 +10211,123 @@ export default function CarLinkPage() {
             </DialogTitle>
           </DialogHeader>
           
-          <div className="space-y-4">
-            {/* Admin Welcome */}
-            <div className={`p-4 bg-green-500/10 rounded-xl border border-green-500/30 ${isRTL ? 'text-right' : 'text-left'}`}>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
-                    <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-green-600">{isRTL ? 'مرحباً بك في لوحة التحكم' : 'Welcome to Dashboard'}</p>
-                    <p className="text-xs text-muted-foreground">{isRTL ? 'تم تسجيل الدخول بنجاح' : 'Logged in successfully'}</p>
-                  </div>
-                </div>
+          <div className="space-y-3">
+            {/* إضافة إعلان */}
+            <div
+              className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
+              onClick={() => { setDashboardOpen(false); setSelectedService('add-announcement'); setServiceDetailOpen(true); }}
+            >
+              <div className="w-10 h-10 rounded-xl bg-cyan-500 flex items-center justify-center shadow-md">
+                <Bell className="w-5 h-5 text-white" />
               </div>
+              <div className="flex-1">
+                <span className="font-medium">{isRTL ? 'إضافة إعلان' : 'Add Announcement'}</span>
+                <p className="text-xs text-muted-foreground">{isRTL ? 'نشر إعلان جديد' : 'Publish new ad'}</p>
+              </div>
+              <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
             </div>
 
-            {/* Dashboard Features */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Add Announcement */}
-              <Card className="cursor-pointer hover:shadow-lg transition-all border-2 border-transparent hover:border-primary/30">
-                <CardContent className="p-6 text-center">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mx-auto mb-4 shadow-lg">
-                    <Bell className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="font-bold text-lg mb-2">{isRTL ? 'إضافة إعلان' : 'Add Announcement'}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {isRTL ? 'إضافة إعلان جديد للمستخدمين' : 'Add new announcement for users'}
-                  </p>
-                  <Button className="mt-4 sky-gradient text-white w-full" size="sm">
-                    <Plus className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                    {isRTL ? 'إضافة' : 'Add'}
-                  </Button>
-                </CardContent>
-              </Card>
-
-              {/* Add Special Offer */}
-              <Card className="cursor-pointer hover:shadow-lg transition-all border-2 border-transparent hover:border-primary/30">
-                <CardContent className="p-6 text-center">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center mx-auto mb-4 shadow-lg">
-                    <Sparkles className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="font-bold text-lg mb-2">{isRTL ? 'إضافة عرض خاص' : 'Add Special Offer'}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {isRTL ? 'إضافة عرض خاص جديد' : 'Add new special offer'}
-                  </p>
-                  <Button className="mt-4 sky-gradient text-white w-full" size="sm">
-                    <Plus className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                    {isRTL ? 'إضافة' : 'Add'}
-                  </Button>
-                </CardContent>
-              </Card>
-
-              {/* Add Service Provider */}
-              <Card className="cursor-pointer hover:shadow-lg transition-all border-2 border-transparent hover:border-primary/30">
-                <CardContent className="p-6 text-center">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center mx-auto mb-4 shadow-lg">
-                    <Building2 className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="font-bold text-lg mb-2">{isRTL ? 'إضافة مزود خدمات' : 'Add Service Provider'}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {isRTL ? 'إضافة مزود خدمات جديد' : 'Add new service provider'}
-                  </p>
-                  <Button className="mt-4 sky-gradient text-white w-full" size="sm">
-                    <Plus className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                    {isRTL ? 'إضافة' : 'Add'}
-                  </Button>
-                </CardContent>
-              </Card>
+            {/* إضافة عرض خاص */}
+            <div
+              className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
+              onClick={() => { setDashboardOpen(false); setSelectedService('add-offer'); setServiceDetailOpen(true); }}
+            >
+              <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center shadow-md">
+                <Sparkles className="w-5 h-5 text-white" />
+              </div>
+              <div className="flex-1">
+                <span className="font-medium">{isRTL ? 'إضافة عرض خاص' : 'Add Special Offer'}</span>
+                <p className="text-xs text-muted-foreground">{isRTL ? 'عروض وخصومات' : 'Offers & discounts'}</p>
+              </div>
+              <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
             </div>
 
-            {/* Quick Stats */}
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base">{isRTL ? 'إحصائيات سريعة' : 'Quick Stats'}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="p-3 bg-blue-500/10 rounded-xl text-center">
-                    <p className="text-2xl font-bold text-blue-600">12</p>
-                    <p className="text-xs text-muted-foreground">{isRTL ? 'الإعلانات' : 'Announcements'}</p>
-                  </div>
-                  <div className="p-3 bg-amber-500/10 rounded-xl text-center">
-                    <p className="text-2xl font-bold text-amber-600">8</p>
-                    <p className="text-xs text-muted-foreground">{isRTL ? 'العروض' : 'Offers'}</p>
-                  </div>
-                  <div className="p-3 bg-green-500/10 rounded-xl text-center">
-                    <p className="text-2xl font-bold text-green-600">24</p>
-                    <p className="text-xs text-muted-foreground">{isRTL ? 'مزودي الخدمات' : 'Providers'}</p>
-                  </div>
-                  <div className="p-3 bg-purple-500/10 rounded-xl text-center">
-                    <p className="text-2xl font-bold text-purple-600">156</p>
-                    <p className="text-xs text-muted-foreground">{isRTL ? 'المستخدمين' : 'Users'}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            {/* إضافة مزود خدمات */}
+            <div
+              className="w-full flex items-center gap-4 cursor-pointer transition-all duration-200 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-primary/20"
+              onClick={() => { setDashboardOpen(false); setSelectedService('add-agent'); setServiceDetailOpen(true); }}
+            >
+              <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center shadow-md">
+                <Building2 className="w-5 h-5 text-white" />
+              </div>
+              <div className="flex-1">
+                <span className="font-medium">{isRTL ? 'إضافة مزود خدمات' : 'Add Provider'}</span>
+                <p className="text-xs text-muted-foreground">{isRTL ? 'تسجيل مزود جديد' : 'Register new provider'}</p>
+              </div>
+              <ChevronLeft className={`w-5 h-5 text-muted-foreground ${isRTL ? '' : 'rotate-180'}`} />
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
-            {/* Recent Activity */}
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base">{isRTL ? 'النشاط الأخير' : 'Recent Activity'}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <div className={`p-3 bg-muted/50 rounded-lg flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
-                    <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                      <Bell className="w-4 h-4 text-blue-500" />
-                      <span className="text-sm">{isRTL ? 'تم إضافة إعلان جديد' : 'New announcement added'}</span>
-                    </div>
-                    <span className="text-xs text-muted-foreground">{isRTL ? 'منذ 5 دقائق' : '5 min ago'}</span>
-                  </div>
-                  <div className={`p-3 bg-muted/50 rounded-lg flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
-                    <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                      <Sparkles className="w-4 h-4 text-amber-500" />
-                      <span className="text-sm">{isRTL ? 'تم إضافة عرض خاص' : 'Special offer added'}</span>
-                    </div>
-                    <span className="text-xs text-muted-foreground">{isRTL ? 'منذ ساعة' : '1 hour ago'}</span>
-                  </div>
-                  <div className={`p-3 bg-muted/50 rounded-lg flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
-                    <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                      <Building2 className="w-4 h-4 text-green-500" />
-                      <span className="text-sm">{isRTL ? 'تم تسجيل وكيل جديد' : 'New agent registered'}</span>
-                    </div>
-                    <span className="text-xs text-muted-foreground">{isRTL ? 'منذ 3 ساعات' : '3 hours ago'}</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+      {/* Admin PIN Login Dialog */}
+      <Dialog open={adminLoginOpen} onOpenChange={setAdminLoginOpen}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse justify-start' : ''}`}>
+              <Shield className="w-5 h-5" />
+              {isRTL ? 'تسجيل الدخول' : 'Login'}
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-4 pt-4">
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+                <Lock className="w-8 h-8 text-muted-foreground" />
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {isRTL ? 'أدخل رقم الدخول للمتابعة' : 'Enter PIN to continue'}
+              </p>
+            </div>
+            
+            <div>
+              <Input
+                type="password"
+                placeholder={isRTL ? 'أدخل الرقم' : 'Enter PIN'}
+                value={adminPin}
+                onChange={(e) => {
+                  setAdminPin(e.target.value);
+                  setAdminPinError(false);
+                }}
+                className={`text-center text-lg tracking-widest ${adminPinError ? 'border-red-500' : ''}`}
+                dir="ltr"
+              />
+              {adminPinError && (
+                <p className="text-red-500 text-xs mt-2 text-center">
+                  {isRTL ? 'الرقم غير صحيح' : 'Incorrect PIN'}
+                </p>
+              )}
+            </div>
+            
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => {
+                  setAdminLoginOpen(false);
+                  setAdminPin('');
+                  setAdminPinError(false);
+                }}
+              >
+                {isRTL ? 'إلغاء' : 'Cancel'}
+              </Button>
+              <Button
+                className="flex-1"
+                onClick={() => {
+                  if (adminPin === ADMIN_PIN) {
+                    setIsAdminLoggedIn(true);
+                    setAdminLoginOpen(false);
+                    setAdminPin('');
+                    setAdminPinError(false);
+                    setDashboardOpen(true);
+                  } else {
+                    setAdminPinError(true);
+                  }
+                }}
+              >
+                {isRTL ? 'دخول' : 'Login'}
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
