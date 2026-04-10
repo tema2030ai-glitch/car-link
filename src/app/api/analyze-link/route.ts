@@ -360,12 +360,48 @@ export async function POST(request: NextRequest) {
     const keywords = extractCarKeywords(url);
     const vehicleKey = keywords[0];
     const vehicle = { ...demoVehicles[vehicleKey] } || { ...demoVehicles['camry'] };
-    
+
     // Ensure all vehicles have default values for required fields
     vehicle.mileage = vehicle.mileage ?? 0;
     vehicle.condition = vehicle.condition || 'new';
     vehicle.color = vehicle.color || 'غير محدد';
     vehicle.trunkCapacity = vehicle.trunkCapacity ?? 0;
+
+    // Ensure all specification fields have default values
+    vehicle.horsepower = vehicle.horsepower ?? 150;
+    vehicle.torque = vehicle.torque ?? 200;
+    vehicle.acceleration = vehicle.acceleration ?? 9.0;
+    vehicle.topSpeed = vehicle.topSpeed ?? 180;
+    vehicle.engine = vehicle.engine || '2.0L 4-cylinder';
+    vehicle.engineCode = vehicle.engineCode || 'N/A';
+    vehicle.fuelType = vehicle.fuelType || 'بنزين';
+    vehicle.fuelTypeEn = vehicle.fuelTypeEn || 'Gasoline';
+    vehicle.fuelConsumption = vehicle.fuelConsumption ?? 7.5;
+    vehicle.transmission = vehicle.transmission || 'أوتوماتيك';
+    vehicle.transmissionEn = vehicle.transmissionEn || 'Automatic';
+    vehicle.gears = vehicle.gears ?? 6;
+    vehicle.drivetrain = vehicle.drivetrain || 'FWD';
+    vehicle.length = vehicle.length ?? 4600;
+    vehicle.width = vehicle.width ?? 1800;
+    vehicle.height = vehicle.height ?? 1450;
+    vehicle.wheelbase = vehicle.wheelbase ?? 2700;
+    vehicle.weight = vehicle.weight ?? 1400;
+    vehicle.groundClearance = vehicle.groundClearance ?? 150;
+    vehicle.seats = vehicle.seats ?? 5;
+    vehicle.doors = vehicle.doors ?? 4;
+    vehicle.fuelTankCapacity = vehicle.fuelTankCapacity ?? 50;
+    vehicle.wheelSize = vehicle.wheelSize ?? 17;
+    vehicle.tireSize = vehicle.tireSize || '225/45 R17';
+    vehicle.warranty = vehicle.warranty || '3 سنوات / 100,000 كم';
+    vehicle.warrantyYears = vehicle.warrantyYears ?? 3;
+    vehicle.warrantyKm = vehicle.warrantyKm ?? 100000;
+    vehicle.country = vehicle.country || 'غير محدد';
+    vehicle.countryEn = vehicle.countryEn || 'Unknown';
+    vehicle.safetyFeatures = vehicle.safetyFeatures || ['وسائد هوائية', 'نظام الفرامل ABS', 'التحكم بالثبات'];
+    vehicle.techFeatures = vehicle.techFeatures || ['شاشة تعمل باللمس', 'Bluetooth', 'USB'];
+    vehicle.comfortFeatures = vehicle.comfortFeatures || ['مكيف هواء', 'نظام صوتي', 'تحكم بالمقاعد'];
+    vehicle.bodyType = vehicle.bodyType || 'سيدان';
+    vehicle.bodyTypeEn = vehicle.bodyTypeEn || 'Sedan';
     
     // Add some variation based on URL to make it feel more dynamic
     const urlHash = url.split('').reduce((a, b) => {
