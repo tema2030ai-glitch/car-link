@@ -1416,6 +1416,11 @@ export default function CarLinkPage() {
   const [dashboardOpen, setDashboardOpen] = useState(false);
   const [adminLoginOpen, setAdminLoginOpen] = useState(false);
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+  const [adminPin, setAdminPin] = useState('');
+  const [adminPinError, setAdminPinError] = useState(false);
+  const [pendingAdminAction, setPendingAdminAction] = useState<string | null>(null);
+  const [isNavigatingFromDashboard, setIsNavigatingFromDashboard] = useState(false);
+  const ADMIN_PIN = '0011003300';
   const [adminEmail, setAdminEmail] = useState('');
   const [confirmationCode, setConfirmationCode] = useState('');
   const [enteredCode, setEnteredCode] = useState('');
