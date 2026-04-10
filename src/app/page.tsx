@@ -1545,15 +1545,6 @@ export default function CarLinkPage() {
       color: 'bg-teal-500',
     },
     {
-      id: 'extended-warranty',
-      titleAr: 'الضمان الممتد',
-      titleEn: 'Extended Warranty',
-      descriptionAr: 'ضمان يبدأ بعد انتهاء ضمان الوكيل',
-      descriptionEn: 'Warranty after dealer warranty expires',
-      icon: Shield,
-      color: 'bg-teal-500',
-    },
-    {
       id: 'settings',
       titleAr: 'الإعدادات والضبط',
       titleEn: 'Settings',
@@ -3344,7 +3335,6 @@ export default function CarLinkPage() {
                       { icon: Calculator, label: isRTL ? 'طلب تمويل' : 'Request Financing' },
                       { icon: Bot, label: t.features.advisor },
                       { icon: Zap, label: isRTL ? 'طلب أسرع' : 'Fast Request' },
-                      { icon: Shield, label: isRTL ? 'الضمان الممتد' : 'Extended Warranty' },
                     ].map((feature) => (
                       <div key={feature.label} className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
                         <feature.icon className="w-6 h-6 text-primary" />
@@ -8815,129 +8805,6 @@ export default function CarLinkPage() {
                 </div>
               </div>
             )}
-            
-
-            {/* ========== خدمة الضمان الممتد - تصميم جديد ========== */}
-            {selectedService === 'extended-warranty' && (
-              <div className="space-y-4">
-                {/* ترحيب */}
-                <motion.div 
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="relative overflow-hidden"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-teal-500/20 to-cyan-500/20 rounded-2xl blur-xl" />
-                  <div className="relative p-5 bg-gradient-to-r from-teal-500/10 to-cyan-500/10 rounded-2xl border border-teal-500/30">
-                    <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center shadow-lg">
-                        <Shield className="w-7 h-7 text-white" />
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-lg">{isRTL ? 'حماية إضافية لسيارتك' : 'Extra Protection for Your Car'}</h4>
-                        <p className="text-sm text-muted-foreground">{isRTL ? 'ضمان ممتد بعد انتهاء ضمان الوكيل' : 'Extended warranty after dealer warranty'}</p>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-
-                {/* باقات الضمان */}
-                <div className="grid gap-3">
-                  {[
-                    {
-                      id: 'basic',
-                      title: isRTL ? 'الباقة الأساسية' : 'Basic Package',
-                      price: '1,500',
-                      period: isRTL ? '/ سنة' : '/ year',
-                      features: isRTL ? ['المحرك وناقل الحركة', 'نظام التبريد', 'الدعم الفني على مدار الساعة'] : ['Engine & Transmission', 'Cooling System', '24/7 Technical Support'],
-                      gradient: 'from-gray-500 to-slate-500',
-                      icon: Cog
-                    },
-                    {
-                      id: 'advanced',
-                      title: isRTL ? 'الباقة المتقدمة' : 'Advanced Package',
-                      price: '2,500',
-                      period: isRTL ? '/ سنة' : '/ year',
-                      features: isRTL ? ['جميع مميزات الأساسية', 'نظام التعليق', 'نظام الفرامل', 'سيارة بديلة'] : ['All Basic Features', 'Suspension System', 'Brake System', 'Replacement Car'],
-                      gradient: 'from-teal-500 to-cyan-500',
-                      popular: true,
-                      icon: Shield
-                    },
-                    {
-                      id: 'premium',
-                      title: isRTL ? 'الباقة الشاملة' : 'Premium Package',
-                      price: '4,000',
-                      period: isRTL ? '/ سنة' : '/ year',
-                      features: isRTL ? ['جميع مميزات المتقدمة', 'نظام الكهرباء', 'التكييف', 'مساعدة على الطريق 24/7', 'سحب مجاني'] : ['All Advanced Features', 'Electrical System', 'AC System', '24/7 Roadside Assistance', 'Free Towing'],
-                      gradient: 'from-amber-500 to-orange-500',
-                      icon: Award
-                    },
-                  ].map((pkg, i) => {
-                    const IconComp = pkg.icon;
-                    return (
-                      <motion.div
-                        key={pkg.id}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: i * 0.1 }}
-                      >
-                        <Card className={`relative overflow-hidden ${pkg.popular ? 'border-2 border-teal-500' : ''}`}>
-                          {pkg.popular && (
-                            <div className="absolute -top-0 right-4 bg-teal-500 text-white text-xs px-3 py-1 rounded-b-lg">
-                              {isRTL ? 'الأكثر طلباً' : 'Most Popular'}
-                            </div>
-                          )}
-                          <div className={`h-1 bg-gradient-to-r ${pkg.gradient}`} />
-                          <CardContent className="p-5">
-                            <div className="flex items-start justify-between mb-4">
-                              <div className="flex items-center gap-3">
-                                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${pkg.gradient} flex items-center justify-center shadow-lg`}>
-                                  <IconComp className="w-6 h-6 text-white" />
-                                </div>
-                                <div>
-                                  <h4 className="font-bold text-lg">{pkg.title}</h4>
-                                </div>
-                              </div>
-                              <div className="text-right">
-                                <p className="text-2xl font-bold">{pkg.price}</p>
-                                <p className="text-xs text-muted-foreground">{isRTL ? 'ريال' : 'SAR'}{pkg.period}</p>
-                              </div>
-                            </div>
-                            <ul className="space-y-2 mb-4">
-                              {pkg.features.map((feature, j) => (
-                                <li key={j} className="flex items-center gap-2 text-sm">
-                                  <CheckCircle2 className="w-4 h-4 text-teal-500 flex-shrink-0" />
-                                  {feature}
-                                </li>
-                              ))}
-                            </ul>
-                            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                              <Button
-                                className={`w-full h-12 rounded-xl ${pkg.popular ? 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white' : ''}`}
-                                variant={pkg.popular ? 'default' : 'outline'}
-                                onClick={() => toast({ title: isRTL ? `✅ تم اختيار ${pkg.title}` : `✅ ${pkg.title} Selected` })}
-                              >
-                                {isRTL ? 'اختيار الباقة' : 'Select Package'}
-                              </Button>
-                            </motion.div>
-                          </CardContent>
-                        </Card>
-                      </motion.div>
-                    );
-                  })}
-                </div>
-
-                {/* تواصل للعرض المخصص */}
-                <div className="p-5 bg-gradient-to-r from-teal-500/5 to-cyan-500/5 rounded-2xl border border-teal-500/20 text-center">
-                  <Phone className="w-8 h-8 mx-auto text-teal-500 mb-2" />
-                  <p className="font-semibold">{isRTL ? 'هل تحتاج باقة مخصصة؟' : 'Need a custom package?'}</p>
-                  <p className="text-sm text-muted-foreground mb-3">{isRTL ? 'تواصل معنا للحصول على عرض مخصص' : 'Contact us for a custom quote'}</p>
-                  <Button variant="outline" className="rounded-xl">
-                    {isRTL ? 'تواصل معنا' : 'Contact Us'}
-                  </Button>
-                </div>
-              </div>
-            )}
-
             {/* ========== خدمة الحسبة/التمويل - حاسبة التمويل ========== */}
             {selectedService === 'financing' && (
               <div className="space-y-6">
