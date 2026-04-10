@@ -7784,10 +7784,36 @@ export default function CarLinkPage() {
                       </Button>
                       <Button
                         className="flex-1 h-12 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl"
-                        onClick={() => toast({ title: isRTL ? '📞 سيتم التواصل معك قريباً' : '📞 We will contact you soon' })}
+                        onClick={() => {
+                          const steps = ['pending', 'approved', 'documents', 'final_approval', 'contract', 'delivery'];
+                          const currentIndex = steps.indexOf(orderStatus);
+                          if (currentIndex < steps.length - 1) {
+                            const nextStatus = steps[currentIndex + 1];
+                            setOrderStatus(nextStatus);
+                            const statusNames: Record<string, string> = {
+                              pending: isRTL ? 'استلام الطلب' : 'Order Received',
+                              approved: isRTL ? 'الموافقة المبدئية' : 'Initial Approval',
+                              documents: isRTL ? 'استكمال المستندات' : 'Documents',
+                              final_approval: isRTL ? 'الموافقة النهائية' : 'Final Approval',
+                              contract: isRTL ? 'توقيع العقد' : 'Contract Signing',
+                              delivery: isRTL ? 'تسليم السيارة' : 'Car Delivery',
+                            };
+                            toast({ 
+                              title: isRTL ? '✅ تم تحديث الحالة' : '✅ Status Updated',
+                              description: isRTL 
+                                ? `تم الانتقال إلى: ${statusNames[nextStatus]}` 
+                                : `Moved to: ${statusNames[nextStatus]}`
+                            });
+                          } else {
+                            toast({ 
+                              title: isRTL ? '🎉 تم تسليم السيارة!' : '🎉 Car Delivered!',
+                              description: isRTL ? 'مبروك! تم إكمال جميع المراحل' : 'Congratulations! All stages completed'
+                            });
+                          }
+                        }}
                       >
-                        <Phone className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                        {isRTL ? 'تواصل معنا' : 'Contact Us'}
+                        <ArrowRight className={`w-4 h-4 ${isRTL ? 'ml-2 rotate-180' : 'mr-2'}`} />
+                        {isRTL ? 'تحديث الحالة' : 'Update Status'}
                       </Button>
                     </div>
                   </motion.div>
