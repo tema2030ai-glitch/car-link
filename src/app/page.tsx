@@ -8060,17 +8060,6 @@ export default function CarLinkPage() {
                       <ClipboardList className="w-10 h-10 text-cyan-500" />
                     </motion.div>
                     <p className="text-muted-foreground">{isRTL ? 'لم تقم بتقديم أي طلبات بعد' : 'You haven\'t submitted any orders yet'}</p>
-                    <Button
-                      variant="link"
-                      className="mt-2 text-cyan-500"
-                      onClick={() => {
-                        setServiceDetailOpen(false);
-                        setSelectedService('new-car-request');
-                        setTimeout(() => setServiceDetailOpen(true), 100);
-                      }}
-                    >
-                      {isRTL ? 'قدم طلبك الآن ←' : 'Submit your request now →'}
-                    </Button>
                   </div>
                 )}
               </div>
