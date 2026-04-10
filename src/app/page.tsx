@@ -3331,9 +3331,9 @@ export default function CarLinkPage() {
                   <div className="flex flex-wrap justify-center gap-6 mt-6 pt-4 border-t">
                     {[
                       { icon: ClipboardList, label: isRTL ? 'تتبع الطلب' : 'Order Tracking', service: 'order-tracking' },
-                      { icon: TrendingUp, label: isRTL ? 'أسعار السوق' : 'Market Prices', service: 'market-prices' },
+                      { icon: Calculator, label: isRTL ? 'الحسبة' : 'Calculation', service: 'financing' },
                       { icon: Landmark, label: isRTL ? 'عروض التمويل' : 'Financing Offers', service: 'bank-offers' },
-                      { icon: Car, label: isRTL ? 'طلب سيارة جديدة' : 'New Car Request', service: 'new-car-request' },
+                      { icon: Car, label: isRTL ? 'عروض السيارات' : 'Car Offers', service: 'car-offers' },
                     ].map((feature) => (
                       <div 
                         key={feature.label} 
