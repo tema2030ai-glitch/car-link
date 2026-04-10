@@ -7989,6 +7989,19 @@ export default function CarLinkPage() {
                         onClick={() => {
                           const steps = ['pending', 'approved', 'documents', 'final_approval', 'contract', 'delivery'];
                           const currentIndex = steps.indexOf(orderStatus);
+                          
+                          // التحقق من رفع المستندات في مرحلة استكمال المستندات
+                          if (orderStatus === 'documents' && !docsSubmitted) {
+                            toast({ 
+                              title: isRTL ? '⚠️ تنبيه' : '⚠️ Alert',
+                              description: isRTL 
+                                ? 'يرجى رفع المستندات المطلوبة أولاً' 
+                                : 'Please upload the required documents first',
+                              variant: 'destructive'
+                            });
+                            return;
+                          }
+                          
                           if (currentIndex < steps.length - 1) {
                             const nextStatus = steps[currentIndex + 1];
                             setOrderStatus(nextStatus);
