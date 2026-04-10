@@ -7513,12 +7513,9 @@ export default function CarLinkPage() {
               <X className="w-5 h-5 text-muted-foreground" />
             </button>
             
-            {/* Title and Icon - Always on Right side */}
-            <div className={`flex items-center gap-2 ${isRTL ? 'flex-row' : 'flex-row-reverse'}`}>
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg">
-                <LayoutGrid className="w-5 h-5 text-white" />
-              </div>
-              <SheetTitle className="text-lg font-bold">
+            {/* Title and Icon - Centered */}
+            <div className="flex justify-center mt-4">
+              <SheetTitle className="text-lg font-bold text-center">
                 {isRTL ? 'خدمات إضافية' : 'Additional Services'}
               </SheetTitle>
             </div>
