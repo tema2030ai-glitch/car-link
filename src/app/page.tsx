@@ -3328,7 +3328,7 @@ export default function CarLinkPage() {
                   </div>
 
                   {/* Features - Primary Color Icons without frame - Inside Card */}
-                  <div className="flex flex-wrap justify-center gap-6 mt-6 pt-4 border-t">
+                  <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8 lg:gap-12 mt-6 pt-4 border-t">
                     {[
                       { icon: ClipboardList, label: isRTL ? 'تتبع الطلب' : 'Order Tracking', service: 'order-tracking' },
                       { icon: Calculator, label: isRTL ? 'الحسبة' : 'Calculation', service: 'financing' },
@@ -3337,14 +3337,14 @@ export default function CarLinkPage() {
                     ].map((feature) => (
                       <div 
                         key={feature.label} 
-                        className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+                        className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors cursor-pointer px-2 sm:px-3 md:px-4"
                         onClick={() => {
                           setSelectedService(feature.service);
                           setServiceDetailOpen(true);
                         }}
                       >
-                        <feature.icon className="w-6 h-6 text-primary" />
-                        <span className="text-sm font-medium">{feature.label}</span>
+                        <feature.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+                        <span className="text-xs sm:text-sm font-medium whitespace-nowrap">{feature.label}</span>
                       </div>
                     ))}
                   </div>
