@@ -7519,7 +7519,7 @@ export default function CarLinkPage() {
                 <LayoutGrid className="w-5 h-5 text-white" />
               </div>
               <SheetTitle className="text-lg font-bold">
-                {isRTL ? 'الخدمات' : 'Services'}
+                {isRTL ? 'خدمات إضافية' : 'Additional Services'}
               </SheetTitle>
             </div>
           </div>
