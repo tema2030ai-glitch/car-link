@@ -7802,51 +7802,56 @@ export default function CarLinkPage() {
                         <div className="space-y-3">
                           {/* صورة الهوية */}
                           <div className="p-3 bg-white/50 dark:bg-black/20 rounded-xl">
-                            <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
-                                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${uploadedDocs.idCard ? 'bg-green-500/20' : 'bg-muted'}`}>
+                                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${uploadedDocs.idCard ? 'bg-green-500/20' : 'bg-muted'}`}>
                                   {uploadedDocs.idCard ? (
-                                    <CheckCircle2 className="w-4 h-4 text-green-600" />
+                                    <CheckCircle2 className="w-5 h-5 text-green-600" />
                                   ) : (
-                                    <FileText className="w-4 h-4 text-muted-foreground" />
+                                    <FileText className="w-5 h-5 text-muted-foreground" />
                                   )}
                                 </div>
                                 <div>
-                                  <p className="text-sm font-medium">{isRTL ? 'صورة الهوية الوطنية' : 'National ID Card'}</p>
+                                  <p className="text-sm font-medium">{isRTL ? 'صورة الهوية' : 'ID Card'}</p>
                                   <p className="text-xs text-muted-foreground">
                                     {uploadedDocs.idCard ? uploadedDocs.idCard.name : (isRTL ? 'لم يتم الرفع' : 'Not uploaded')}
                                   </p>
                                 </div>
                               </div>
-                              <label className="cursor-pointer">
-                                <input
-                                  type="file"
-                                  accept="image/*,.pdf"
-                                  className="hidden"
-                                  onChange={(e) => {
-                                    const file = e.target.files?.[0];
-                                    if (file) {
-                                      setUploadedDocs(prev => ({ ...prev, idCard: file }));
-                                    }
-                                  }}
-                                />
-                                <Button variant="outline" size="sm" className="h-8">
-                                  <Upload className={`w-3 h-3 ${isRTL ? 'ml-1' : 'mr-1'}`} />
-                                  {isRTL ? 'رفع' : 'Upload'}
-                                </Button>
-                              </label>
+                              <input
+                                type="file"
+                                id="idCardInput"
+                                accept="image/*,.pdf"
+                                className="hidden"
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    setUploadedDocs(prev => ({ ...prev, idCard: file }));
+                                    toast({ title: isRTL ? '✅ تم رفع صورة الهوية' : '✅ ID Card uploaded' });
+                                  }
+                                }}
+                              />
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="h-9 px-4"
+                                onClick={() => document.getElementById('idCardInput')?.click()}
+                              >
+                                <Upload className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                                {uploadedDocs.idCard ? (isRTL ? 'تغيير' : 'Change') : (isRTL ? 'رفع' : 'Upload')}
+                              </Button>
                             </div>
                           </div>
 
                           {/* صورة رخصة القيادة */}
                           <div className="p-3 bg-white/50 dark:bg-black/20 rounded-xl">
-                            <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
-                                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${uploadedDocs.driverLicense ? 'bg-green-500/20' : 'bg-muted'}`}>
+                                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${uploadedDocs.driverLicense ? 'bg-green-500/20' : 'bg-muted'}`}>
                                   {uploadedDocs.driverLicense ? (
-                                    <CheckCircle2 className="w-4 h-4 text-green-600" />
+                                    <CheckCircle2 className="w-5 h-5 text-green-600" />
                                   ) : (
-                                    <FileText className="w-4 h-4 text-muted-foreground" />
+                                    <FileText className="w-5 h-5 text-muted-foreground" />
                                   )}
                                 </div>
                                 <div>
@@ -7856,35 +7861,40 @@ export default function CarLinkPage() {
                                   </p>
                                 </div>
                               </div>
-                              <label className="cursor-pointer">
-                                <input
-                                  type="file"
-                                  accept="image/*,.pdf"
-                                  className="hidden"
-                                  onChange={(e) => {
-                                    const file = e.target.files?.[0];
-                                    if (file) {
-                                      setUploadedDocs(prev => ({ ...prev, driverLicense: file }));
-                                    }
-                                  }}
-                                />
-                                <Button variant="outline" size="sm" className="h-8">
-                                  <Upload className={`w-3 h-3 ${isRTL ? 'ml-1' : 'mr-1'}`} />
-                                  {isRTL ? 'رفع' : 'Upload'}
-                                </Button>
-                              </label>
+                              <input
+                                type="file"
+                                id="driverLicenseInput"
+                                accept="image/*,.pdf"
+                                className="hidden"
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    setUploadedDocs(prev => ({ ...prev, driverLicense: file }));
+                                    toast({ title: isRTL ? '✅ تم رفع رخصة القيادة' : '✅ Driver\'s License uploaded' });
+                                  }
+                                }}
+                              />
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="h-9 px-4"
+                                onClick={() => document.getElementById('driverLicenseInput')?.click()}
+                              >
+                                <Upload className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                                {uploadedDocs.driverLicense ? (isRTL ? 'تغيير' : 'Change') : (isRTL ? 'رفع' : 'Upload')}
+                              </Button>
                             </div>
                           </div>
 
                           {/* تعريف الراتب */}
                           <div className="p-3 bg-white/50 dark:bg-black/20 rounded-xl">
-                            <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
-                                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${uploadedDocs.salaryCertificate ? 'bg-green-500/20' : 'bg-muted'}`}>
+                                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${uploadedDocs.salaryCertificate ? 'bg-green-500/20' : 'bg-muted'}`}>
                                   {uploadedDocs.salaryCertificate ? (
-                                    <CheckCircle2 className="w-4 h-4 text-green-600" />
+                                    <CheckCircle2 className="w-5 h-5 text-green-600" />
                                   ) : (
-                                    <FileText className="w-4 h-4 text-muted-foreground" />
+                                    <FileText className="w-5 h-5 text-muted-foreground" />
                                   )}
                                 </div>
                                 <div>
@@ -7894,23 +7904,28 @@ export default function CarLinkPage() {
                                   </p>
                                 </div>
                               </div>
-                              <label className="cursor-pointer">
-                                <input
-                                  type="file"
-                                  accept="image/*,.pdf"
-                                  className="hidden"
-                                  onChange={(e) => {
-                                    const file = e.target.files?.[0];
-                                    if (file) {
-                                      setUploadedDocs(prev => ({ ...prev, salaryCertificate: file }));
-                                    }
-                                  }}
-                                />
-                                <Button variant="outline" size="sm" className="h-8">
-                                  <Upload className={`w-3 h-3 ${isRTL ? 'ml-1' : 'mr-1'}`} />
-                                  {isRTL ? 'رفع' : 'Upload'}
-                                </Button>
-                              </label>
+                              <input
+                                type="file"
+                                id="salaryCertificateInput"
+                                accept="image/*,.pdf"
+                                className="hidden"
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    setUploadedDocs(prev => ({ ...prev, salaryCertificate: file }));
+                                    toast({ title: isRTL ? '✅ تم رفع تعريف الراتب' : '✅ Salary Certificate uploaded' });
+                                  }
+                                }}
+                              />
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="h-9 px-4"
+                                onClick={() => document.getElementById('salaryCertificateInput')?.click()}
+                              >
+                                <Upload className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                                {uploadedDocs.salaryCertificate ? (isRTL ? 'تغيير' : 'Change') : (isRTL ? 'رفع' : 'Upload')}
+                              </Button>
                             </div>
                           </div>
                         </div>
