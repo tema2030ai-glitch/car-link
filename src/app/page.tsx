@@ -3326,33 +3326,35 @@ export default function CarLinkPage() {
                       </Tooltip>
                     </div>
                   </div>
-
-                  {/* Features - Primary Color Icons without frame - Inside Card */}
-                  <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8 lg:gap-12 mt-6 pt-4 border-t">
-                    {[
-                      { icon: ClipboardList, label: isRTL ? 'تتبع الطلب' : 'Order Tracking', service: 'order-tracking' },
-                      { icon: Calculator, label: isRTL ? 'الحسبة' : 'Calculation', service: 'financing' },
-                      { icon: Landmark, label: isRTL ? 'عروض التمويل' : 'Financing Offers', service: 'bank-offers' },
-                      { icon: Car, label: isRTL ? 'عروض السيارات' : 'Car Offers', service: 'car-offers' },
-                    ].map((feature) => (
-                      <div 
-                        key={feature.label} 
-                        className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors cursor-pointer px-2 sm:px-3 md:px-4"
-                        onClick={() => {
-                          setSelectedService(feature.service);
-                          setServiceDetailOpen(true);
-                        }}
-                      >
-                        <feature.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
-                        <span className="text-xs sm:text-sm font-medium whitespace-nowrap">{feature.label}</span>
-                      </div>
-                    ))}
-                  </div>
                 </CardContent>
               </Card>
 
+              {/* Quick Services - Below Card - Centered */}
+              <div className="flex justify-center mt-8">
+                <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8 lg:gap-12">
+                  {[
+                    { icon: ClipboardList, label: isRTL ? 'تتبع الطلب' : 'Order Tracking', service: 'order-tracking' },
+                    { icon: Calculator, label: isRTL ? 'الحسبة' : 'Calculation', service: 'financing' },
+                    { icon: Landmark, label: isRTL ? 'عروض التمويل' : 'Financing Offers', service: 'bank-offers' },
+                    { icon: Car, label: isRTL ? 'عروض السيارات' : 'Car Offers', service: 'car-offers' },
+                  ].map((feature) => (
+                    <div 
+                      key={feature.label} 
+                      className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors cursor-pointer px-2 sm:px-3 md:px-4"
+                      onClick={() => {
+                        setSelectedService(feature.service);
+                        setServiceDetailOpen(true);
+                      }}
+                    >
+                      <feature.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+                      <span className="text-xs sm:text-sm font-medium whitespace-nowrap">{feature.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               {/* Tagline - Below Card */}
-              <div className="flex items-center justify-center gap-2 mt-4 text-sm text-white">
+              <div className="flex items-center justify-center gap-2 mt-6 text-sm text-white">
                 <span className="w-3.5 h-3.5 rounded-full border-2 border-primary flex-shrink-0"></span>
                 <span>{isRTL ? 'بيئة متكاملة لتجربة خدمات السيارات المدعومة بالذكاء الاصطناعي' : 'An integrated environment for experiencing AI-powered car services'}</span>
               </div>
