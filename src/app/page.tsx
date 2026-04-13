@@ -884,15 +884,14 @@ export default function CarLinkPage() {
 
   // Monthly Obligations State
   const [monthlyObligations, setMonthlyObligations] = useState({
-    rent: 0,
-    otherLoans: 0,
-    bills: 0,
-    other: 0,
+    personalLoan: 0, // قرض شخصي
+    mortgage: 0, // قرض عقاري
+    otherLoans: 0, // قروض أخرى
   });
   const [showObligations, setShowObligations] = useState(false);
 
   // Calculate total obligations
-  const totalObligations = monthlyObligations.rent + monthlyObligations.otherLoans + monthlyObligations.bills + monthlyObligations.other;
+  const totalObligations = monthlyObligations.personalLoan + monthlyObligations.mortgage + monthlyObligations.otherLoans;
   const netIncome = (financingParams.salary || 0) - totalObligations;
 
   // New Car Request Form States
@@ -4916,33 +4915,56 @@ export default function CarLinkPage() {
                                     className="overflow-hidden"
                                   >
                                     <div className="space-y-3 mt-4 pt-4 border-t border-rose-200/50">
-                                      {/* Rent */}
+                                      {/* Personal Loan - قرض شخصي */}
                                       <div className="flex items-center gap-3">
                                         <div className="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
-                                          <Landmark className="w-4 h-4 text-rose-500" />
+                                          <CreditCard className="w-4 h-4 text-rose-500" />
                                         </div>
                                         <div className="flex-1">
                                           <Label className="text-xs text-muted-foreground">
-                                            {isRTL ? 'الإيجار' : 'Rent'}
+                                            {isRTL ? 'قرض شخصي' : 'Personal Loan'}
                                           </Label>
                                           <Input
                                             type="text"
                                             inputMode="numeric"
                                             placeholder="0"
-                                            value={monthlyObligations.rent || ''}
+                                            value={monthlyObligations.personalLoan || ''}
                                             onChange={(e) => {
                                               const value = e.target.value.replace(/[^0-9]/g, '');
-                                              setMonthlyObligations({ ...monthlyObligations, rent: Number(value) });
+                                              setMonthlyObligations({ ...monthlyObligations, personalLoan: Number(value) });
                                             }}
                                             className={`h-9 ${isRTL ? 'text-right' : 'text-left'}`}
                                           />
                                         </div>
                                       </div>
                                       
-                                      {/* Other Loans */}
+                                      {/* Mortgage - قرض عقاري */}
                                       <div className="flex items-center gap-3">
                                         <div className="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
-                                          <CreditCard className="w-4 h-4 text-rose-500" />
+                                          <Landmark className="w-4 h-4 text-rose-500" />
+                                        </div>
+                                        <div className="flex-1">
+                                          <Label className="text-xs text-muted-foreground">
+                                            {isRTL ? 'قرض عقاري' : 'Mortgage'}
+                                          </Label>
+                                          <Input
+                                            type="text"
+                                            inputMode="numeric"
+                                            placeholder="0"
+                                            value={monthlyObligations.mortgage || ''}
+                                            onChange={(e) => {
+                                              const value = e.target.value.replace(/[^0-9]/g, '');
+                                              setMonthlyObligations({ ...monthlyObligations, mortgage: Number(value) });
+                                            }}
+                                            className={`h-9 ${isRTL ? 'text-right' : 'text-left'}`}
+                                          />
+                                        </div>
+                                      </div>
+                                      
+                                      {/* Other Loans - قروض أخرى */}
+                                      <div className="flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
+                                          <Wallet className="w-4 h-4 text-rose-500" />
                                         </div>
                                         <div className="flex-1">
                                           <Label className="text-xs text-muted-foreground">
@@ -4962,49 +4984,15 @@ export default function CarLinkPage() {
                                         </div>
                                       </div>
                                       
-                                      {/* Bills */}
-                                      <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
-                                          <FileText className="w-4 h-4 text-rose-500" />
-                                        </div>
-                                        <div className="flex-1">
-                                          <Label className="text-xs text-muted-foreground">
-                                            {isRTL ? 'الفواتير' : 'Bills'}
-                                          </Label>
-                                          <Input
-                                            type="text"
-                                            inputMode="numeric"
-                                            placeholder="0"
-                                            value={monthlyObligations.bills || ''}
-                                            onChange={(e) => {
-                                              const value = e.target.value.replace(/[^0-9]/g, '');
-                                              setMonthlyObligations({ ...monthlyObligations, bills: Number(value) });
-                                            }}
-                                            className={`h-9 ${isRTL ? 'text-right' : 'text-left'}`}
-                                          />
-                                        </div>
-                                      </div>
-                                      
-                                      {/* Other */}
-                                      <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
-                                          <Wallet className="w-4 h-4 text-rose-500" />
-                                        </div>
-                                        <div className="flex-1">
-                                          <Label className="text-xs text-muted-foreground">
-                                            {isRTL ? 'أخرى' : 'Other'}
-                                          </Label>
-                                          <Input
-                                            type="text"
-                                            inputMode="numeric"
-                                            placeholder="0"
-                                            value={monthlyObligations.other || ''}
-                                            onChange={(e) => {
-                                              const value = e.target.value.replace(/[^0-9]/g, '');
-                                              setMonthlyObligations({ ...monthlyObligations, other: Number(value) });
-                                            }}
-                                            className={`h-9 ${isRTL ? 'text-right' : 'text-left'}`}
-                                          />
+                                      {/* Total Obligations - إجمالي الالتزامات */}
+                                      <div className={`p-3 rounded-lg bg-rose-100/50 border border-rose-300/50 ${isRTL ? 'text-right' : 'text-left'}`}>
+                                        <div className="flex items-center justify-between">
+                                          <span className="text-sm font-medium text-rose-700">
+                                            {isRTL ? 'إجمالي الالتزامات' : 'Total Obligations'}
+                                          </span>
+                                          <span className="font-bold text-rose-600 text-lg">
+                                            {getCurrencyDisplay()} {totalObligations.toLocaleString()}
+                                          </span>
                                         </div>
                                       </div>
                                       
@@ -9008,33 +8996,56 @@ export default function CarLinkPage() {
                               className="overflow-hidden"
                             >
                               <div className="space-y-3 mt-4 pt-4 border-t border-rose-200/50">
-                                {/* Rent */}
+                                {/* Personal Loan - قرض شخصي */}
                                 <div className="flex items-center gap-3">
                                   <div className="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
-                                    <Landmark className="w-4 h-4 text-rose-500" />
+                                    <CreditCard className="w-4 h-4 text-rose-500" />
                                   </div>
                                   <div className="flex-1">
                                     <Label className="text-xs text-muted-foreground">
-                                      {isRTL ? 'الإيجار' : 'Rent'}
+                                      {isRTL ? 'قرض شخصي' : 'Personal Loan'}
                                     </Label>
                                     <Input
                                       type="text"
                                       inputMode="numeric"
                                       placeholder="0"
-                                      value={monthlyObligations.rent || ''}
+                                      value={monthlyObligations.personalLoan || ''}
                                       onChange={(e) => {
                                         const value = e.target.value.replace(/[^0-9]/g, '');
-                                        setMonthlyObligations({ ...monthlyObligations, rent: Number(value) });
+                                        setMonthlyObligations({ ...monthlyObligations, personalLoan: Number(value) });
                                       }}
                                       className={`h-9 ${isRTL ? 'text-right' : 'text-left'}`}
                                     />
                                   </div>
                                 </div>
                                 
-                                {/* Other Loans */}
+                                {/* Mortgage - قرض عقاري */}
                                 <div className="flex items-center gap-3">
                                   <div className="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
-                                    <CreditCard className="w-4 h-4 text-rose-500" />
+                                    <Landmark className="w-4 h-4 text-rose-500" />
+                                  </div>
+                                  <div className="flex-1">
+                                    <Label className="text-xs text-muted-foreground">
+                                      {isRTL ? 'قرض عقاري' : 'Mortgage'}
+                                    </Label>
+                                    <Input
+                                      type="text"
+                                      inputMode="numeric"
+                                      placeholder="0"
+                                      value={monthlyObligations.mortgage || ''}
+                                      onChange={(e) => {
+                                        const value = e.target.value.replace(/[^0-9]/g, '');
+                                        setMonthlyObligations({ ...monthlyObligations, mortgage: Number(value) });
+                                      }}
+                                      className={`h-9 ${isRTL ? 'text-right' : 'text-left'}`}
+                                    />
+                                  </div>
+                                </div>
+                                
+                                {/* Other Loans - قروض أخرى */}
+                                <div className="flex items-center gap-3">
+                                  <div className="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
+                                    <Wallet className="w-4 h-4 text-rose-500" />
                                   </div>
                                   <div className="flex-1">
                                     <Label className="text-xs text-muted-foreground">
@@ -9054,49 +9065,15 @@ export default function CarLinkPage() {
                                   </div>
                                 </div>
                                 
-                                {/* Bills */}
-                                <div className="flex items-center gap-3">
-                                  <div className="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
-                                    <FileText className="w-4 h-4 text-rose-500" />
-                                  </div>
-                                  <div className="flex-1">
-                                    <Label className="text-xs text-muted-foreground">
-                                      {isRTL ? 'الفواتير' : 'Bills'}
-                                    </Label>
-                                    <Input
-                                      type="text"
-                                      inputMode="numeric"
-                                      placeholder="0"
-                                      value={monthlyObligations.bills || ''}
-                                      onChange={(e) => {
-                                        const value = e.target.value.replace(/[^0-9]/g, '');
-                                        setMonthlyObligations({ ...monthlyObligations, bills: Number(value) });
-                                      }}
-                                      className={`h-9 ${isRTL ? 'text-right' : 'text-left'}`}
-                                    />
-                                  </div>
-                                </div>
-                                
-                                {/* Other */}
-                                <div className="flex items-center gap-3">
-                                  <div className="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
-                                    <Wallet className="w-4 h-4 text-rose-500" />
-                                  </div>
-                                  <div className="flex-1">
-                                    <Label className="text-xs text-muted-foreground">
-                                      {isRTL ? 'أخرى' : 'Other'}
-                                    </Label>
-                                    <Input
-                                      type="text"
-                                      inputMode="numeric"
-                                      placeholder="0"
-                                      value={monthlyObligations.other || ''}
-                                      onChange={(e) => {
-                                        const value = e.target.value.replace(/[^0-9]/g, '');
-                                        setMonthlyObligations({ ...monthlyObligations, other: Number(value) });
-                                      }}
-                                      className={`h-9 ${isRTL ? 'text-right' : 'text-left'}`}
-                                    />
+                                {/* Total Obligations - إجمالي الالتزامات */}
+                                <div className={`p-3 rounded-lg bg-rose-100/50 border border-rose-300/50 ${isRTL ? 'text-right' : 'text-left'}`}>
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-sm font-medium text-rose-700">
+                                      {isRTL ? 'إجمالي الالتزامات' : 'Total Obligations'}
+                                    </span>
+                                    <span className="font-bold text-rose-600 text-lg">
+                                      {getCurrencyDisplay()} {totalObligations.toLocaleString()}
+                                    </span>
                                   </div>
                                 </div>
                                 
