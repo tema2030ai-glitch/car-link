@@ -34,11 +34,11 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
       <body
-        className={`${cairo.variable} font-sans antialiased bg-background text-foreground`}
+        className={`${cairo.variable} font-sans antialiased bg-white dark:bg-slate-950 text-slate-900 dark:text-white`}
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >

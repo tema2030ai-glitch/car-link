@@ -10,104 +10,115 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Vehicle data extracted from links or images
-model Vehicle {
-  id            String   @id @default(cuid())
-  brand         String
-  model         String
-  year          Int?
-  trim          String?
-  price         Float?
-  currency      String   @default("USD")
-  
-  // Specifications
-  engine        String?
-  horsepower    Int?
-  torque        Int?
-  fuelType      String?
-  fuelConsumption Float?  // L/100km or MPG
-  transmission  String?
-  drivetrain    String?
-  acceleration  Float?    // 0-100 km/h in seconds
-  
-  // Dimensions
-  length        Float?
-  width         Float?
-  height        Float?
-  weight        Int?
-  
-  // Features
-  safetyFeatures String?  // JSON array
-  techFeatures   String?  // JSON array
-  
-  // Source info
-  sourceUrl     String?
-  sourceImage   String?   // Base64 or URL
-  
-  // Market analysis
-  marketPrice   Float?
-  priceStatus   String?   // good, average, overpriced
-  
-  // Financing
-  monthlyPayment Float?
-  
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  
-  comparisons   ComparisonItem[]
-  chatSessions  ChatSession[]
+// Car Brands
+model CarBrand {
+  id          String      @id @default(cuid())
+  name        String      @unique
+  nameAr      String?
+  logo        String?
+  country     String?
+  isPopular   Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  models      CarModel[]
 }
 
-// Comparison sessions
-model Comparison {
-  id          String   @id @default(cuid())
-  name        String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  items       ComparisonItem[]
-}
-
-model ComparisonItem {
-  id           String     @id @default(cuid())
-  comparisonId String
-  comparison   Comparison @relation(fields: [comparisonId], references: [id], onDelete: Cascade)
-  vehicleId    String
-  vehicle      Vehicle    @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
-  order        Int        @default(0)
+// Car Models
+model CarModel {
+  id          String      @id @default(cuid())
+  brandId     String
+  brand       CarBrand    @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  name        String
+  nameAr      String?
+  category    String?     // Sedan, SUV, Hatchback, etc.
+  basePrice   Float?      // Base price in SAR
+  createdAt   DateTime    @default(now())
+  years       CarYear[]
   
-  @@index([comparisonId])
+  @@index([brandId])
 }
 
-// Financing offers from banks
-model FinancingOffer {
-  id            String   @id @default(cuid())
-  bankName      String
-  bankLogo      String?
-  interestRate  Float    // Annual percentage rate
-  minDownPayment Float   // Percentage
-  maxLoanTerm   Int      // In months
-  minLoanAmount Float?
-  maxLoanAmount Float?
-  fees          Float?   // Processing fees
-  isActive      Boolean  @default(true)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+// Model Years with specific data
+model CarYear {
+  id          String      @id @default(cuid())
+  modelId     String
+  model       CarModel    @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  year        Int
+  priceNew    Float       // New car price in SAR
+  createdAt   DateTime    @default(now())
+  valuations  CarValuation[]
+  
+  @@unique([modelId, year])
+  @@index([modelId])
 }
 
-// Saved chat sessions with AI advisor
-model ChatSession {
-  id        String   @id @default(cuid())
-  messages  String   // JSON array of messages
-  vehicleId String?
-  vehicle   Vehicle? @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// Car Valuation Records
+model CarValuation {
+  id              String      @id @default(cuid())
+  carYearId       String
+  carYear         CarYear     @relation(fields: [carYearId], references: [id], onDelete: Cascade)
+  
+  // Car Details
+  mileage         Int         // in km
+  condition       String      // excellent, good, fair, poor
+  color           String?
+  fuelType        String?     // petrol, hybrid, electric, diesel
+  transmission    String?     // automatic, manual
+  bodyType        String?     // sedan, suv, hatchback, coupe
+  
+  // Calculated Values
+  estimatedValue  Float       // Estimated market value in SAR
+  minPrice        Float       // Minimum market price
+  maxPrice        Float       // Maximum market price
+  confidence      Float       // Confidence level 0-1
+  
+  // Market Data
+  marketTrend     String?     // rising, stable, falling
+  depreciationRate Float?     // Yearly depreciation rate
+  
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  
+  @@index([carYearId])
 }
 
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// Saved Valuation Requests (for history)
+model ValuationRequest {
+  id              String      @id @default(cuid())
+  
+  // User Input
+  brand           String
+  model           String
+  year            Int
+  mileage         Int
+  condition       String
+  color           String?
+  fuelType        String?
+  transmission    String?
+  
+  // Result
+  estimatedValue  Float
+  minPrice        Float
+  maxPrice        Float
+  confidence      Float
+  
+  // Metadata
+  userAgent       String?
+  ipAddress       String?
+  
+  createdAt       DateTime    @default(now())
+  
+  @@index([createdAt])
+}
+
+// Market Reference Data
+model MarketReference {
+  id              String      @id @default(cuid())
+  category        String      // e.g., "depreciation_rates", "brand_factors"
+  key             String
+  value           Float
+  description     String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  
+  @@unique([category, key])
 }
