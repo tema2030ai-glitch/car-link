@@ -6907,8 +6907,7 @@ export default function CarLinkPage() {
                   className="w-full h-14 sky-gradient text-white text-lg font-bold shadow-lg hover:shadow-xl transition-all"
                   onClick={() => {
                     setFinancingChatOpen(false);
-                    setViewState('services');
-                    setSelectedService('order-tracking');
+                    setAppsSheetOpen(true);
                   }}
                 >
                   <MapPin className={`w-5 h-5 ${isRTL ? 'ml-3' : 'mr-3'}`} />
@@ -7518,8 +7517,7 @@ export default function CarLinkPage() {
                   className="w-full h-14 sky-gradient text-white text-lg font-bold shadow-lg hover:shadow-xl transition-all"
                   onClick={() => {
                     setOrderTrackingOpen(false);
-                    setViewState('services');
-                    setSelectedService('order-tracking');
+                    setAppsSheetOpen(true);
                   }}
                 >
                   <MapPin className={`w-5 h-5 ${isRTL ? 'ml-3' : 'mr-3'}`} />
