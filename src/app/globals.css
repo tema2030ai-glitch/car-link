@@ -117,6 +117,7 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    -webkit-tap-highlight-color: transparent;
   }
   /* Remove border from Sheet content */
   [data-slot="sheet-content"] {
@@ -134,15 +135,33 @@
   [data-slot~="sheet"] {
     border: none !important;
   }
-  body {
-    @apply bg-background text-foreground;
-    font-family: var(--font-cairo), var(--font-geist-sans), system-ui, sans-serif;
-  }
   html {
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
   html[dir="rtl"] body {
     direction: rtl;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-cairo), var(--font-geist-sans), system-ui, sans-serif;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+  /* Mobile touch improvements */
+  button, a, [role="button"], input, select, textarea {
+    touch-action: manipulation;
+  }
+  /* Safe area for modern devices */
+  @supports (padding: max(0px)) {
+    body {
+      padding-left: max(0px, env(safe-area-inset-left));
+      padding-right: max(0px, env(safe-area-inset-right));
+      padding-bottom: max(0px, env(safe-area-inset-bottom));
+    }
   }
 }
 
