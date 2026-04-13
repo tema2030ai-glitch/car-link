@@ -6894,95 +6894,26 @@ export default function CarLinkPage() {
                 <div className="w-20 h-20 rounded-full bg-green-500/10 flex items-center justify-center mx-auto mb-4">
                   <CheckCircle2 className="w-10 h-10 text-green-500" />
                 </div>
-                <h3 className="text-xl font-bold mb-2">{t.applicationSubmitted}</h3>
+                <h3 className="text-xl font-bold mb-4">{t.applicationSubmitted}</h3>
 
-                {/* Tracking Number - Prominent Display */}
-                <div className="p-5 bg-gradient-to-br from-primary/10 via-primary/5 to-cyan-500/10 rounded-2xl border-2 border-primary/30 mb-4 shadow-lg">
-                  <div className="flex items-center justify-center gap-2 mb-2">
-                    <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
-                      <Ticket className="w-4 h-4 text-primary" />
-                    </div>
-                    <p className="text-sm font-semibold text-primary">{t.applicationNumber}</p>
-                  </div>
-                  <p className="font-mono text-3xl font-bold text-primary tracking-wider mb-2" dir="ltr">{applicationData.orderNumber}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {isRTL ? 'احتفظ بهذا الرقم لتتبع طلبك' : 'Keep this number to track your request'}
-                  </p>
-                  
-                  {/* Copy Button */}
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="mt-3 gap-2"
-                    onClick={() => {
-                      navigator.clipboard.writeText(applicationData.orderNumber);
-                      toast({ title: isRTL ? 'تم نسخ رقم الطلب' : 'Order number copied' });
-                    }}
-                  >
-                    <Copy className="w-4 h-4" />
-                    {isRTL ? 'نسخ الرقم' : 'Copy Number'}
-                  </Button>
+                {/* Tracking Number Only */}
+                <div className="p-4 bg-gradient-to-br from-primary/10 via-primary/5 to-cyan-500/10 rounded-xl border border-primary/30 mb-6">
+                  <p className="text-sm text-muted-foreground mb-1">{t.applicationNumber}</p>
+                  <p className="font-mono text-2xl font-bold text-primary tracking-wider" dir="ltr">{applicationData.orderNumber}</p>
                 </div>
 
-                {/* Track Order Button - Prominent */}
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                  className="mb-4"
+                {/* Track Order Button */}
+                <Button
+                  className="w-full h-14 sky-gradient text-white text-lg font-bold shadow-lg hover:shadow-xl transition-all"
+                  onClick={() => {
+                    setFinancingChatOpen(false);
+                    setViewState('services');
+                    setSelectedService('order-tracking');
+                  }}
                 >
-                  <Button
-                    className="w-full h-14 sky-gradient text-white text-lg font-bold shadow-lg hover:shadow-xl transition-all group"
-                    onClick={() => {
-                      setApplicationStatus('tracking');
-                    }}
-                  >
-                    <MapPin className={`w-5 h-5 ${isRTL ? 'ml-3' : 'mr-3'}`} />
-                    <span>{t.orderTracking}</span>
-                    <ArrowRight className={`w-5 h-5 ${isRTL ? 'mr-3 rotate-180' : 'ml-3'} group-hover:translate-x-1 transition-transform`} />
-                  </Button>
-                </motion.div>
-
-                {renderOrderTracking()}
-
-                {/* Action Buttons */}
-                <div className="flex gap-2 mt-4">
-                  <Button
-                    variant="outline"
-                    className="flex-1"
-                    onClick={() => {
-                      // Refresh order status with logic
-                      const steps = ['pending', 'approved', 'documents', 'final_approval', 'contract', 'delivery'];
-                      const currentIndex = steps.indexOf(orderStatus);
-                      
-                      if (currentIndex < steps.length - 1) {
-                        const nextStatus = steps[currentIndex + 1];
-                        
-                        // If next status is documents, show documents form
-                        if (nextStatus === 'documents' && !documentsSubmitted) {
-                          setOrderStatus(nextStatus);
-                          setShowDocumentsForm(true);
-                          toast({ title: isRTL ? 'يرجى استكمال المستندات المطلوبة' : 'Please complete required documents' });
-                        } else {
-                          setOrderStatus(nextStatus);
-                          toast({ title: isRTL ? 'تم تحديث الحالة' : 'Status updated' });
-                        }
-                      } else {
-                        toast({ title: isRTL ? 'الطلب مكتمل' : 'Order is complete' });
-                      }
-                    }}
-                  >
-                    <RefreshCw className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                    {isRTL ? 'تحديث الحالة' : 'Refresh Status'}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="flex-1"
-                    onClick={() => setFinancingChatOpen(false)}
-                  >
-                    {isRTL ? 'إغلاق' : 'Close'}
-                  </Button>
-                </div>
+                  <MapPin className={`w-5 h-5 ${isRTL ? 'ml-3' : 'mr-3'}`} />
+                  <span>{t.orderTracking}</span>
+                </Button>
               </div>
             )}
 
@@ -7564,7 +7495,7 @@ export default function CarLinkPage() {
 
             {/* Found Order Details - Success Page Style */}
             {foundOrder && (
-              <div className="text-center">
+              <div className="text-center p-4">
                 {/* Success Icon */}
                 <motion.div
                   initial={{ scale: 0 }}
@@ -7574,130 +7505,26 @@ export default function CarLinkPage() {
                   <CheckCircle2 className="w-10 h-10 text-green-500" />
                 </motion.div>
                 
-                <h3 className="text-xl font-bold mb-2">{t.applicationSubmitted}</h3>
+                <h3 className="text-xl font-bold mb-4">{isRTL ? 'تم العثور على الطلب' : 'Order Found'}</h3>
 
-                {/* Tracking Number - Prominent Display */}
-                <div className="p-5 bg-gradient-to-br from-primary/10 via-primary/5 to-cyan-500/10 rounded-2xl border-2 border-primary/30 mb-4 shadow-lg">
-                  <div className="flex items-center justify-center gap-2 mb-2">
-                    <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
-                      <Ticket className="w-4 h-4 text-primary" />
-                    </div>
-                    <p className="text-sm font-semibold text-primary">{t.applicationNumber}</p>
-                  </div>
-                  <p className="font-mono text-3xl font-bold text-primary tracking-wider mb-2" dir="ltr">{foundOrder.orderNumber}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {isRTL ? 'احتفظ بهذا الرقم لتتبع طلبك' : 'Keep this number to track your request'}
-                  </p>
-                  
-                  {/* Copy Button */}
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="mt-3 gap-2"
-                    onClick={() => {
-                      navigator.clipboard.writeText(foundOrder.orderNumber);
-                      toast({ title: isRTL ? 'تم نسخ رقم الطلب' : 'Order number copied' });
-                    }}
-                  >
-                    <Copy className="w-4 h-4" />
-                    {isRTL ? 'نسخ الرقم' : 'Copy Number'}
-                  </Button>
+                {/* Tracking Number Only */}
+                <div className="p-4 bg-gradient-to-br from-primary/10 via-primary/5 to-cyan-500/10 rounded-xl border border-primary/30 mb-6">
+                  <p className="text-sm text-muted-foreground mb-1">{t.applicationNumber}</p>
+                  <p className="font-mono text-2xl font-bold text-primary tracking-wider" dir="ltr">{foundOrder.orderNumber}</p>
                 </div>
 
-                {/* Track Order Button - Prominent */}
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                  className="mb-4"
+                {/* Track Order Button */}
+                <Button
+                  className="w-full h-14 sky-gradient text-white text-lg font-bold shadow-lg hover:shadow-xl transition-all"
+                  onClick={() => {
+                    setOrderTrackingOpen(false);
+                    setViewState('services');
+                    setSelectedService('order-tracking');
+                  }}
                 >
-                  <Button
-                    className="w-full h-14 sky-gradient text-white text-lg font-bold shadow-lg hover:shadow-xl transition-all group"
-                    onClick={() => {
-                      setOrderTrackingOpen(false);
-                      setApplicationStatus('tracking');
-                    }}
-                  >
-                    <MapPin className={`w-5 h-5 ${isRTL ? 'ml-3' : 'mr-3'}`} />
-                    <span>{t.orderTracking}</span>
-                    <ArrowRight className={`w-5 h-5 ${isRTL ? 'mr-3 rotate-180' : 'ml-3'} group-hover:translate-x-1 transition-transform`} />
-                  </Button>
-                </motion.div>
-
-                {/* Order Tracking Steps */}
-                {renderOrderTracking()}
-                
-                {/* Vehicle Info Card */}
-                <div className={`p-4 bg-muted/50 rounded-xl mb-4 ${isRTL ? 'text-right' : 'text-left'}`}>
-                  <h5 className="font-semibold text-sm mb-3 flex items-center gap-2">
-                    <Car className="w-4 h-4 text-primary" />
-                    {isRTL ? 'معلومات السيارة' : 'Vehicle Info'}
-                  </h5>
-                  <div className="grid grid-cols-2 gap-3 text-sm">
-                    <div className={`flex justify-between p-2 bg-background rounded-lg ${isRTL ? 'flex-row-reverse' : ''}`}>
-                      <span className="text-muted-foreground">{isRTL ? 'الماركة' : 'Brand'}</span>
-                      <span className="font-medium">{foundOrder.carBrand}</span>
-                    </div>
-                    <div className={`flex justify-between p-2 bg-background rounded-lg ${isRTL ? 'flex-row-reverse' : ''}`}>
-                      <span className="text-muted-foreground">{isRTL ? 'الموديل' : 'Model'}</span>
-                      <span className="font-medium">{foundOrder.carModel}</span>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Financing Info Card */}
-                <div className={`p-4 bg-green-500/10 rounded-xl border border-green-500/20 mb-4 ${isRTL ? 'text-right' : 'text-left'}`}>
-                  <h5 className="font-semibold text-sm mb-3 flex items-center gap-2">
-                    <Calculator className="w-4 h-4 text-green-500" />
-                    {isRTL ? 'معلومات التمويل' : 'Financing Info'}
-                  </h5>
-                  <div className="grid grid-cols-2 gap-3 text-sm">
-                    <div className={`flex justify-between p-2 bg-background rounded-lg ${isRTL ? 'flex-row-reverse' : ''}`}>
-                      <span className="text-muted-foreground">{isRTL ? 'البرنامج' : 'Program'}</span>
-                      <span className="font-medium">{foundOrder.programType}</span>
-                    </div>
-                    <div className={`flex justify-between p-2 bg-background rounded-lg ${isRTL ? 'flex-row-reverse' : ''}`}>
-                      <span className="text-muted-foreground">{isRTL ? 'البنك' : 'Bank'}</span>
-                      <span className="font-medium">{foundOrder.bankName}</span>
-                    </div>
-                    <div className={`flex justify-between p-2 bg-background rounded-lg ${isRTL ? 'flex-row-reverse' : ''}`}>
-                      <span className="text-muted-foreground">{isRTL ? 'القسط الشهري' : 'Monthly'}</span>
-                      <span className="text-green-600 font-bold">{foundOrder.monthlyPayment?.toLocaleString()} {isRTL ? 'ريال' : 'SAR'}</span>
-                    </div>
-                    <div className={`flex justify-between p-2 bg-background rounded-lg ${isRTL ? 'flex-row-reverse' : ''}`}>
-                      <span className="text-muted-foreground">{isRTL ? 'المدة' : 'Duration'}</span>
-                      <span className="font-medium">{foundOrder.selectedTerm} {isRTL ? 'سنوات' : 'years'}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex gap-2 mt-4">
-                  <Button
-                    variant="outline"
-                    className="flex-1"
-                    onClick={() => {
-                      // Refresh order status
-                      const steps = ['pending', 'approved', 'documents', 'final_approval', 'contract', 'delivery'];
-                      const currentIndex = steps.indexOf(orderStatus);
-                      if (currentIndex < steps.length - 1) {
-                        setOrderStatus(steps[currentIndex + 1]);
-                        toast({ title: isRTL ? 'تم تحديث الحالة' : 'Status updated' });
-                      } else {
-                        toast({ title: isRTL ? 'الطلب مكتمل' : 'Order is complete' });
-                      }
-                    }}
-                  >
-                    <RefreshCw className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                    {isRTL ? 'تحديث الحالة' : 'Refresh Status'}
-                  </Button>
-                  <Button
-                    className="flex-1 sky-gradient text-white"
-                    onClick={() => setOrderTrackingOpen(false)}
-                  >
-                    {isRTL ? 'إغلاق' : 'Close'}
-                  </Button>
-                </div>
+                  <MapPin className={`w-5 h-5 ${isRTL ? 'ml-3' : 'mr-3'}`} />
+                  <span>{t.orderTracking}</span>
+                </Button>
               </div>
             )}
 
