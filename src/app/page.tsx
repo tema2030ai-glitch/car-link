@@ -6897,13 +6897,51 @@ export default function CarLinkPage() {
                 <h3 className="text-xl font-bold mb-2">{t.applicationSubmitted}</h3>
 
                 {/* Tracking Number - Prominent Display */}
-                <div className="p-4 bg-primary/5 rounded-xl border border-primary/20 mb-4">
-                  <p className="text-sm text-muted-foreground mb-1">{t.applicationNumber}</p>
-                  <p className="font-mono text-2xl font-bold text-primary tracking-wider">{applicationData.orderNumber}</p>
-                  <p className="text-xs text-muted-foreground mt-2">
+                <div className="p-5 bg-gradient-to-br from-primary/10 via-primary/5 to-cyan-500/10 rounded-2xl border-2 border-primary/30 mb-4 shadow-lg">
+                  <div className="flex items-center justify-center gap-2 mb-2">
+                    <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+                      <Ticket className="w-4 h-4 text-primary" />
+                    </div>
+                    <p className="text-sm font-semibold text-primary">{t.applicationNumber}</p>
+                  </div>
+                  <p className="font-mono text-3xl font-bold text-primary tracking-wider mb-2" dir="ltr">{applicationData.orderNumber}</p>
+                  <p className="text-xs text-muted-foreground">
                     {isRTL ? 'احتفظ بهذا الرقم لتتبع طلبك' : 'Keep this number to track your request'}
                   </p>
+                  
+                  {/* Copy Button */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="mt-3 gap-2"
+                    onClick={() => {
+                      navigator.clipboard.writeText(applicationData.orderNumber);
+                      toast({ title: isRTL ? 'تم نسخ رقم الطلب' : 'Order number copied' });
+                    }}
+                  >
+                    <Copy className="w-4 h-4" />
+                    {isRTL ? 'نسخ الرقم' : 'Copy Number'}
+                  </Button>
                 </div>
+
+                {/* Track Order Button - Prominent */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="mb-4"
+                >
+                  <Button
+                    className="w-full h-14 sky-gradient text-white text-lg font-bold shadow-lg hover:shadow-xl transition-all group"
+                    onClick={() => {
+                      setApplicationStatus('tracking');
+                    }}
+                  >
+                    <MapPin className={`w-5 h-5 ${isRTL ? 'ml-3' : 'mr-3'}`} />
+                    <span>{t.orderTracking}</span>
+                    <ArrowRight className={`w-5 h-5 ${isRTL ? 'mr-3 rotate-180' : 'ml-3'} group-hover:translate-x-1 transition-transform`} />
+                  </Button>
+                </motion.div>
 
                 {renderOrderTracking()}
 
@@ -6938,7 +6976,8 @@ export default function CarLinkPage() {
                     {isRTL ? 'تحديث الحالة' : 'Refresh Status'}
                   </Button>
                   <Button
-                    className="flex-1 sky-gradient text-white"
+                    variant="outline"
+                    className="flex-1"
                     onClick={() => setFinancingChatOpen(false)}
                   >
                     {isRTL ? 'إغلاق' : 'Close'}
@@ -7538,13 +7577,52 @@ export default function CarLinkPage() {
                 <h3 className="text-xl font-bold mb-2">{t.applicationSubmitted}</h3>
 
                 {/* Tracking Number - Prominent Display */}
-                <div className="p-4 bg-primary/5 rounded-xl border border-primary/20 mb-4">
-                  <p className="text-sm text-muted-foreground mb-1">{t.applicationNumber}</p>
-                  <p className="font-mono text-2xl font-bold text-primary tracking-wider">{foundOrder.orderNumber}</p>
-                  <p className="text-xs text-muted-foreground mt-2">
+                <div className="p-5 bg-gradient-to-br from-primary/10 via-primary/5 to-cyan-500/10 rounded-2xl border-2 border-primary/30 mb-4 shadow-lg">
+                  <div className="flex items-center justify-center gap-2 mb-2">
+                    <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+                      <Ticket className="w-4 h-4 text-primary" />
+                    </div>
+                    <p className="text-sm font-semibold text-primary">{t.applicationNumber}</p>
+                  </div>
+                  <p className="font-mono text-3xl font-bold text-primary tracking-wider mb-2" dir="ltr">{foundOrder.orderNumber}</p>
+                  <p className="text-xs text-muted-foreground">
                     {isRTL ? 'احتفظ بهذا الرقم لتتبع طلبك' : 'Keep this number to track your request'}
                   </p>
+                  
+                  {/* Copy Button */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="mt-3 gap-2"
+                    onClick={() => {
+                      navigator.clipboard.writeText(foundOrder.orderNumber);
+                      toast({ title: isRTL ? 'تم نسخ رقم الطلب' : 'Order number copied' });
+                    }}
+                  >
+                    <Copy className="w-4 h-4" />
+                    {isRTL ? 'نسخ الرقم' : 'Copy Number'}
+                  </Button>
                 </div>
+
+                {/* Track Order Button - Prominent */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="mb-4"
+                >
+                  <Button
+                    className="w-full h-14 sky-gradient text-white text-lg font-bold shadow-lg hover:shadow-xl transition-all group"
+                    onClick={() => {
+                      setOrderTrackingOpen(false);
+                      setApplicationStatus('tracking');
+                    }}
+                  >
+                    <MapPin className={`w-5 h-5 ${isRTL ? 'ml-3' : 'mr-3'}`} />
+                    <span>{t.orderTracking}</span>
+                    <ArrowRight className={`w-5 h-5 ${isRTL ? 'mr-3 rotate-180' : 'ml-3'} group-hover:translate-x-1 transition-transform`} />
+                  </Button>
+                </motion.div>
 
                 {/* Order Tracking Steps */}
                 {renderOrderTracking()}
