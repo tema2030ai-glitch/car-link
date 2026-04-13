@@ -882,6 +882,19 @@ export default function CarLinkPage() {
   });
   const [applicationLoading, setApplicationLoading] = useState(false);
 
+  // Monthly Obligations State
+  const [monthlyObligations, setMonthlyObligations] = useState({
+    rent: 0,
+    otherLoans: 0,
+    bills: 0,
+    other: 0,
+  });
+  const [showObligations, setShowObligations] = useState(false);
+
+  // Calculate total obligations
+  const totalObligations = monthlyObligations.rent + monthlyObligations.otherLoans + monthlyObligations.bills + monthlyObligations.other;
+  const netIncome = (financingParams.salary || 0) - totalObligations;
+
   // New Car Request Form States
   const [carRequestBrand, setCarRequestBrand] = useState('');
   const [carRequestModel, setCarRequestModel] = useState('');
@@ -4866,6 +4879,158 @@ export default function CarLinkPage() {
                                 <AlertCircle className="w-3 h-3" />
                                 {t.salaryHint}
                               </p>
+                            </div>
+
+                            {/* Monthly Obligations Section */}
+                            <div className="p-4 rounded-xl bg-gradient-to-r from-rose-500/10 to-pink-500/10 border border-rose-500/20">
+                              <button
+                                type="button"
+                                onClick={() => setShowObligations(!showObligations)}
+                                className={`w-full flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}
+                              >
+                                <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                                  <Wallet className="w-5 h-5 text-rose-500" />
+                                  <Label className="font-semibold text-rose-600">
+                                    {isRTL ? 'الالتزامات الشهرية' : 'Monthly Obligations'}
+                                  </Label>
+                                </div>
+                                <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                                  {totalObligations > 0 && (
+                                    <Badge variant="secondary" className="bg-rose-100 text-rose-700 text-xs">
+                                      {getCurrencyDisplay()} {totalObligations.toLocaleString()}
+                                    </Badge>
+                                  )}
+                                  <motion.div animate={{ rotate: showObligations ? 180 : 0 }} transition={{ duration: 0.2 }}>
+                                    <ChevronLeft className={`w-4 h-4 text-rose-500 ${isRTL ? '' : 'rotate-180'}`} />
+                                  </motion.div>
+                                </div>
+                              </button>
+                              
+                              <AnimatePresence>
+                                {showObligations && (
+                                  <motion.div
+                                    initial={{ height: 0, opacity: 0 }}
+                                    animate={{ height: 'auto', opacity: 1 }}
+                                    exit={{ height: 0, opacity: 0 }}
+                                    transition={{ duration: 0.3 }}
+                                    className="overflow-hidden"
+                                  >
+                                    <div className="space-y-3 mt-4 pt-4 border-t border-rose-200/50">
+                                      {/* Rent */}
+                                      <div className="flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
+                                          <Landmark className="w-4 h-4 text-rose-500" />
+                                        </div>
+                                        <div className="flex-1">
+                                          <Label className="text-xs text-muted-foreground">
+                                            {isRTL ? 'الإيجار' : 'Rent'}
+                                          </Label>
+                                          <Input
+                                            type="text"
+                                            inputMode="numeric"
+                                            placeholder="0"
+                                            value={monthlyObligations.rent || ''}
+                                            onChange={(e) => {
+                                              const value = e.target.value.replace(/[^0-9]/g, '');
+                                              setMonthlyObligations({ ...monthlyObligations, rent: Number(value) });
+                                            }}
+                                            className={`h-9 ${isRTL ? 'text-right' : 'text-left'}`}
+                                          />
+                                        </div>
+                                      </div>
+                                      
+                                      {/* Other Loans */}
+                                      <div className="flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
+                                          <CreditCard className="w-4 h-4 text-rose-500" />
+                                        </div>
+                                        <div className="flex-1">
+                                          <Label className="text-xs text-muted-foreground">
+                                            {isRTL ? 'قروض أخرى' : 'Other Loans'}
+                                          </Label>
+                                          <Input
+                                            type="text"
+                                            inputMode="numeric"
+                                            placeholder="0"
+                                            value={monthlyObligations.otherLoans || ''}
+                                            onChange={(e) => {
+                                              const value = e.target.value.replace(/[^0-9]/g, '');
+                                              setMonthlyObligations({ ...monthlyObligations, otherLoans: Number(value) });
+                                            }}
+                                            className={`h-9 ${isRTL ? 'text-right' : 'text-left'}`}
+                                          />
+                                        </div>
+                                      </div>
+                                      
+                                      {/* Bills */}
+                                      <div className="flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
+                                          <FileText className="w-4 h-4 text-rose-500" />
+                                        </div>
+                                        <div className="flex-1">
+                                          <Label className="text-xs text-muted-foreground">
+                                            {isRTL ? 'الفواتير' : 'Bills'}
+                                          </Label>
+                                          <Input
+                                            type="text"
+                                            inputMode="numeric"
+                                            placeholder="0"
+                                            value={monthlyObligations.bills || ''}
+                                            onChange={(e) => {
+                                              const value = e.target.value.replace(/[^0-9]/g, '');
+                                              setMonthlyObligations({ ...monthlyObligations, bills: Number(value) });
+                                            }}
+                                            className={`h-9 ${isRTL ? 'text-right' : 'text-left'}`}
+                                          />
+                                        </div>
+                                      </div>
+                                      
+                                      {/* Other */}
+                                      <div className="flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
+                                          <Wallet className="w-4 h-4 text-rose-500" />
+                                        </div>
+                                        <div className="flex-1">
+                                          <Label className="text-xs text-muted-foreground">
+                                            {isRTL ? 'أخرى' : 'Other'}
+                                          </Label>
+                                          <Input
+                                            type="text"
+                                            inputMode="numeric"
+                                            placeholder="0"
+                                            value={monthlyObligations.other || ''}
+                                            onChange={(e) => {
+                                              const value = e.target.value.replace(/[^0-9]/g, '');
+                                              setMonthlyObligations({ ...monthlyObligations, other: Number(value) });
+                                            }}
+                                            className={`h-9 ${isRTL ? 'text-right' : 'text-left'}`}
+                                          />
+                                        </div>
+                                      </div>
+                                      
+                                      {/* Net Income Summary */}
+                                      {financingParams.salary > 0 && (
+                                        <div className={`p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 ${isRTL ? 'text-right' : 'text-left'}`}>
+                                          <div className="flex items-center justify-between mb-1">
+                                            <span className="text-xs text-muted-foreground">
+                                              {isRTL ? 'صافي الدخل المتاح' : 'Net Available Income'}
+                                            </span>
+                                            <span className={`font-bold ${netIncome > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                              {getCurrencyDisplay()} {netIncome.toLocaleString()}
+                                            </span>
+                                          </div>
+                                          <div className="text-[10px] text-muted-foreground">
+                                            {isRTL 
+                                              ? `${financingParams.salary.toLocaleString()} راتب - ${totalObligations.toLocaleString()} التزامات = ${netIncome.toLocaleString()} متاح`
+                                              : `${financingParams.salary.toLocaleString()} salary - ${totalObligations.toLocaleString()} obligations = ${netIncome.toLocaleString()} available`
+                                            }
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </motion.div>
+                                )}
+                              </AnimatePresence>
                             </div>
 
                             {/* Bank Selection */}
@@ -8897,6 +9062,158 @@ export default function CarLinkPage() {
                           <AlertCircle className="w-3 h-3" />
                           {t.salaryHint}
                         </p>
+                      </div>
+
+                      {/* Monthly Obligations Section - Services */}
+                      <div className="p-4 rounded-xl bg-gradient-to-r from-rose-500/10 to-pink-500/10 border border-rose-500/20">
+                        <button
+                          type="button"
+                          onClick={() => setShowObligations(!showObligations)}
+                          className={`w-full flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}
+                        >
+                          <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                            <Wallet className="w-5 h-5 text-rose-500" />
+                            <Label className="font-semibold text-rose-600">
+                              {isRTL ? 'الالتزامات الشهرية' : 'Monthly Obligations'}
+                            </Label>
+                          </div>
+                          <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                            {totalObligations > 0 && (
+                              <Badge variant="secondary" className="bg-rose-100 text-rose-700 text-xs">
+                                {getCurrencyDisplay()} {totalObligations.toLocaleString()}
+                              </Badge>
+                            )}
+                            <motion.div animate={{ rotate: showObligations ? 180 : 0 }} transition={{ duration: 0.2 }}>
+                              <ChevronLeft className={`w-4 h-4 text-rose-500 ${isRTL ? '' : 'rotate-180'}`} />
+                            </motion.div>
+                          </div>
+                        </button>
+                        
+                        <AnimatePresence>
+                          {showObligations && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: 'auto', opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.3 }}
+                              className="overflow-hidden"
+                            >
+                              <div className="space-y-3 mt-4 pt-4 border-t border-rose-200/50">
+                                {/* Rent */}
+                                <div className="flex items-center gap-3">
+                                  <div className="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
+                                    <Landmark className="w-4 h-4 text-rose-500" />
+                                  </div>
+                                  <div className="flex-1">
+                                    <Label className="text-xs text-muted-foreground">
+                                      {isRTL ? 'الإيجار' : 'Rent'}
+                                    </Label>
+                                    <Input
+                                      type="text"
+                                      inputMode="numeric"
+                                      placeholder="0"
+                                      value={monthlyObligations.rent || ''}
+                                      onChange={(e) => {
+                                        const value = e.target.value.replace(/[^0-9]/g, '');
+                                        setMonthlyObligations({ ...monthlyObligations, rent: Number(value) });
+                                      }}
+                                      className={`h-9 ${isRTL ? 'text-right' : 'text-left'}`}
+                                    />
+                                  </div>
+                                </div>
+                                
+                                {/* Other Loans */}
+                                <div className="flex items-center gap-3">
+                                  <div className="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
+                                    <CreditCard className="w-4 h-4 text-rose-500" />
+                                  </div>
+                                  <div className="flex-1">
+                                    <Label className="text-xs text-muted-foreground">
+                                      {isRTL ? 'قروض أخرى' : 'Other Loans'}
+                                    </Label>
+                                    <Input
+                                      type="text"
+                                      inputMode="numeric"
+                                      placeholder="0"
+                                      value={monthlyObligations.otherLoans || ''}
+                                      onChange={(e) => {
+                                        const value = e.target.value.replace(/[^0-9]/g, '');
+                                        setMonthlyObligations({ ...monthlyObligations, otherLoans: Number(value) });
+                                      }}
+                                      className={`h-9 ${isRTL ? 'text-right' : 'text-left'}`}
+                                    />
+                                  </div>
+                                </div>
+                                
+                                {/* Bills */}
+                                <div className="flex items-center gap-3">
+                                  <div className="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
+                                    <FileText className="w-4 h-4 text-rose-500" />
+                                  </div>
+                                  <div className="flex-1">
+                                    <Label className="text-xs text-muted-foreground">
+                                      {isRTL ? 'الفواتير' : 'Bills'}
+                                    </Label>
+                                    <Input
+                                      type="text"
+                                      inputMode="numeric"
+                                      placeholder="0"
+                                      value={monthlyObligations.bills || ''}
+                                      onChange={(e) => {
+                                        const value = e.target.value.replace(/[^0-9]/g, '');
+                                        setMonthlyObligations({ ...monthlyObligations, bills: Number(value) });
+                                      }}
+                                      className={`h-9 ${isRTL ? 'text-right' : 'text-left'}`}
+                                    />
+                                  </div>
+                                </div>
+                                
+                                {/* Other */}
+                                <div className="flex items-center gap-3">
+                                  <div className="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
+                                    <Wallet className="w-4 h-4 text-rose-500" />
+                                  </div>
+                                  <div className="flex-1">
+                                    <Label className="text-xs text-muted-foreground">
+                                      {isRTL ? 'أخرى' : 'Other'}
+                                    </Label>
+                                    <Input
+                                      type="text"
+                                      inputMode="numeric"
+                                      placeholder="0"
+                                      value={monthlyObligations.other || ''}
+                                      onChange={(e) => {
+                                        const value = e.target.value.replace(/[^0-9]/g, '');
+                                        setMonthlyObligations({ ...monthlyObligations, other: Number(value) });
+                                      }}
+                                      className={`h-9 ${isRTL ? 'text-right' : 'text-left'}`}
+                                    />
+                                  </div>
+                                </div>
+                                
+                                {/* Net Income Summary */}
+                                {financingParams.salary > 0 && (
+                                  <div className={`p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 ${isRTL ? 'text-right' : 'text-left'}`}>
+                                    <div className="flex items-center justify-between mb-1">
+                                      <span className="text-xs text-muted-foreground">
+                                        {isRTL ? 'صافي الدخل المتاح' : 'Net Available Income'}
+                                      </span>
+                                      <span className={`font-bold ${netIncome > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                        {getCurrencyDisplay()} {netIncome.toLocaleString()}
+                                      </span>
+                                    </div>
+                                    <div className="text-[10px] text-muted-foreground">
+                                      {isRTL 
+                                        ? `${financingParams.salary.toLocaleString()} راتب - ${totalObligations.toLocaleString()} التزامات = ${netIncome.toLocaleString()} متاح`
+                                        : `${financingParams.salary.toLocaleString()} salary - ${totalObligations.toLocaleString()} obligations = ${netIncome.toLocaleString()} available`
+                                      }
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
                       </div>
 
                       {/* Bank Selection */}
