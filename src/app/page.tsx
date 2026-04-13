@@ -6058,6 +6058,32 @@ export default function CarLinkPage() {
                                     );
                                   })()}
                                 </div>
+                                
+                                {/* Apply Now Button - Only show when exactly 3 cars */}
+                                {comparisonVehicles.length === 3 && (
+                                  <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.5 }}
+                                    className="mt-4 pt-4 border-t border-sky-500/20"
+                                  >
+                                    <Button
+                                      className="w-full sky-gradient text-white shadow-lg hover:shadow-xl transition-all py-6 text-base font-semibold"
+                                      onClick={() => {
+                                        setFinancingChatOpen(true);
+                                      }}
+                                    >
+                                      <Handshake className={`w-5 h-5 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                                      {isRTL ? 'قدم طلبك الآن' : 'Apply Now'}
+                                      <ArrowRight className={`w-4 h-4 ${isRTL ? 'mr-2 rotate-180' : 'ml-2'}`} />
+                                    </Button>
+                                    <p className="text-xs text-center text-muted-foreground mt-2">
+                                      {isRTL 
+                                        ? 'اختر السيارة المناسبة واطلب تمويلك الآن'
+                                        : 'Choose your car and apply for financing now'}
+                                    </p>
+                                  </motion.div>
+                                )}
                               </CardContent>
                             </Card>
                           </motion.div>
