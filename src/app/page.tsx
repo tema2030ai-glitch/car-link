@@ -3202,7 +3202,7 @@ export default function CarLinkPage() {
               {/* Main Input Card - Full Width */}
               <Card className="mb-6 overflow-hidden relative">
                 <CardContent className="p-6">
-                  {/* Header */}
+                  {/* Header with Tagline */}
                   <div className="flex items-center gap-4 mb-4">
                     <div className="w-14 h-14 rounded-xl sky-gradient flex items-center justify-center flex-shrink-0">
                       <Link className="w-7 h-7 text-white" />
@@ -3211,6 +3211,12 @@ export default function CarLinkPage() {
                       <h3 className="font-bold text-xl">{t.pasteLink}</h3>
                       <p className="text-sm text-muted-foreground">{t.pasteLinkDesc}</p>
                     </div>
+                  </div>
+                  
+                  {/* Tagline inside card */}
+                  <div className="flex items-center justify-center gap-2 mb-4 py-2 px-4 bg-primary/5 rounded-lg">
+                    <Sparkles className="w-4 h-4 text-primary" />
+                    <span className="text-sm font-medium text-primary">{isRTL ? 'بيئة متكاملة لتجربة خدمات السيارات المدعومة بالذكاء الاصطناعي' : 'An integrated environment for experiencing AI-powered car services'}</span>
                   </div>
 
                   {/* Input Row with Icons */}
@@ -3362,12 +3368,6 @@ export default function CarLinkPage() {
                         <span className="text-xs sm:text-sm font-medium whitespace-nowrap">{feature.label}</span>
                       </div>
                     ))}
-                  </div>
-
-                  {/* Tagline - Inside Card */}
-                  <div className="flex items-center justify-center gap-2 mt-6 pt-4 border-t text-sm text-muted-foreground">
-                    <span className="w-3 h-3 rounded-full bg-primary flex-shrink-0"></span>
-                    <span>{isRTL ? 'بيئة متكاملة لتجربة خدمات السيارات المدعومة بالذكاء الاصطناعي' : 'An integrated environment for experiencing AI-powered car services'}</span>
                   </div>
                 </CardContent>
               </Card>
