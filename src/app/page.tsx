@@ -3379,7 +3379,7 @@ export default function CarLinkPage() {
                   </div>
                   
                   {/* قسم الإحصائيات */}
-                  <div className="mt-6 pt-4 border-t">
+                  <div className="mt-6 pt-4">
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                       {/* السيارات المحللة */}
                       <div className="flex flex-col items-center p-3 rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-500/5 hover:from-cyan-500/20 hover:to-blue-500/10 transition-all cursor-default">
