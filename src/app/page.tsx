@@ -3344,15 +3344,18 @@ export default function CarLinkPage() {
                     {[
                       { icon: ClipboardList, label: isRTL ? 'تتبع الطلب' : 'Order Tracking', service: 'order-tracking' },
                       { icon: Calculator, label: isRTL ? 'الحسبة' : 'Calculation', service: 'financing' },
-                      { icon: Landmark, label: isRTL ? 'عروض التمويل' : 'Financing Offers', service: 'bank-offers' },
-                      { icon: Car, label: isRTL ? 'عروض السيارات' : 'Car Offers', service: 'car-offers' },
+                      { icon: LayoutGrid, label: isRTL ? 'المزيد' : 'More', service: 'more', isMore: true },
                     ].map((feature) => (
                       <div 
                         key={feature.label} 
                         className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors cursor-pointer px-2 sm:px-3 md:px-4"
                         onClick={() => {
-                          setSelectedService(feature.service);
-                          setServiceDetailOpen(true);
+                          if (feature.isMore) {
+                            setAppsSheetOpen(true);
+                          } else {
+                            setSelectedService(feature.service);
+                            setServiceDetailOpen(true);
+                          }
                         }}
                       >
                         <feature.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
@@ -3360,14 +3363,14 @@ export default function CarLinkPage() {
                       </div>
                     ))}
                   </div>
+
+                  {/* Tagline - Inside Card */}
+                  <div className="flex items-center justify-center gap-2 mt-6 pt-4 border-t text-sm text-muted-foreground">
+                    <span className="w-3 h-3 rounded-full bg-primary flex-shrink-0"></span>
+                    <span>{isRTL ? 'بيئة متكاملة لتجربة خدمات السيارات المدعومة بالذكاء الاصطناعي' : 'An integrated environment for experiencing AI-powered car services'}</span>
+                  </div>
                 </CardContent>
               </Card>
-
-              {/* Tagline - Below Card */}
-              <div className="flex items-center justify-center gap-2 mt-6 text-sm text-white">
-                <span className="w-3.5 h-3.5 rounded-full border-2 border-primary flex-shrink-0"></span>
-                <span>{isRTL ? 'بيئة متكاملة لتجربة خدمات السيارات المدعومة بالذكاء الاصطناعي' : 'An integrated environment for experiencing AI-powered car services'}</span>
-              </div>
             </motion.div>
           )}
 
