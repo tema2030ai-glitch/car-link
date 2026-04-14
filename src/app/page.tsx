@@ -3377,6 +3377,47 @@ export default function CarLinkPage() {
                     </div>
                     </div>
                   </div>
+                  
+                  {/* قسم الإحصائيات */}
+                  <div className="mt-6 pt-4 border-t">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                      {/* السيارات المحللة */}
+                      <div className="flex flex-col items-center p-3 rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-500/5 hover:from-cyan-500/20 hover:to-blue-500/10 transition-all cursor-default">
+                        <div className="w-10 h-10 rounded-full bg-cyan-500/20 flex items-center justify-center mb-2">
+                          <Car className="w-5 h-5 text-cyan-500" />
+                        </div>
+                        <span className="text-2xl font-bold text-cyan-500">12,500+</span>
+                        <span className="text-xs text-muted-foreground">{isRTL ? 'سيارة تم تحليلها' : 'Cars Analyzed'}</span>
+                      </div>
+                      
+                      {/* الشركاء */}
+                      <div className="flex flex-col items-center p-3 rounded-xl bg-gradient-to-br from-emerald-500/10 to-green-500/5 hover:from-emerald-500/20 hover:to-green-500/10 transition-all cursor-default">
+                        <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center mb-2">
+                          <Handshake className="w-5 h-5 text-emerald-500" />
+                        </div>
+                        <span className="text-2xl font-bold text-emerald-500">85+</span>
+                        <span className="text-xs text-muted-foreground">{isRTL ? 'شريك' : 'Partners'}</span>
+                      </div>
+                      
+                      {/* الوكلاء */}
+                      <div className="flex flex-col items-center p-3 rounded-xl bg-gradient-to-br from-violet-500/10 to-purple-500/5 hover:from-violet-500/20 hover:to-purple-500/10 transition-all cursor-default">
+                        <div className="w-10 h-10 rounded-full bg-violet-500/20 flex items-center justify-center mb-2">
+                          <Building2 className="w-5 h-5 text-violet-500" />
+                        </div>
+                        <span className="text-2xl font-bold text-violet-500">120+</span>
+                        <span className="text-xs text-muted-foreground">{isRTL ? 'وكيل معتمد' : 'Authorized Dealers'}</span>
+                      </div>
+                      
+                      {/* المستخدمين */}
+                      <div className="flex flex-col items-center p-3 rounded-xl bg-gradient-to-br from-orange-500/10 to-amber-500/5 hover:from-orange-500/20 hover:to-amber-500/10 transition-all cursor-default">
+                        <div className="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center mb-2">
+                          <Users className="w-5 h-5 text-orange-500" />
+                        </div>
+                        <span className="text-2xl font-bold text-orange-500">50K+</span>
+                        <span className="text-xs text-muted-foreground">{isRTL ? 'مستخدم نشط' : 'Active Users'}</span>
+                      </div>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
               
