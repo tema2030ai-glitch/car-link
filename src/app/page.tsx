@@ -3376,6 +3376,12 @@ export default function CarLinkPage() {
                       <span className="text-sm font-medium text-primary whitespace-nowrap">{isRTL ? 'المزيد' : 'More'}</span>
                     </div>
                     </div>
+                    
+                    {/* الجملة أسفل الأزرار */}
+                    <div className="flex items-center justify-center gap-3 mt-6 pt-4 text-sm text-white">
+                      <div className="w-5 h-5 rounded-full border-[3px] border-primary bg-primary/30 flex-shrink-0"></div>
+                      <span>{isRTL ? 'بيئة متكاملة لتجربة خدمات السيارات المدعومة بالذكاء الاصطناعي' : 'An integrated environment for experiencing AI-powered car services'}</span>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -11534,14 +11540,6 @@ export default function CarLinkPage() {
           </div>
         </DialogContent>
       </Dialog>
-
-      {/* Tagline before Footer */}
-      <div className="w-full py-4">
-        <div className="flex items-center justify-center gap-3 text-sm text-white">
-          <div className="w-5 h-5 rounded-full border-3 border-primary bg-primary/30 flex-shrink-0"></div>
-          <span>{isRTL ? 'بيئة متكاملة لتجربة خدمات السيارات المدعومة بالذكاء الاصطناعي' : 'An integrated environment for experiencing AI-powered car services'}</span>
-        </div>
-      </div>
 
       {/* Blue Gradient Divider Line before Footer */}
       <div className="w-full py-2">
