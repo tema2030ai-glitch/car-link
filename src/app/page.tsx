@@ -3346,28 +3346,39 @@ export default function CarLinkPage() {
                   </div>
 
                   {/* Quick Services - Inside Card - Lower Section */}
-                  <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8 lg:gap-12 mt-8 pt-6 border-t">
-                    {[
-                      { icon: ClipboardList, label: isRTL ? 'تتبع الطلب' : 'Order Tracking', service: 'order-tracking' },
-                      { icon: Calculator, label: isRTL ? 'الحسبة' : 'Calculation', service: 'financing' },
-                      { icon: LayoutGrid, label: isRTL ? 'المزيد' : 'More', service: 'more', isMore: true },
-                    ].map((feature) => (
-                      <div 
-                        key={feature.label} 
-                        className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors cursor-pointer px-2 sm:px-3 md:px-4"
-                        onClick={() => {
-                          if (feature.isMore) {
-                            setAppsSheetOpen(true);
-                          } else {
-                            setSelectedService(feature.service);
-                            setServiceDetailOpen(true);
-                          }
-                        }}
-                      >
-                        <feature.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
-                        <span className="text-xs sm:text-sm font-medium whitespace-nowrap">{feature.label}</span>
-                      </div>
-                    ))}
+                  <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mt-6 pt-4 border-t">
+                    {/* تتبع الطلب */}
+                    <div 
+                      className="flex items-center gap-2 bg-cyan-500/10 hover:bg-cyan-500/20 transition-colors cursor-pointer px-4 py-2 rounded-full"
+                      onClick={() => {
+                        setSelectedService('order-tracking');
+                        setServiceDetailOpen(true);
+                      }}
+                    >
+                      <ClipboardList className="w-5 h-5 text-cyan-500" />
+                      <span className="text-sm font-medium text-cyan-600 dark:text-cyan-400 whitespace-nowrap">{isRTL ? 'تتبع الطلب' : 'Order Tracking'}</span>
+                    </div>
+                    
+                    {/* الحسبة */}
+                    <div 
+                      className="flex items-center gap-2 bg-emerald-500/10 hover:bg-emerald-500/20 transition-colors cursor-pointer px-4 py-2 rounded-full"
+                      onClick={() => {
+                        setSelectedService('financing');
+                        setServiceDetailOpen(true);
+                      }}
+                    >
+                      <Calculator className="w-5 h-5 text-emerald-500" />
+                      <span className="text-sm font-medium text-emerald-600 dark:text-emerald-400 whitespace-nowrap">{isRTL ? 'الحسبة' : 'Calculator'}</span>
+                    </div>
+                    
+                    {/* المزيد */}
+                    <div 
+                      className="flex items-center gap-2 bg-primary/10 hover:bg-primary/20 transition-colors cursor-pointer px-4 py-2 rounded-full"
+                      onClick={() => setAppsSheetOpen(true)}
+                    >
+                      <LayoutGrid className="w-5 h-5 text-primary" />
+                      <span className="text-sm font-medium text-primary whitespace-nowrap">{isRTL ? 'المزيد' : 'More'}</span>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
