@@ -3377,57 +3377,6 @@ export default function CarLinkPage() {
                     </div>
                     </div>
                   </div>
-                  
-                  {/* قسم الإحصائيات */}
-                  <div className="mt-6 pt-4">
-                    {/* خط فاصل متدرج */}
-                    <div className="w-full h-0.5 bg-gradient-to-r from-transparent via-white to-transparent mb-6"></div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {/* السيارات المحللة */}
-                      <div className="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-r from-cyan-500/10 to-blue-500/5 hover:from-cyan-500/20 hover:to-blue-500/10 transition-all cursor-default">
-                        <div className="w-12 h-12 rounded-xl bg-cyan-500/20 flex items-center justify-center flex-shrink-0">
-                          <Car className="w-6 h-6 text-cyan-500" />
-                        </div>
-                        <div className="flex-1">
-                          <span className="text-2xl font-bold text-cyan-500">12,500+</span>
-                          <p className="text-sm text-muted-foreground">{isRTL ? 'سيارة تم تحليلها' : 'Cars Analyzed'}</p>
-                        </div>
-                      </div>
-                      
-                      {/* الشركاء */}
-                      <div className="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-r from-emerald-500/10 to-green-500/5 hover:from-emerald-500/20 hover:to-green-500/10 transition-all cursor-default">
-                        <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
-                          <Handshake className="w-6 h-6 text-emerald-500" />
-                        </div>
-                        <div className="flex-1">
-                          <span className="text-2xl font-bold text-emerald-500">85+</span>
-                          <p className="text-sm text-muted-foreground">{isRTL ? 'شريك' : 'Partners'}</p>
-                        </div>
-                      </div>
-                      
-                      {/* الوكلاء */}
-                      <div className="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-r from-violet-500/10 to-purple-500/5 hover:from-violet-500/20 hover:to-purple-500/10 transition-all cursor-default">
-                        <div className="w-12 h-12 rounded-xl bg-violet-500/20 flex items-center justify-center flex-shrink-0">
-                          <Building2 className="w-6 h-6 text-violet-500" />
-                        </div>
-                        <div className="flex-1">
-                          <span className="text-2xl font-bold text-violet-500">120+</span>
-                          <p className="text-sm text-muted-foreground">{isRTL ? 'وكيل معتمد' : 'Authorized Dealers'}</p>
-                        </div>
-                      </div>
-                      
-                      {/* المستخدمين */}
-                      <div className="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-r from-orange-500/10 to-amber-500/5 hover:from-orange-500/20 hover:to-amber-500/10 transition-all cursor-default">
-                        <div className="w-12 h-12 rounded-xl bg-orange-500/20 flex items-center justify-center flex-shrink-0">
-                          <Users className="w-6 h-6 text-orange-500" />
-                        </div>
-                        <div className="flex-1">
-                          <span className="text-2xl font-bold text-orange-500">50K+</span>
-                          <p className="text-sm text-muted-foreground">{isRTL ? 'مستخدم نشط' : 'Active Users'}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </CardContent>
               </Card>
               
