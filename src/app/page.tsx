@@ -11541,6 +11541,14 @@ export default function CarLinkPage() {
         </DialogContent>
       </Dialog>
 
+      {/* Tagline before Footer */}
+      <div className="w-full py-4">
+        <div className="flex items-center justify-center gap-2 text-sm text-white">
+          <div className="w-3.5 h-3.5 rounded-full border-2 border-primary flex-shrink-0"></div>
+          <span>{isRTL ? 'بيئة متكاملة لتجربة خدمات السيارات المدعومة بالذكاء الاصطناعي' : 'An integrated environment for experiencing AI-powered car services'}</span>
+        </div>
+      </div>
+
       {/* Blue Gradient Divider Line before Footer */}
       <div className="w-full py-2">
         <div className="w-full h-0.5 bg-gradient-to-r from-transparent via-blue-500 to-transparent" />
