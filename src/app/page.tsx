@@ -3212,12 +3212,6 @@ export default function CarLinkPage() {
                       <p className="text-sm text-muted-foreground">{t.pasteLinkDesc}</p>
                     </div>
                   </div>
-                  
-                  {/* Tagline inside card */}
-                  <div className="flex items-center justify-center gap-2 mb-4 py-2 px-4 bg-primary/5 rounded-lg">
-                    <Sparkles className="w-4 h-4 text-primary" />
-                    <span className="text-sm font-medium text-primary">{isRTL ? 'بيئة متكاملة لتجربة خدمات السيارات المدعومة بالذكاء الاصطناعي' : 'An integrated environment for experiencing AI-powered car services'}</span>
-                  </div>
 
                   {/* Input Row with Icons */}
                   <div className="flex flex-col sm:flex-row items-center gap-3">
@@ -3346,7 +3340,17 @@ export default function CarLinkPage() {
                   </div>
 
                   {/* Quick Services - Inside Card - Lower Section */}
-                  <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mt-6 pt-4 border-t">
+                  <div className="mt-6 pt-4 border-t">
+                    {/* الحلقة الدائرية والجملة */}
+                    <div className="flex flex-col items-center gap-3 mb-4">
+                      <div className="w-3 h-3 rounded-full border-2 border-primary bg-primary/20"></div>
+                      <p className="text-sm text-muted-foreground text-center">
+                        {isRTL ? 'بيئة متكاملة لتجربة خدمات السيارات المدعومة بالذكاء الاصطناعي' : 'An integrated environment for experiencing AI-powered car services'}
+                      </p>
+                    </div>
+                    
+                    {/* الأزرار */}
+                    <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
                     {/* تتبع الطلب */}
                     <div 
                       className="flex items-center gap-2 bg-cyan-500/10 hover:bg-cyan-500/20 transition-colors cursor-pointer px-4 py-2 rounded-full"
@@ -3378,6 +3382,7 @@ export default function CarLinkPage() {
                     >
                       <LayoutGrid className="w-5 h-5 text-primary" />
                       <span className="text-sm font-medium text-primary whitespace-nowrap">{isRTL ? 'المزيد' : 'More'}</span>
+                    </div>
                     </div>
                   </div>
                 </CardContent>
