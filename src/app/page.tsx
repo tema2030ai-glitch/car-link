@@ -3212,12 +3212,6 @@ export default function CarLinkPage() {
                       <p className="text-sm text-muted-foreground">{t.pasteLinkDesc}</p>
                     </div>
                   </div>
-                  
-                  {/* Tagline inside card */}
-                  <div className="flex items-center justify-center gap-2 mb-4 py-2 px-4 bg-primary/5 rounded-lg">
-                    <Sparkles className="w-4 h-4 text-primary" />
-                    <span className="text-sm font-medium text-primary">{isRTL ? 'بيئة متكاملة لتجربة خدمات السيارات المدعومة بالذكاء الاصطناعي' : 'An integrated environment for experiencing AI-powered car services'}</span>
-                  </div>
 
                   {/* Input Row with Icons */}
                   <div className="flex flex-col sm:flex-row items-center gap-3">
@@ -11543,8 +11537,8 @@ export default function CarLinkPage() {
 
       {/* Tagline before Footer */}
       <div className="w-full py-4">
-        <div className="flex items-center justify-center gap-2 text-sm text-white">
-          <div className="w-3.5 h-3.5 rounded-full border-2 border-primary flex-shrink-0"></div>
+        <div className="flex items-center justify-center gap-3 text-sm text-white">
+          <div className="w-5 h-5 rounded-full border-3 border-primary bg-primary/30 flex-shrink-0"></div>
           <span>{isRTL ? 'بيئة متكاملة لتجربة خدمات السيارات المدعومة بالذكاء الاصطناعي' : 'An integrated environment for experiencing AI-powered car services'}</span>
         </div>
       </div>
